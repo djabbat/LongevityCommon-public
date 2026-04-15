@@ -1,0 +1,33 @@
+# Rust build artifacts
+simulator/target/
+simulator/Cargo.lock
+
+# Phoenix/Elixir build artifacts
+website/ze_sim/_build/
+website/ze_sim/deps/
+website/ze_sim/.elixir_ls/
+website/ze_sim/priv/static/assets/
+website/ze_sim/priv/ze-runner
+
+# Claude session files
+.claude/
+MEMORY.md
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Public repo rule: only README.md is allowed in public git
+# New .md files must be added explicitly with: git add -f file.md
+*.md
+!README.md
+
+# Docs and articles (private only)
+docs/
+Articles/
+simulator/data/

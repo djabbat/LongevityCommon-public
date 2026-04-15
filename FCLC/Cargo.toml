@@ -1,0 +1,3 @@
+[workspace]
+members = ["fclc-core", "fclc-node", "fclc-server"]
+resolver = "2"

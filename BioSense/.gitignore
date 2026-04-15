@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Data — obtain from original sources (Zenodo, PhysioNet, etc.)
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Claude session files
+.claude/
+MEMORY.md
+
+# Rust build artifacts (future)
+target/
+Cargo.lock
+
+# Public repo rule: only README.md is allowed in public git
+# New .md files must be added explicitly with: git add -f file.md
+*.md
+!README.md
+
+# Docs and articles (private only)
+docs/
+Articles/

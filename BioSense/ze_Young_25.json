@@ -1,0 +1,47 @@
+{
+  "label": "Young_25",
+  "age": 25,
+  "sfreq": 128.0,
+  "n_channels": 1,
+  "duration_s": 60,
+  "channels": {
+    "Cz": {
+      "N": 7680,
+      "N_S": 1259,
+      "v": 0.163954,
+      "v_star": 0.45631,
+      "chi_Ze": 0.462274,
+      "chi_max_living": 0.839,
+      "tau": 3550.26,
+      "v_deviation": 0.292356
+    }
+  },
+  "summary": {
+    "chi_Ze_mean": 0.462274,
+    "chi_Ze_std": 0.0,
+    "chi_Ze_min": 0.462274,
+    "chi_Ze_max": 0.462274,
+    "v_mean": 0.163954,
+    "v_std": 0.0
+  },
+  "proxy": {
+    "method": "proxy",
+    "f_peak": 10.5,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164062,
+    "chi_Ze": 0.462474
+  },
+  "narrowband": {
+    "method": "narrowband_Ze",
+    "lowcut": 8.0,
+    "highcut": 12.0,
+    "N": 7680,
+    "N_S": 1260,
+    "v": 0.164084,
+    "chi_Ze": 0.462513
+  },
+  "timestamp": "2026-03-28T15:33:53.205544"
+}

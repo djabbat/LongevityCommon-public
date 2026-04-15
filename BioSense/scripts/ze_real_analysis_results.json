@@ -1,0 +1,115 @@
+{
+  "run_date": "2026-04-11",
+  "bootstrap_cuban_wideband": {
+    "estimate": 0.18749,
+    "ci_lo": 0.17968,
+    "ci_hi": 0.17968,
+    "ci_width": 0.0,
+    "se": 0.004110944752442076,
+    "n": 97
+  },
+  "bootstrap_lemon_gamma": {
+    "estimate": 0.5501598572404371,
+    "ci_lo": 0.5469065163934426,
+    "ci_hi": 0.5542000163934426,
+    "ci_width": 0.007293500000000064,
+    "se": 0.0017077263131357716,
+    "n": 24
+  },
+  "sensitivity_analysis": [
+    {
+      "dataset": "Cuban_wideband",
+      "v_target": 0.19,
+      "methods": {
+        "median": {
+          "mean": 0.46933769063180825,
+          "sd": 0.002180482888488359,
+          "n": 30
+        },
+        "zero": {
+          "mean": 0.4691764705882353,
+          "sd": 0.0023107818257319802,
+          "n": 30
+        },
+        "quartile": {
+          "mean": 0.35644880174291954,
+          "sd": 0.0025876814031418854,
+          "n": 30
+        },
+        "envelope": {
+          "mean": 0.3718910675381265,
+          "sd": 0.003978308956611094,
+          "n": 30
+        }
+      },
+      "cv_across_methods_pct": 12.68,
+      "robust_cv_lt_10pct": false,
+      "note": "Synthetic EEG (calibrated to real data v_target); raw time-series not available locally"
+    },
+    {
+      "dataset": "Dortmund_gamma",
+      "v_target": 0.57,
+      "methods": {
+        "median": {
+          "mean": 0.46933769063180825,
+          "sd": 0.002180482888488359,
+          "n": 30
+        },
+        "zero": {
+          "mean": 0.4691764705882353,
+          "sd": 0.0023107818257319802,
+          "n": 30
+        },
+        "quartile": {
+          "mean": 0.35644880174291954,
+          "sd": 0.0025876814031418854,
+          "n": 30
+        },
+        "envelope": {
+          "mean": 0.3718910675381265,
+          "sd": 0.003978308956611094,
+          "n": 30
+        }
+      },
+      "cv_across_methods_pct": 12.68,
+      "robust_cv_lt_10pct": false,
+      "note": "Synthetic EEG (calibrated to real data v_target); raw time-series not available locally"
+    },
+    {
+      "dataset": "Lemon_gamma",
+      "v_target": 0.55,
+      "methods": {
+        "median": {
+          "mean": 0.46933769063180825,
+          "sd": 0.002180482888488359,
+          "n": 30
+        },
+        "zero": {
+          "mean": 0.4691764705882353,
+          "sd": 0.0023107818257319802,
+          "n": 30
+        },
+        "quartile": {
+          "mean": 0.35644880174291954,
+          "sd": 0.0025876814031418854,
+          "n": 30
+        },
+        "envelope": {
+          "mean": 0.3718910675381265,
+          "sd": 0.003978308956611094,
+          "n": 30
+        }
+      },
+      "cv_across_methods_pct": 12.68,
+      "robust_cv_lt_10pct": false,
+      "note": "Synthetic EEG (calibrated to real data v_target); raw time-series not available locally"
+    }
+  ],
+  "critical_finding_v_star": {
+    "cuban_v_median": 0.18749,
+    "lemon_gamma_v_median": 0.5501598572404371,
+    "claimed_v_star_active": 0.45631,
+    "inconsistency": "Cuban data max_freq=19.1Hz; v*=0.456 cannot derive from 25-35Hz Cuban band"
+  },
+  "note": "Raw EEG time-series not available locally. Sensitivity analysis uses synthetic EEG."
+}

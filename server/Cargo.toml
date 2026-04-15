@@ -1,0 +1,66 @@
+[package]
+name = "commonhealth-server"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jaba Tkemaladze"]
+description = "CommonHealth REST API — longevity social network backend"
+
+[lib]
+name = "commonhealth_server"
+path = "src/lib.rs"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[dependencies]
+# Web framework
+axum = { version = "0.7", features = ["macros", "multipart"] }
+tower = { version = "0.4", features = ["limit", "buffer"] }
+tower-http = { version = "0.5", features = ["cors", "trace", "compression-gzip"] }
+tokio = { version = "1", features = ["full"] }
+hyper = { version = "1", features = ["full"] }
+
+# Database
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Auth
+jsonwebtoken = "9"
+argon2 = "0.5"
+rand = "0.8"
+
+# Rate limiting
+# tower_governor = { version = "0.8", features = ["axum"] }  # post-MVP: per-IP rate limiting
+
+# Regex (for Ze·Guide DOI/file extraction)
+regex-lite = "0.1"
+
+# IDs & time
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# HTTP client (DOI validation, DeepSeek API)
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+
+# Config
+dotenvy = "0.15"
+config = "0.14"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Error handling
+thiserror = "1"
+anyhow = "1"
+
+# Validation
+validator = { version = "0.18", features = ["derive"] }
+
+[dev-dependencies]
+tokio-test = "0.4"
+axum-test = "19"

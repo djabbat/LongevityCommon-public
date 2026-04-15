@@ -1,0 +1,13 @@
+[package]
+name = "ze-runner"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ze-runner"
+path = "src/main.rs"
+
+[dependencies]
+ze-core = { path = "../ze-core" }
+serde_json = "1"
+clap = { version = "4", features = ["derive"] }

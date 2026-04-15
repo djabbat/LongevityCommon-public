@@ -1,0 +1,47 @@
+{
+  "label": "Middle_50",
+  "age": 50,
+  "sfreq": 128.0,
+  "n_channels": 1,
+  "duration_s": 60,
+  "channels": {
+    "Cz": {
+      "N": 7680,
+      "N_S": 1139,
+      "v": 0.148327,
+      "v_star": 0.45631,
+      "chi_Ze": 0.433531,
+      "chi_max_living": 0.839,
+      "tau": 3329.52,
+      "v_deviation": 0.307983
+    }
+  },
+  "summary": {
+    "chi_Ze_mean": 0.433531,
+    "chi_Ze_std": 0.0,
+    "chi_Ze_min": 0.433531,
+    "chi_Ze_max": 0.433531,
+    "v_mean": 0.148327,
+    "v_std": 0.0
+  },
+  "proxy": {
+    "method": "proxy",
+    "f_peak": 9.5,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.148438,
+    "chi_Ze": 0.433735
+  },
+  "narrowband": {
+    "method": "narrowband_Ze",
+    "lowcut": 8.0,
+    "highcut": 12.0,
+    "N": 7680,
+    "N_S": 1139,
+    "v": 0.148327,
+    "chi_Ze": 0.433531
+  },
+  "timestamp": "2026-03-28T15:33:53.207512"
+}
