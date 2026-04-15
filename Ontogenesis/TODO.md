@@ -1,7 +1,7 @@
-# TODO — Ontogenesis v4.1
-## Интерактивная платформа: онтогенез человека 0–25 лет
+# TODO — Ontogenesis v4.2
+## Интерактивная платформа: онтогенез человека 0–120 лет
 
-_Дата: 2026-03-27 | Версия концепта: 4.1 | MVP срок: 24–36 месяцев_
+_Дата: 2026-04-16 | Версия концепта: 4.2 | MVP срок: 24–36 месяцев_
 
 ---
 
@@ -31,6 +31,8 @@ _Дата: 2026-03-27 | Версия концепта: 4.1 | MVP срок: 24–
 - [x] `CVAnalysis`: расчет CV для поперечных данных — `src/analysis/cv_analysis.rs` ✅ 2026-03-28
 - [x] `RangeAnalysis`: расчет Range_90_10 — `src/analysis/cv_analysis.rs` ✅ 2026-03-28
 - [x] `TransitionDetection`: алгоритм из CONCEPT §2.2–2.3 — `src/analysis/transition_detection.rs` ✅ 2026-03-28
+- [x] `LCS Dual model`: Univariate + Dual LCS, Individual Likelihood, coupling γ — `src/analysis/lcs.rs` ✅ 2026-04-16
+- [x] `MetamorphosisDetector`: FDR-BH, кросс-доменный триггер, detect_metamorphoses() — `src/metamorphosis.rs` ✅ 2026-04-16
 - [ ] `DataIngestion`: добавить Excel-импорт (calamine крейт)
   **Критерий:** успешный импорт 3+ форматов, нормализация работает — **CSV+JSON: готово**
 
