@@ -12,8 +12,8 @@ High-NA oil immersion is required to resolve centriolar foci (~ 300 nm FWHM). Pi
 
 ## §3 Current state of the art
 
-- Sage D et al. 2014 — open microscope platforms (OpenSPIM / µManager) [PMID-PENDING-VERIFY]
-- Almada P et al. 2019 — automated live-cell imaging workflows [PMID-PENDING-VERIFY]
+- Pitrone PG et al. 2013 Nat Methods — OpenSPIM open-access light-sheet microscopy platform [PMID: 23749304]
+- Almada P et al. 2019 Nat Commun — automating multimodal microscopy with NanoJ-Fluidics [PMID: 30874553]
 - Schott GmbH technical docs — IM 35 optical specs [DOC-PENDING]
 
 ## §4 Integration with other CytogeneticTree technologies

@@ -11,7 +11,7 @@ Initial scaffolding:
 ## v1.1 (Phase 0 refinement, ~2026-05)
 
 - [ ] Populate KNOWLEDGE.md with verified literature (all PMIDs checked via PubMed API)
-- [ ] Review 12 sub-subproject CONCEPTs for scientific accuracy; replace `[PMID-PENDING-VERIFY]` placeholders
+- [x] Review 12 sub-subproject CONCEPTs for scientific accuracy; replace `[PMID-PENDING-VERIFY]` placeholders — 2026-04-22 (19 PMIDs verified via PubMed; unresolvable refs marked "pending dedicated verification")
 - [ ] MAP.md dependency graph finalized after KNOWLEDGE.md contents known
 - [ ] Integration test: connect Ilia Zheleznov HSC simulator (https://github.com/zhelilyan-create/hematopoiesis-simulator) as computational pre-validation tool
 - [ ] Add explicit data-release plan (Zenodo DOI + image metadata standard)

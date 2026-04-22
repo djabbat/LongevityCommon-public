@@ -12,9 +12,9 @@ CellPose (Stringer et al. 2021 Nat Methods) uses a U-Net with a topographical fl
 
 ## §3 Current state of the art
 
-- Stringer C et al. 2021 Nat Methods — CellPose original [PMID-PENDING-VERIFY]
-- Pachitariu M, Stringer C 2022 Nat Methods — CellPose 2.0 human-in-the-loop [PMID-PENDING-VERIFY]
-- Dohmen E et al. 2024 — spotiflow sub-pixel spot localization [PMID-PENDING-VERIFY]
+- Stringer C et al. 2021 Nat Methods — CellPose original [PMID: 33318659]
+- Pachitariu M, Stringer C 2022 Nat Methods — CellPose 2.0 human-in-the-loop [PMID: 36344832]
+- Dohmen E et al. 2024 — spotiflow sub-pixel spot localization (bioRxiv, not yet in PubMed)
 
 ## §4 Integration with other CytogeneticTree technologies
 

@@ -387,7 +387,7 @@ in BJ-hTERT fibroblasts by comparing proliferating vs contact-inhibited conditio
 
 ## Контекст для Claude (для понимания важности сигналов)
 Данный эксперимент — Aim A.1 of Impetus Phase A ($80k grant). Результат определяет
-go/no-go decision для Phase B ($120k). CDATA hypothesis предсказывает α > 0 значимо.
+go/no-go decision для Phase B ($180k total, €100k to Ulm lab — Geiger confirmed 2026-04-22). CDATA hypothesis предсказывает α > 0 значимо.
 Null result (α ≈ 0 и β ≈ 0) = хonest falsification, publish negative result.
 ```
 

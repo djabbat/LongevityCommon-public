@@ -10,16 +10,16 @@ The algorithm operates on two primary input streams:
 
 The core logic builds a NetworkX DiGraph (DAG) where nodes represent cell states (with metadata: ID, generation, centriole age) and directed edges represent "is-parent-of" relationships. The algorithm parses the event log sequentially:
 *   **Symmetric Division:** Creates two child nodes from one parent, with edges indicating lineage split but no fate bias from centriole inheritance.
-*   **Asymmetric Division:** Creates two child nodes. The edge to the cell inheriting the older centriole is tagged with a fate bias property (e.g., `progenitor_fate: likely`), based on the established correlation between older centriole inheritance and stem/progenitor fate ([PMID-PENDING-VERIFY]).
+*   **Asymmetric Division:** Creates two child nodes. The edge to the cell inheriting the older centriole is tagged with a fate bias property (e.g., `progenitor_fate: likely`), based on the established correlation between older mother centriole inheritance and stem/progenitor fate (Yamashita et al. 2007 Science, [PMID: 17255513]; Royall et al. 2023, [PMID: 37882444]).
 *   **Terminal Event:** Marks a node as a leaf (no outgoing edges).
 
 Critical logic handles biological noise: **Focus Drift** (temporary loss of tracking, resolved via temporal gap-closing), **Mixed Centriole** inheritance (ambiguous signals trigger a probabilistic branch point), and **Out-of-Plane Division** (3D spatial data is used to validate or correct inferred 2D lineage connections).
 
 ## §3 State of the Art (≤3 Key Refs)
 Current lineage reconstruction predominantly relies on fluorescent labeling (e.g., Brainbow), live imaging, or single-cell DNA barcoding. These methods have limitations in temporal resolution, scalability, or ability to function retrospectively in fixed tissues. The use of endogenous, structurally inherited organelles as lineage recorders is a nascent but powerful paradigm.
-1.  **Centriole as a Determinant of Cell Fate:** Foundational work established the non-random inheritance of the older mother centriole during asymmetric division in Drosophila and mammalian neural stem cells, linking it to the retention of stem cell properties ([PMID-PENDING-VERIFY]).
-2.  **Computational Lineage Tracing:** Advances in single-cell phylogenetics and algorithms for reconstructing trees from CRISPR-Cas9 mutation patterns provide a relevant computational framework for building trees from sparse, noisy data ([PMID-PENDING-VERIFY]).
-3.  **Integrative Morphodynamic Analysis:** Recent methods combining live-cell imaging with deep learning for cell tracking represent the state-of-the-art in high-fidelity lineage extraction, setting a benchmark for accuracy that this project aims to achieve via a fixed-tissue compatible method ([PMID-PENDING-VERIFY]).
+1.  **Centriole as a Determinant of Cell Fate:** Foundational work established the non-random inheritance of the older mother centriole during asymmetric division in *Drosophila* male germline stem cells (Yamashita et al. 2007 Science, [PMID: 17255513]) and human neural progenitor cells (Royall et al. 2023, [PMID: 37882444]), linking it to the retention of stem cell properties.
+2.  **Computational Lineage Tracing:** Advances in single-cell phylogenetics and algorithms for reconstructing trees from CRISPR-Cas9 mutation patterns (GESTALT, McKenna et al. 2016 Science, [PMID: 27229144]; Chan et al. 2019 Nature, [PMID: 31086336]) provide a relevant computational framework for building trees from sparse, noisy data.
+3.  **Integrative Morphodynamic Analysis:** Recent methods combining live-cell imaging with transcriptional-landscape mapping (LARRY lentiviral barcoding, Weinreb et al. 2020 Science, [PMID: 31974159]) represent the state-of-the-art in high-fidelity lineage extraction, setting a benchmark for accuracy that this project aims to achieve via a fixed-tissue-compatible method.
 
 ## §4 Integration with Other CytogeneticTree Technologies
 GenealogyReconstruction is a central integration layer:

@@ -20,7 +20,7 @@ The AICoordinator is not an ML model per se — it is an **LLM-as-orchestrator**
 ## §3 Current state of the art
 
 - Claude Code `/overnight` protocol (Anthropic, internal) + SESSION_STATE.md pattern
-- LLM-based lab automation: Coscientist (Boiko et al. 2023) [PMID-PENDING-VERIFY]
+- LLM-based lab automation: Coscientist (Boiko et al. 2023 *Nature*) [PMID: 38123806]
 - SmartACM / autonomous microscopy — emerging field [REF-PENDING]
 
 ## §4 Integration with other CytogeneticTree technologies

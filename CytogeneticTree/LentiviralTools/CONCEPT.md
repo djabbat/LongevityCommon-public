@@ -12,8 +12,8 @@ Third-generation lentiviral system (pMD2.G VSV-G, psPAX2 packaging, self-inactiv
 
 ## §3 Current state of the art
 
-- Dull T et al. 1998 — third-gen lentiviral vectors [PMID-PENDING-VERIFY]
-- Trono lab / Naldini L et al. — standard packaging protocols [PMID-PENDING-VERIFY]
+- Dull T et al. 1998 J Virol — third-generation lentiviral vector with conditional packaging [PMID: 9765382]
+- Naldini L et al. 1996 Science — in vivo gene delivery and stable transduction of nondividing cells by lentivirus [PMID: 8602510]
 - Addgene plasmid repository — pLenti backbones catalog [URL-VERIFY]
 - Twist Bioscience gene synthesis — commercial service [DOC]
 

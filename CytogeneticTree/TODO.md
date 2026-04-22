@@ -8,7 +8,7 @@
 - [ ] MAP.md dependency graph across subprojects
 - [ ] LINKS.md with Addgene plasmids, GitHub repos, Micro-Manager documentation
 - [ ] Review all auto-generated subfolder CONCEPTs for scientific accuracy
-- [ ] Replace any `[PMID-PENDING-VERIFY]` placeholders with real verified PMIDs (feedback_verify_references rule)
+- [x] Replace any `[PMID-PENDING-VERIFY]` placeholders with real verified PMIDs (feedback_verify_references rule) — 2026-04-22
 
 ## Phase 1 — Minimum Viable Cytogenetic Tree (MVCT; contingent on Impetus Go)
 

@@ -13,9 +13,9 @@ The core algorithmic challenge is the **constrained propagation** of state label
 
 ## §3 State of the Art
 Current methods for cell state annotation are largely divorced from lineage context. They operate on dissociated cells, losing the spatial and genealogical relationships that are fundamental to understanding differentiation dynamics.
-*   **scRNA-seq Clustering & Annotation:** Standard pipelines (e.g., Seurat, Scanpy) cluster cells by transcriptomic similarity and annotate clusters using reference databases ([PMID-PENDING-VERIFY]). These methods infer *pseudotime* but cannot reconstruct actual lineage trees.
-*   **Lineage Tracing with Molecular Barcodes:** Techniques like CRISPR-Cas9 barcoding can reconstruct lineages but typically lack simultaneous deep transcriptional phenotyping at single-cell resolution for all barcoded clones ([PMID-PENDING-VERIFY]).
-*   **Integrated Imaging & Sequencing:** Emerging spatial transcriptomics methods (e.g., MERFISH, seqFISH+) provide gene expression in situ but are limited in gene throughput and cannot yet trace deep historical lineages ([PMID-PENDING-VERIFY]).
+*   **scRNA-seq Clustering & Annotation:** Standard pipelines (e.g., Seurat, Scanpy) cluster cells by transcriptomic similarity and annotate clusters using reference databases. These methods infer *pseudotime* but cannot reconstruct actual lineage trees (reference pending — general Seurat/Scanpy reviews; not verified here).
+*   **Lineage Tracing with Molecular Barcodes:** Techniques like CRISPR-Cas9 barcoding (GESTALT, McKenna et al. 2016 Science, [PMID: 27229144]; scGESTALT, Raj et al. 2018 Nat Biotech, [PMID: 29608178]) can reconstruct lineages but typically lack simultaneous deep transcriptional phenotyping at single-cell resolution for all barcoded clones.
+*   **Integrated Imaging & Sequencing:** Emerging spatial transcriptomics methods (MERFISH, seqFISH+) provide gene expression *in situ* but are limited in gene throughput and cannot yet trace deep historical lineages (reference pending — specific method paper not verified here).
 
 **DifferentiationAnnotation** uniquely sits at the convergence of these approaches, using the intrinsic centriole-age lineage barcode to provide the temporal framework for integrating the deepest available molecular and morphological phenotyping.
 

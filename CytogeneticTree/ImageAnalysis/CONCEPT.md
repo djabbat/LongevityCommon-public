@@ -20,9 +20,9 @@ For live-cell streams, the pipeline tracks these parameters over time, correlati
 
 ## §3 State of the Art (Key References)
 Current methods for centriole analysis are largely manual or semi-automated, creating a bottleneck for large-scale lineage studies.
-*   **Automated Centriole Analysis:** Recent tools like CentrioleTracker [PMID-PENDING-VERIFY] offer automated detection and tracking in live cells but lack integrated, validated pipelines for the specific polyglutamylation intensity quantification required for age-dating.
-*   **Polyglutamylation as an Age Marker:** The foundational work establishing GT335 as a marker of centriole age was conducted in specific model systems [PMID-PENDING-VERIFY]. However, systematic quantification across a differentiating lineage remains unperformed.
-*   **Ciliation & Cell State:** The link between ciliation, cell cycle exit, and differentiation is well-established [PMID-PENDING-VERIFY], but its integration with continuous centriole age metrics is novel.
+*   **Automated Centriole Analysis:** Recent tools like CenFind ([PMID: 36977999]) offer automated centriole detection in 3D microscopy but lack integrated, validated pipelines for the specific polyglutamylation intensity quantification required for age-dating.
+*   **Polyglutamylation as an Age Marker:** The foundational work using the GT335 antibody to characterize centriolar polyglutamylation was conducted in vertebrate model systems (Bobinnec et al. 1998 J Cell Biol, [PMID: 9852152]). Systematic quantification across a differentiating lineage remains unperformed.
+*   **Ciliation & Cell State:** The link between primary cilium assembly, cell cycle exit, and differentiation is reviewed in Nigg & Holland 2018 ([PMID: 29363672]); its integration with continuous centriole age metrics is novel.
 
 ## §4 Integration with CytogeneticTree Technologies
 This subproject is a critical data feeder for other components:

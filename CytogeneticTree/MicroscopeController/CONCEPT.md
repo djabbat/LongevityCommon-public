@@ -12,7 +12,7 @@ Micro-Manager 2.0 is the de-facto open-source microscope control standard, with 
 
 ## §3 Current state of the art
 
-- Edelstein A et al. 2014 — Micro-Manager original [PMID-PENDING-VERIFY]
+- Edelstein A et al. 2014 J Biol Methods — advanced microscope control using µManager [PMID: 25606571]
 - PyMMCore-Plus GitHub docs (pymmcore-plus.github.io) [URL-VERIFY]
 - useq-schema — YAML-based acquisition description [URL-VERIFY]
 

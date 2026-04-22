@@ -15,9 +15,9 @@ Both are focused through the 100× / 1.4 NA oil objective (shared with imaging).
 
 ## §3 Current state of the art
 
-- Khodjakov A, Rieder CL 2001 — laser microsurgery of centrosomes [PMID-PENDING-VERIFY]
-- Colombelli J et al. 2005 — fs-laser ablation in live cells [PMID-PENDING-VERIFY]
-- Liang X et al. 2020 — automated laser ablation pipelines [PMID-PENDING-VERIFY]
+- Khodjakov A, Rieder CL 2001 J Cell Biol — centrosome requirement for fidelity of cytokinesis (laser microsurgery) [PMID: 11285289]
+- Colombelli J et al. 2005 Traffic — pulsed UV laser nanosurgery for cytoskeletal dynamics in live cells [PMID: 16262721]
+- Liang X et al. 2020 — automated laser ablation pipelines (reference pending dedicated PubMed verification)
 
 ## §4 Integration with other CytogeneticTree technologies
 

@@ -8,13 +8,13 @@ RITE_Centriole provides the **molecular clock** that makes the Cytogenetic Tree 
 
 ## §2 Scientific basis / mechanism
 
-RITE (Verzijlbergen et al. 2010 [PMID-PENDING-VERIFY]) uses Cre/loxP-mediated excision to irreversibly swap the C-terminal tag of a target protein. A Cre-ER^T2 driver activates only when 4-hydroxytamoxifen (4-OHT) is added, giving temporal control within minutes. Applied to centriolar proteins, the system exploits the semi-conservative mode of centriole duplication: mother centrioles retain their original (pre-pulse, red) coat, while procentrioles assembled de novo after the pulse incorporate newly-translated (green) protein. Because centriolar proteins such as Centrin are extremely stable (turnover > 24 h), the tag-swap cleanly distinguishes "old" from "new" centrioles over multiple divisions.
+RITE (Verzijlbergen et al. 2010 [PMID: 20018668]) uses Cre/loxP-mediated excision to irreversibly swap the C-terminal tag of a target protein. A Cre-ER^T2 driver activates only when 4-hydroxytamoxifen (4-OHT) is added, giving temporal control within minutes. Applied to centriolar proteins, the system exploits the semi-conservative mode of centriole duplication: mother centrioles retain their original (pre-pulse, red) coat, while procentrioles assembled de novo after the pulse incorporate newly-translated (green) protein. Because centriolar proteins such as Centrin are extremely stable (turnover > 24 h), the tag-swap cleanly distinguishes "old" from "new" centrioles over multiple divisions.
 
 ## §3 Current state of the art
 
-- Verzijlbergen KF et al. 2010 — original RITE method, yeast histones [PMID-PENDING-VERIFY]
-- Wang X et al. 2009 Nature — asymmetric centrosome inheritance in *Drosophila* male GSCs using photoconvertible Centrin [PMID-PENDING-VERIFY]
-- Nigg EA, Holland AJ 2018 Nat Rev Mol Cell Biol — centrosome biogenesis review [PMID-PENDING-VERIFY]
+- Verzijlbergen KF et al. 2010 — original RITE method, yeast histones [PMID: 20018668]
+- Yamashita YM et al. 2007 Science — asymmetric centrosome inheritance in *Drosophila* male germline stem cells [PMID: 17255513]
+- Nigg EA, Holland AJ 2018 Nat Rev Mol Cell Biol — centrosome biogenesis review [PMID: 29363672]
 
 No published study has yet combined RITE with centriolar scaffolds in mammalian cells for lineage tracing. This gap is the core opportunity.
 

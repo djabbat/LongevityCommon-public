@@ -15,7 +15,7 @@ Panel verdict says "Do Not Submit" with readiness 2/10. What does this really me
 4. **Phase A go/no-go design** addresses exactly the panel's concern about overpromising — it builds in honest falsification.
 
 ### Con submission (4 reasons)
-1. **Signed EU partners not ready:** Geiger (Phase B Co-PI) and Janke (Phase A Collaborator) status = "pending" after 1 week from contact. Reviewer may flag as vaporware.
+1. **Signed EU partners status:** Geiger (Phase B Co-PI) — ✅ **CONFIRMED 2026-04-22 20:30** (€100k Phase B allocation, letter of support arriving morning of 23.04). Janke (Phase A Collaborator) — still pending.
 2. **Library crisis:** per meta-analysis, 0% of PMID refs are topically relevant (1965 Hayflick etc.). Any half-diligent reviewer will notice.
 3. **ABL-2 paradox disclosure** → honest but the experimental plan doesn't address it (WP2 tests only centriolar, not epigenetic; this was panel's #3 blocker).
 4. **Reputation cost of 2/10 submission** — LRF community small, word travels. Better one strong application than two weak.

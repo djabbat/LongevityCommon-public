@@ -20,7 +20,7 @@ Industrial cameras based on Sony Pregius / Starvis sensors (IMX250, IMX264, IMX4
 ## §3 Current state of the art
 
 - Sony IMX Pregius datasheet (IMX250 / IMX264) — industrial global-shutter CMOS specs
-- Mandracchia B et al. 2020 — low-noise industrial camera characterization for microscopy [PMID-PENDING-VERIFY]
+- Mandracchia B et al. 2020 — low-noise industrial camera characterization for microscopy (reference pending dedicated PubMed verification)
 - Photometrics / Hamamatsu application notes — sCMOS reference [DOC-PENDING]
 
 ## §4 Integration with other CytogeneticTree technologies
