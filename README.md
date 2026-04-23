@@ -121,7 +121,7 @@ mix phx.server
 
 | Term | Meaning |
 |------|---------|
-| **χ_Ze** | Ze complexity index — primary biomarker (0–1, higher = younger biology) |
+| **χ_Ze** | Ze complexity index — research metric under validation (0–1); see `Ze/CONCEPT.md` — **NOT a clinical biomarker; 3 pre-registered tests failed, used as research signal only** |
 | **D_norm** | Normalized biological distance — bridge to chronological age |
 | **Ze·Profile** | User's live biological dashboard with 95% CI on bio age |
 | **Ze·Guide** | AI assistant (DeepSeek + Llama 3 fallback) for scientific Q&A |

@@ -1,6 +1,6 @@
 # CLAUDE.md — CommonHealth Ecosystem
 
-> ⚠️ **См. [CORRECTIONS_2026-04-22.md](CORRECTIONS_2026-04-22.md)** — некоторые утверждения в этом файле могут быть отозваны. Каноны обновлены 2026-04-22.
+> ⚠️ **См. [_archive/audits/CORRECTIONS_2026-04-22.md](_archive/audits/CORRECTIONS_2026-04-22.md)** — некоторые утверждения в этом файле могут быть отозваны. Каноны обновлены 2026-04-22.
 
 
 ## Project Identity
@@ -28,7 +28,7 @@ Blocker summary (cannot be fixed in 21 days before 2026-05-12):
 *Historical (frozen):* Variant C structure (WP1 FCLC €0.6M + WP2 Ze €0.5M + WP3 CDATA €0.8M + WP4 BioSense €0.6M + WP5 Aqtivirebuli €0.5M = €3.0M / 36 mo, host NGO Georgia Longevity Alliance) preserved for 2027 resubmission scaffolding but **not the submission plan for 2026-05-12**.
 
 *Deep audit file:* `~/Desktop/CommonHealth/FCLC/DEEP_AUDIT_2026-04-21.md`
-*Canonical deferral record:* `~/Desktop/CommonHealth/EIC_CONSORTIUM_STRUCTURE_2026-04-21.md`
+*Canonical deferral record:* `~/Desktop/CommonHealth/_archive/EIC_CONSORTIUM_STRUCTURE_2026-04-21.md`
 
 ---
 
