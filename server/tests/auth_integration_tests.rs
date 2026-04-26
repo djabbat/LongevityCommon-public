@@ -228,7 +228,7 @@ async fn test_soft_delete_hides_user() {
     .unwrap();
 
     sqlx::query!(
-        "UPDATE users SET deleted_at = NOW(), email = 'deleted_' || id || '@commonhealth.deleted' WHERE id = $1",
+        "UPDATE users SET deleted_at = NOW(), email = 'deleted_' || id || '@longevitycommon.deleted' WHERE id = $1",
         user_id
     )
     .execute(&mut *tx)

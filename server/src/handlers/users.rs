@@ -135,7 +135,7 @@ pub async fn delete_account(
 ) -> Result<StatusCode, (StatusCode, String)> {
     // GDPR soft delete — marks user and cascades via DB triggers
     sqlx::query!(
-        "UPDATE users SET deleted_at = NOW(), email = 'deleted_' || id || '@commonhealth.deleted' WHERE id = $1",
+        "UPDATE users SET deleted_at = NOW(), email = 'deleted_' || id || '@longevitycommon.deleted' WHERE id = $1",
         auth_user.id
     )
     .execute(&state.db)

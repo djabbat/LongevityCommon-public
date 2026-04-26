@@ -35,7 +35,7 @@ Blocker summary (cannot be fixed in 21 days before 2026-05-12):
 ## Ecosystem Structure
 
 ```
-CommonHealth/           ← этот проект (социальный слой)
+LongevityCommon/        ← этот проект (социальный слой)
 ├── MCOA/               ← Multi-Counter Architecture of Organismal Aging — мета-теория (добавлен 2026-04-21)
 ├── Ze/                 ← Ze Theory — Entropic-Geometric Theory of Everything. Канон: Ze Theory.pdf + Ze Теория.pdf (2026-04-25). Rust simulator покрывает 3 блока: импеданс-ODE, CHSH-деформация, cheating autowaves.
 ├── CDATA/              ← теория повреждения центриолей, MCAI (Counter #2 в MCOA)

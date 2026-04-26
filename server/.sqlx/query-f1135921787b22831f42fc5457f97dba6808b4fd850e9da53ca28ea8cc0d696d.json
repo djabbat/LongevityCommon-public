@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE users SET deleted_at = NOW(), email = 'deleted_' || id || '@longevitycommon.deleted' WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f1135921787b22831f42fc5457f97dba6808b4fd850e9da53ca28ea8cc0d696d"
+}
