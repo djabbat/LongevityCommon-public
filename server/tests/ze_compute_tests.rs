@@ -10,8 +10,8 @@ use uuid::Uuid;
 // We test the public API of ze_compute indirectly through compute_profile.
 // Pure numeric correctness tests do not require a database.
 
-use commonhealth_server::models::ze_profile::ZeSample;
-use commonhealth_server::services::ze_compute;
+use longevitycommon_server::models::ze_profile::ZeSample;
+use longevitycommon_server::services::ze_compute;
 
 fn make_sample(chi_eeg: Option<f64>, chi_hrv: Option<f64>, days_ago: i64, verified: bool) -> ZeSample {
     let now = Utc::now();

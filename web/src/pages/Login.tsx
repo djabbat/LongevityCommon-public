@@ -77,7 +77,7 @@ export function Login() {
       }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: '#7dd3fc', fontFamily: 'monospace' }}>
-            CommonHealth
+            LongevityCommon
           </div>
           <div style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>
             Longevity social network

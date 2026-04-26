@@ -2,7 +2,7 @@
 name = "biosense_backend"
 version = "0.1.0"
 edition = "2021"
-authors = ["CommonHealth Team"]
+authors = ["LongevityCommon Team"]
 description = "BioSense measurement layer backend for MCOA"
 license = "MIT"
 repository = "https://github.com/LongevityCommon/biosense"

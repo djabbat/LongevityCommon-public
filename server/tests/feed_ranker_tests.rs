@@ -4,7 +4,7 @@
 /// Run: cargo test --test feed_ranker_tests
 
 use chrono::Utc;
-use commonhealth_server::services::feed_ranker::{compute_score, PostScoreInput};
+use longevitycommon_server::services::feed_ranker::{compute_score, PostScoreInput};
 
 fn base_input() -> PostScoreInput {
     PostScoreInput {

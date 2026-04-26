@@ -1,6 +1,6 @@
 import Config
 
-config :commonhealth_realtime, CommonhealthRealtimeWeb.Endpoint,
+config :longevitycommon_realtime, LongevityCommonRealtimeWeb.Endpoint,
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true
 

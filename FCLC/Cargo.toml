@@ -1,3 +1,0 @@
-[workspace]
-members = ["fclc-core", "fclc-node", "fclc-server", "fclc-demogen"]
-resolver = "2"

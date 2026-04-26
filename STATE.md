@@ -52,8 +52,8 @@
 ### Code baseline ✅ 2026-04-25 (overnight #1 fixed)
 - [x] **server build SUCCESS** после `cargo sqlx prepare`
 - [x] Установлен `sqlx-cli` v0.8.6 (postgres + sqlite features)
-- [x] Установлен пароль для user `commonhealth` в локальной Postgres (`ALTER USER commonhealth WITH PASSWORD 'commonhealth'`)
-- [x] `DATABASE_URL=postgres://commonhealth:commonhealth@localhost/commonhealth cargo sqlx prepare` → `.sqlx/` cache сгенерирован
+- [x] Установлен пароль для user `longevitycommon` в локальной Postgres (`ALTER USER longevitycommon WITH PASSWORD 'longevitycommon'`)
+- [x] `DATABASE_URL=postgres://longevitycommon:longevitycommon@localhost/longevitycommon cargo sqlx prepare` → `.sqlx/` cache сгенерирован
 - [x] `SQLX_OFFLINE=true cargo build --release` → success (1 warning unused import; sqlx-postgres 0.7.4 future-incompat)
 - [ ] TODO: `.sqlx/` директория commit в git для CI/CD без БД
 - [ ] TODO: обновить sqlx 0.7.4 → 0.8 (future-incompat warning)

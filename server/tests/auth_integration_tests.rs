@@ -2,7 +2,7 @@
 ///
 /// Requires a running PostgreSQL instance.
 /// Set TEST_DATABASE_URL in environment (or .env.test):
-///   export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost/commonhealth_test"
+///   export TEST_DATABASE_URL="postgresql://postgres:postgres@localhost/longevitycommon_test"
 ///
 /// Run: cargo test --test auth_integration_tests
 ///
@@ -62,7 +62,7 @@ async fn test_register_creates_user_and_sends_otp() {
 
     let mut tx = pool.begin().await.unwrap();
 
-    let email = format!("test_{}@commonhealth.test", uuid::Uuid::new_v4().simple());
+    let email = format!("test_{}@longevitycommon.test", uuid::Uuid::new_v4().simple());
     let username = format!("testuser_{}", &email[5..13]);
 
     let row = sqlx::query!(
@@ -91,7 +91,7 @@ async fn test_register_duplicate_email_fails() {
     };
 
     let mut tx = pool.begin().await.unwrap();
-    let email = format!("dup_{}@commonhealth.test", uuid::Uuid::new_v4().simple());
+    let email = format!("dup_{}@longevitycommon.test", uuid::Uuid::new_v4().simple());
     let u1 = format!("u1_{}", &email[4..12]);
     let u2 = format!("u2_{}", &email[4..12]);
 
@@ -124,7 +124,7 @@ async fn test_otp_lockout_after_five_failed_attempts() {
     };
 
     let mut tx = pool.begin().await.unwrap();
-    let email = format!("lock_{}@commonhealth.test", uuid::Uuid::new_v4().simple());
+    let email = format!("lock_{}@longevitycommon.test", uuid::Uuid::new_v4().simple());
     let username = format!("lockuser_{}", &email[5..13]);
 
     sqlx::query!(
@@ -167,7 +167,7 @@ async fn test_ze_sample_insert_and_retrieve() {
     };
 
     let mut tx = pool.begin().await.unwrap();
-    let email = format!("ze_{}@commonhealth.test", uuid::Uuid::new_v4().simple());
+    let email = format!("ze_{}@longevitycommon.test", uuid::Uuid::new_v4().simple());
     let username = format!("zeuser_{}", &email[3..11]);
 
     let user_id: uuid::Uuid = sqlx::query_scalar!(
@@ -216,7 +216,7 @@ async fn test_soft_delete_hides_user() {
     };
 
     let mut tx = pool.begin().await.unwrap();
-    let email = format!("del_{}@commonhealth.test", uuid::Uuid::new_v4().simple());
+    let email = format!("del_{}@longevitycommon.test", uuid::Uuid::new_v4().simple());
     let username = format!("deluser_{}", &email[4..12]);
 
     let user_id: uuid::Uuid = sqlx::query_scalar!(

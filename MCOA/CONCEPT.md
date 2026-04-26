@@ -89,7 +89,7 @@ Additional counters (lipofuscin, lamina defects, ECM stiffening, SASP spread) ar
 
 Known non-zero entries (from Nature Aging Perspective):
 - Γ_{telomere, mito} > 0 (Parrinello 2003 — oxidative stress accelerates telomere loss)
-- Γ_{epigenetic, mito} > 0 (Sun 2016 — mitochondrial signal drives epigenetic drift)
+- Γ_{epigenetic, mito} > 0 (Schultz & Sinclair *Cell* 2019, PMID 30982602 — NAD+/sirtuin/aging axis; replaces fabricated «Sun 2016 Measuring In Vivo Mitophagy», corrected 2026-04-26)
 - Γ_{cent, epigenetic} > 0 (epigenetic dysregulation alters TTLL/CCP balance — Janke & Magiera 2020)
 
 All Γ entries must be measured, not fitted. ~~MCOA Test 2~~ [отозвано — see CORRECTIONS §1.3] (§6.2 Perspective) is the canonical measurement protocol.

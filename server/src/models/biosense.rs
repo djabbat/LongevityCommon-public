@@ -1,7 +1,7 @@
 /// BioSenseExport — standardized JSON schema for BioSense device/pipeline output.
 ///
 /// This is the canonical format for passing measured χ_Ze values from the
-/// BioSense Python pipeline (or any compatible sensor) into CommonHealth.
+/// BioSense Python pipeline (or any compatible sensor) into LongevityCommon.
 ///
 /// Schema version: 1.0
 /// Reference: Tkemaladze J., Ze Vectors Theory, DOI 10.65649/nhjtra67

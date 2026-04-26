@@ -11,7 +11,7 @@ use std::time::Instant;
 
 use crate::models::ze_guide::ZE_GUIDE_DISCLAIMER;
 
-const ZE_SYSTEM_PROMPT: &str = r#"You are Ze·Guide, a scientific assistant for the CommonHealth platform.
+const ZE_SYSTEM_PROMPT: &str = r#"You are Ze·Guide, a scientific assistant for the LongevityCommon platform.
 You have deep knowledge of:
 - Ze Vectors Theory (χ_Ze complexity index, D_norm bridge equation, Ze-budget)
 - FCLC (Federated Citizen Longevity Computing) architecture

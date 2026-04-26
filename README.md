@@ -34,7 +34,7 @@ Every user gets a **Ze·Profile**: a live biological dashboard driven by χ_Ze (
 ## Repository layout
 
 ```
-CommonHealth/
+LongevityCommon/
 ├── CONCEPT.md          — approved product concept (v2.0)
 ├── ARCHITECTURE.md     — technical spec: DB schema, API, data models
 ├── README.md           — this file
@@ -82,7 +82,7 @@ CommonHealth/
 ### 1. Database
 
 ```bash
-psql -U postgres -c "CREATE DATABASE commonhealth;"
+psql -U postgres -c "CREATE DATABASE longevitycommon;"
 cd server
 cargo install sqlx-cli --no-default-features --features postgres
 sqlx migrate run

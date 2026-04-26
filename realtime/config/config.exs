@@ -1,16 +1,16 @@
 import Config
 
-config :commonhealth_realtime, CommonhealthRealtimeWeb.Endpoint,
+config :longevitycommon_realtime, LongevityCommonRealtimeWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Phoenix.Endpoint.Cowboy2Adapter,
-  render_errors: [formats: [json: CommonhealthRealtimeWeb.ErrorJSON], layout: false],
-  pubsub_server: CommonhealthRealtime.PubSub,
+  render_errors: [formats: [json: LongevityCommonRealtimeWeb.ErrorJSON], layout: false],
+  pubsub_server: LongevityCommonRealtime.PubSub,
   live_view: [signing_salt: "change_me"]
 
-config :commonhealth_realtime, CommonhealthRealtime.Repo,
+config :longevitycommon_realtime, LongevityCommonRealtime.Repo,
   adapter: Ecto.Adapters.Postgres
 
-config :commonhealth_realtime,
+config :longevitycommon_realtime,
   jwt_secret: System.get_env("JWT_SECRET", "change_me_to_random_64_char_string")
 
 config :logger, :console,

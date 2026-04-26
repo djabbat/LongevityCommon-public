@@ -74,7 +74,7 @@
 *   В исходниках CDATA (`CDATA/PARAMETERS.md`) значение `n*` для HSC **не найдено**. Есть `max_divisions` в конфигах, но оно не равно 65. Значение `tau_glu` (аналог `τ`) также задано в других единицах (условные "единицы времени симуляции").
 *   **Вывод:** **Нет прямой параметрической согласованности.** MCOA декларирует, что CDATA — это её Counter #2, но числовые параметры не синхронизированы. Правило "if a parameter changes here it MUST also change in CONCEPT.md" не распространяется на CDATA.
 
-**Рекомендация:** Создать явную таблицу маппинга: `MCOA Counter#2 (Centriolar).n*` ↔ `CDATA.centriole_polyG.max_divisions`. И синхронизировать их через общий файл конфигурации (например, `commonhealth_parameters.toml`).
+**Рекомендация:** Создать явную таблицу маппинга: `MCOA Counter#2 (Centriolar).n*` ↔ `CDATA.centriole_polyG.max_divisions`. И синхронизировать их через общий файл конфигурации (например, `longevitycommon_parameters.toml`).
 
 ---
 

@@ -13,7 +13,7 @@ pub struct AppConfig {
     pub app_host: String,
     pub app_port: u16,
     /// Comma-separated list of allowed CORS origins.
-    /// Use "*" only in development. In production: "https://commonhealth.io"
+    /// Use "*" only in development. In production: "https://longevitycommon.io"
     pub allowed_origins: Vec<String>,
     /// SendGrid API key for OTP email delivery
     pub sendgrid_api_key: String,
@@ -57,7 +57,7 @@ impl AppConfig {
             allowed_origins,
             sendgrid_api_key: env("SENDGRID_API_KEY").unwrap_or_default(),
             from_email: env("FROM_EMAIL")
-                .unwrap_or("noreply@commonhealth.io".into()),
+                .unwrap_or("noreply@longevitycommon.io".into()),
         })
     }
 }

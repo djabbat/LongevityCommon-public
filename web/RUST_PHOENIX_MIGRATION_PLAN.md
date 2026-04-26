@@ -1,4 +1,4 @@
-# CommonHealth/web (React/TypeScript) → Phoenix LiveView Migration Plan
+# LongevityCommon/web (React/TypeScript) → Phoenix LiveView Migration Plan
 
 **Дата:** 2026-04-25 (overnight)
 

@@ -9,7 +9,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE telomere_measurements (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     
-    -- Subject identifier (links to CommonHealth subject registry)
+    -- Subject identifier (links to LongevityCommon subject registry)
     subject_id UUID NOT NULL,
     
     -- Optional sample identifier for traceability

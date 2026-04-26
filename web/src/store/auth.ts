@@ -19,6 +19,6 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => set({ token: null, user: null }),
       isAuthenticated: () => !!get().token,
     }),
-    { name: 'commonhealth-auth' }
+    { name: 'longevitycommon-auth' }
   )
 )

@@ -378,36 +378,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "commonhealth-server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "argon2",
- "axum 0.7.9",
- "axum-test",
- "chrono",
- "config",
- "dotenvy",
- "hyper 1.9.0",
- "jsonwebtoken",
- "rand 0.8.5",
- "regex-lite",
- "reqwest",
- "serde",
- "serde_json",
- "sqlx",
- "thiserror 1.0.69",
- "tokio",
- "tokio-test",
- "tower 0.4.13",
- "tower-http",
- "tracing",
- "tracing-subscriber",
- "uuid",
- "validator",
-]
-
-[[package]]
 name = "compression-codecs"
 version = "0.4.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1551,6 +1521,36 @@ name = "log"
 version = "0.4.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
+
+[[package]]
+name = "longevitycommon-server"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "argon2",
+ "axum 0.7.9",
+ "axum-test",
+ "chrono",
+ "config",
+ "dotenvy",
+ "hyper 1.9.0",
+ "jsonwebtoken",
+ "rand 0.8.5",
+ "regex-lite",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-test",
+ "tower 0.4.13",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "matchers"

@@ -1,12 +1,12 @@
 [package]
-name = "commonhealth-server"
+name = "longevitycommon-server"
 version = "0.1.0"
 edition = "2021"
 authors = ["Jaba Tkemaladze"]
-description = "CommonHealth REST API — longevity social network backend"
+description = "LongevityCommon REST API — longevity social network backend"
 
 [lib]
-name = "commonhealth_server"
+name = "longevitycommon_server"
 path = "src/lib.rs"
 
 [[bin]]

@@ -1,4 +1,4 @@
-# CommonHealth — public push exclusions
+# LongevityCommon — public push exclusions
 # Rule: docs/ folder NEVER in public repo (peer reviews, emails, personal data, unpublished drafts)
 
 docs/

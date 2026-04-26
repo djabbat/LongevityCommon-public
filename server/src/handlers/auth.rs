@@ -150,13 +150,13 @@ async fn send_otp_email(state: &AppState, to_email: &str, otp: &str) {
     let body = serde_json::json!({
         "personalizations": [{"to": [{"email": to_email}]}],
         "from": {"email": state.config.from_email},
-        "subject": "CommonHealth — Your verification code",
+        "subject": "LongevityCommon — Your verification code",
         "content": [{
             "type": "text/plain",
             "value": format!(
-                "Your CommonHealth verification code: {}\n\nValid for 15 minutes.\n\n\
+                "Your LongevityCommon verification code: {}\n\nValid for 15 minutes.\n\n\
                  If you did not request this code, ignore this email.\n\n\
-                 CommonHealth — longevity social network",
+                 LongevityCommon — longevity social network",
                 otp
             )
         }]

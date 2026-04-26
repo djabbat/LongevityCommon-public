@@ -2,10 +2,10 @@
 name = "telomere_backend"
 version = "0.1.0"
 edition = "2021"
-authors = ["CommonHealth Team"]
+authors = ["LongevityCommon Team"]
 description = "Backend service for Telomere Shortening Counter (MCOA Counter #2)"
 license = "MIT"
-repository = "https://github.com/commonhealth/telomere"
+repository = "https://github.com/longevitycommon/telomere"
 
 [[bin]]
 name = "telomere_server"

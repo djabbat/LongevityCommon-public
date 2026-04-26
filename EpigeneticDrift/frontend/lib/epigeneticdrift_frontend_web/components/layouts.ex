@@ -11,7 +11,7 @@ defmodule EpigeneticDriftFrontendWeb.Layouts do
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <meta name="csrf-token" content={get_csrf_token()} />
-        <title>Epigenetic Drift · CommonHealth</title>
+        <title>Epigenetic Drift · LongevityCommon</title>
         <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}/>
         <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
       </head>
@@ -45,7 +45,7 @@ defmodule EpigeneticDriftFrontendWeb.Layouts do
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <meta name="csrf-token" content={get_csrf_token()} />
-        <.live_title suffix=" · CommonHealth"><%= @page_title %></.live_title>
+        <.live_title suffix=" · LongevityCommon"><%= @page_title %></.live_title>
         <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}/>
         <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -113,7 +113,7 @@ defmodule EpigeneticDriftFrontendWeb.Layouts do
       <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center text-sm text-gray-500">
           <div>
-            CommonHealth Subproject · Epigenetic Drift (Counter #4)
+            LongevityCommon Subproject · Epigenetic Drift (Counter #4)
           </div>
           <div>
             v<%= Application.spec(:epigeneticdrift_frontend, :vsn) %> ·

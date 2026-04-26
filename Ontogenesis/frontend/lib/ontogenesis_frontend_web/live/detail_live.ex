@@ -256,7 +256,7 @@ defmodule OntogenesisFrontendWeb.DetailLive do
             </p>
             <div class="mt-4">
               <.link 
-                href="https://commonhealth.org/mcoa/counter-registry" 
+                href="https://longevitycommon.org/mcoa/counter-registry" 
                 target="_blank"
                 class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-900"
               >

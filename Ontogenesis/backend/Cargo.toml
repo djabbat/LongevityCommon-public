@@ -2,7 +2,7 @@
 name = "ontogenesis_backend"
 version = "0.1.0"
 edition = "2021"
-authors = ["CommonHealth Team"]
+authors = ["LongevityCommon Team"]
 description = "Ontogenesis v4.2 backend - Developmental prequel to MCOA (0-25 years)"
 
 [[bin]]

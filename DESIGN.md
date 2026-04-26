@@ -16,7 +16,7 @@
 ## 2. Repository structure (monorepo)
 
 ```
-CommonHealth/
+LongevityCommon/
 ├── server/                — Rust/Axum REST API
 ├── web/                   — React TS PWA
 ├── realtime/              — Elixir/Phoenix Channels

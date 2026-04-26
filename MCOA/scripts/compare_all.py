@@ -22,7 +22,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path.home() / 'Desktop' / 'CommonHealth'
+ROOT = Path.home() / 'Desktop' / 'LongevityCommon'
 
 COUNTERS = [
     # (subproject,       crate_dir_name,           cli_bin,       number)

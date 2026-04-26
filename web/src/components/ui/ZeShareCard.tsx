@@ -55,7 +55,7 @@ export function ZeShareCard({ profile }: Props) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24 }}>
           <div>
             <div style={{ fontSize: 13, color: '#7dd3fc', fontWeight: 700, letterSpacing: 2 }}>
-              COMMONHEALTH
+              LONGEVITYCOMMON
             </div>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#e2e8f0', marginTop: 4 }}>
               @{profile.username}
@@ -141,7 +141,7 @@ export function ZeShareCard({ profile }: Props) {
 
         {/* Footer */}
         <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #1e293b', fontSize: 10, color: '#334155' }}>
-          commonhealth.app · Ze Theory by J. Tkemaladze · For scientific use only
+          longevitycommon.app · Ze Theory by J. Tkemaladze · For scientific use only
         </div>
       </div>
 

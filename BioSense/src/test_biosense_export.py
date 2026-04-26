@@ -3,7 +3,7 @@
 test_biosense_export.py — BioSenseExport compatibility test.
 
 Verifies that the Python BioSense pipeline produces valid BioSenseExport JSON
-compatible with CommonHealth's POST /api/biosense/compute endpoint.
+compatible with LongevityCommon's POST /api/biosense/compute endpoint.
 
 Usage:
     python3 test_biosense_export.py                   # offline schema test
@@ -233,7 +233,7 @@ def run_offline_tests():
 
 
 def run_live_tests(base_url: str):
-    """Run tests against a live CommonHealth server."""
+    """Run tests against a live LongevityCommon server."""
     import urllib.request
     print(f"Running live tests against {base_url} ...\n")
     np.random.seed(42)
@@ -262,7 +262,7 @@ def run_live_tests(base_url: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--url", help="Base URL of CommonHealth server for live test")
+    parser.add_argument("--url", help="Base URL of LongevityCommon server for live test")
     args = parser.parse_args()
 
     if args.url:

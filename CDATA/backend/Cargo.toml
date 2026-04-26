@@ -2,7 +2,7 @@
 name = "cdata_backend"
 version = "0.1.0"
 edition = "2021"
-authors = ["CommonHealth Team"]
+authors = ["LongevityCommon Team"]
 description = "CDATA subproject backend - Centriolar Damage Accumulation Theory of Aging"
 license = "MIT"
 repository = "https://github.com/LongevityCommon/CDATA"

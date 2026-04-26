@@ -1,9 +1,9 @@
-defmodule CommonhealthRealtime.MixProject do
+defmodule LongevityCommonRealtime.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :commonhealth_realtime,
+      app: :longevitycommon_realtime,
       version: "0.1.0",
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -15,7 +15,7 @@ defmodule CommonhealthRealtime.MixProject do
 
   def application do
     [
-      mod: {CommonhealthRealtime.Application, []},
+      mod: {LongevityCommonRealtime.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

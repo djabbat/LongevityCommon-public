@@ -1,4 +1,4 @@
--- CommonHealth initial schema
+-- LongevityCommon initial schema
 -- Compatible with FCLC OMOP CDM conventions
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";

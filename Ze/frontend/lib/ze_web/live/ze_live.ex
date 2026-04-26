@@ -158,7 +158,7 @@ defmodule ZeWeb.ZeLive do
       <% end %>
 
       <footer class="text-xs opacity-60 pt-6 border-t">
-        Ze Theory · см. <code>~/Desktop/CommonHealth/Ze/CONCEPT.md</code> · источник концепции: <code>~/Desktop/5.md</code>
+        Ze Theory · см. <code>~/Desktop/LongevityCommon/Ze/CONCEPT.md</code> · источник концепции: <code>~/Desktop/5.md</code>
       </footer>
     </div>
     """

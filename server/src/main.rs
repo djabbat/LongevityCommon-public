@@ -6,13 +6,13 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 // All modules are defined in lib.rs and re-exported.
 // main.rs only contains the binary entry point.
-use commonhealth_server::{AppState, AppConfig, db, routes};
+use longevitycommon_server::{AppState, AppConfig, db, routes};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| "commonhealth_server=debug,tower_http=info".into()))
+            .unwrap_or_else(|_| "longevitycommon_server=debug,tower_http=info".into()))
         .with(tracing_subscriber::fmt::layer())
         .init();
 
@@ -32,7 +32,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(TraceLayer::new_for_http());
 
     let addr: SocketAddr = format!("{}:{}", config.app_host, config.app_port).parse()?;
-    tracing::info!("CommonHealth API listening on {}", addr);
+    tracing::info!("LongevityCommon API listening on {}", addr);
     tracing::info!("Allowed origins: {:?}", config.allowed_origins);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
