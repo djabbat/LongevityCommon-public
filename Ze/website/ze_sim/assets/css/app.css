@@ -1,0 +1,460 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* This file is for your main application CSS */
+
+/* ── Ze Simulator pages ────────────────────────────────────────────────────── */
+.sim-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  font-family: system-ui, sans-serif;
+}
+.sim-page h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: 0.4rem; }
+.sim-page .subtitle { color: #555; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+.sim-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.5rem;
+}
+.sim-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  gap: 0.25rem;
+}
+.sim-form input, .sim-form select {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  width: 110px;
+}
+.sim-form button {
+  padding: 0.45rem 1.2rem;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.sim-form button:hover { background: #1e40af; }
+.sim-form button:disabled { background: #93c5fd; cursor: not-allowed; }
+
+.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.results h2 { font-size: 1.2rem; font-weight: 600; margin: 1.25rem 0 0.75rem; }
+
+table.metrics {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+table.metrics th {
+  background: #f3f4f6;
+  padding: 0.45rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+table.metrics td { padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb; }
+table.metrics tr.row-born td { background: #eff6ff; }
+table.metrics tr.row-anti td { background: #fef2f2; }
+
+.chart-container { margin: 1rem 0; }
+.theorem-note {
+  font-size: 0.9rem;
+  color: #374151;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Ze Dynamics — Main page (dark cosmic theme)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+body:has(.ze-main) { background: #05050f; }
+
+.ze-main {
+  min-height: 100vh;
+  background: #05050f;
+  color: #e8e8f0;
+  font-family: system-ui, -apple-system, sans-serif;
+  padding: 0;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+.ze-main-header {
+  padding: 2rem 2.5rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: linear-gradient(180deg, rgba(5,5,20,1) 0%, rgba(5,5,15,0.9) 100%);
+}
+.ze-main-title h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #e8e8ff 0%, #9988ff 50%, #00ccff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 0.4rem;
+}
+.ze-main-subtitle {
+  color: rgba(200,200,220,0.7);
+  font-size: 0.95rem;
+  max-width: 650px;
+  margin: 0 0 0.3rem;
+  line-height: 1.5;
+}
+.ze-main-ref {
+  font-size: 0.8rem;
+  color: rgba(180,180,200,0.45);
+  margin: 0;
+}
+.ze-main-ref a { color: rgba(120,160,255,0.7); text-decoration: none; }
+.ze-main-ref a:hover { color: #88aaff; }
+
+/* ── Action bar (dropdown buttons) ─────────────────────────────────────────── */
+.ze-action-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+.ze-dropdown { position: relative; }
+.ze-drop-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: rgba(255,255,255,0.04);
+  letter-spacing: 0.01em;
+}
+.ze-drop-falsifiable {
+  border-color: rgba(100,200,100,0.35);
+  color: #80ee90;
+}
+.ze-drop-falsifiable:hover { background: rgba(80,180,80,0.12); border-color: #80ee90; }
+.ze-drop-experiments {
+  border-color: rgba(80,160,255,0.35);
+  color: #88ccff;
+}
+.ze-drop-experiments:hover { background: rgba(60,130,255,0.12); border-color: #88ccff; }
+.ze-drop-arrow { font-size: 0.75rem; opacity: 0.7; }
+
+/* Dropdown panel */
+.ze-drop-panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  min-width: 440px;
+  background: #111122;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 0.75rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  padding: 0.5rem 0 0.5rem;
+  animation: zeFadeIn 0.15s ease;
+}
+.ze-drop-panel.ze-drop-open { display: block; }
+@keyframes zeFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ze-drop-title {
+  padding: 0.4rem 0.9rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(200,200,220,0.4);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 0.25rem;
+}
+.ze-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.9rem;
+  cursor: pointer;
+  border-radius: 0.4rem;
+  margin: 0 0.35rem;
+  transition: background 0.12s;
+}
+.ze-drop-item:hover { background: rgba(255,255,255,0.06); }
+.ze-fp-label {
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(180,180,200,0.55);
+  min-width: 36px;
+}
+.ze-fp-name {
+  flex: 1;
+  font-size: 0.87rem;
+  color: rgba(220,220,240,0.85);
+}
+
+/* Status badges */
+.ze-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.3rem;
+  white-space: nowrap;
+}
+.ze-verified    { background: rgba(30,180,60,0.18);  color: #60ee80; border: 1px solid rgba(60,180,60,0.3); }
+.ze-proposed    { background: rgba(180,120,0,0.18);   color: #ffcc44; border: 1px solid rgba(200,150,0,0.3); }
+.ze-experiment  { background: rgba(60,120,255,0.18);  color: #88aaff; border: 1px solid rgba(80,130,255,0.3); }
+.ze-partial     { background: rgba(100,180,200,0.18); color: #88ddee; border: 1px solid rgba(100,180,200,0.3); }
+.ze-third       { background: rgba(160,100,255,0.18); color: #cc88ff; border: 1px solid rgba(160,100,255,0.3); }
+.ze-sim         { background: rgba(0,180,120,0.18);   color: #44eeaa; border: 1px solid rgba(0,180,120,0.3); }
+
+/* ── Central Ze-Dynamics Window ─────────────────────────────────────────────── */
+.ze-dynamics-section {
+  padding: 1.5rem 2.5rem 0;
+}
+.ze-dynamics-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: rgba(220,220,255,0.9);
+  margin: 0 0 0.35rem;
+}
+.ze-dynamics-header p {
+  font-size: 0.88rem;
+  color: rgba(180,180,200,0.6);
+  margin: 0 0 0.75rem;
+  max-width: 700px;
+}
+.ze-dynamics-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: rgba(180,180,200,0.5);
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.ze-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 2px;
+}
+.ze-legend-born  { background: #00ff99; box-shadow: 0 0 6px #00ff9966; }
+.ze-legend-dying { background: #ff4466; box-shadow: 0 0 6px #ff446666; }
+.ze-legend-dead  { background: #444460; }
+.ze-legend-line {
+  width: 24px; height: 2px; background: rgba(100,150,255,0.5);
+  border-radius: 1px; display: inline-block; margin-right: 2px;
+}
+
+.ze-canvas-area {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 60px rgba(0,0,40,0.5), inset 0 0 1px rgba(255,255,255,0.06);
+  display: block;
+}
+#ze-canvas { display: block; }
+
+/* Controls */
+.ze-dynamics-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.9rem;
+  flex-wrap: wrap;
+}
+.ze-ctrl-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  color: rgba(220,220,240,0.9);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.ze-ctrl-btn:hover { background: rgba(255,255,255,0.12); }
+.ze-ctrl-primary { border-color: rgba(80,180,80,0.5); color: #80ee90; }
+.ze-ctrl-primary:hover { background: rgba(60,150,60,0.15); }
+.ze-ctrl-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: rgba(180,180,200,0.6);
+}
+.ze-ctrl-label input[type=range] {
+  width: 90px;
+  accent-color: #4488ff;
+}
+.ze-ctrl-label span { color: rgba(180,180,220,0.8); font-family: monospace; font-size: 0.8rem; }
+
+/* Stats */
+.ze-dynamics-stats {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.85rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 0.5rem;
+  flex-wrap: wrap;
+}
+.ze-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.ze-stat span {
+  font-size: 0.72rem;
+  color: rgba(180,180,200,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ze-stat strong {
+  font-family: monospace;
+  font-size: 1rem;
+  color: rgba(220,220,255,0.9);
+}
+
+/* ── Detail panel (modal) ────────────────────────────────────────────────────── */
+.ze-detail-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 500;
+  backdrop-filter: blur(3px);
+}
+.ze-detail-panel {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 600;
+  width: min(640px, 92vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #0e0e20;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 0.9rem;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+  padding: 1.75rem 1.75rem 1.5rem;
+  animation: zeFadeIn 0.2s ease;
+}
+.ze-detail-panel h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(220,220,255,0.95);
+  margin: 0 0 0.5rem;
+  padding-right: 2rem;
+  line-height: 1.35;
+}
+.ze-detail-status {
+  font-size: 0.82rem;
+  color: rgba(180,180,200,0.6);
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.ze-detail-body {
+  font-size: 0.9rem;
+  color: rgba(200,200,220,0.8);
+  line-height: 1.6;
+}
+.ze-detail-body p  { margin: 0 0 0.7rem; }
+.ze-detail-body ul { padding-left: 1.2rem; margin: 0.4rem 0 0.8rem; }
+.ze-detail-body li { margin-bottom: 0.3rem; }
+.ze-detail-body strong { color: rgba(220,220,255,0.95); }
+.ze-code {
+  display: block;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  font-family: monospace;
+  font-size: 0.88rem;
+  color: #88ccff;
+  margin: 0.5rem 0 0.8rem;
+  overflow-x: auto;
+}
+.ze-detail-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(200,200,220,0.7);
+  border-radius: 50%;
+  width: 28px; height: 28px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+}
+.ze-detail-close:hover { background: rgba(255,80,80,0.2); color: #ff8888; }
+
+/* ── Simulators navigation ───────────────────────────────────────────────────── */
+.ze-sims-nav {
+  padding: 1.5rem 2.5rem 2.5rem;
+  margin-top: 1.5rem;
+}
+.ze-sims-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(180,180,200,0.35);
+  margin-bottom: 0.75rem;
+}
+.ze-sims-grid {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.ze-sim-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  text-decoration: none;
+  min-width: 165px;
+  transition: all 0.15s;
+}
+.ze-sim-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); transform: translateY(-1px); }
+.ze-sim-level { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.45; }
+.ze-sim-name  { font-size: 0.95rem; font-weight: 600; }
+.ze-sim-desc  { font-size: 0.78rem; opacity: 0.5; line-height: 1.35; }
+.ze-sim-thermo  { --c: #60cc60; }
+.ze-sim-quantum { --c: #60aaff; }
+.ze-sim-repro   { --c: #cc80ff; }
+.ze-sim-slit    { --c: #ffaa44; }
+.ze-sim-thermo  .ze-sim-level, .ze-sim-thermo  .ze-sim-name { color: var(--c); }
+.ze-sim-quantum .ze-sim-level, .ze-sim-quantum .ze-sim-name { color: var(--c); }
+.ze-sim-repro   .ze-sim-level, .ze-sim-repro   .ze-sim-name { color: var(--c); }
+.ze-sim-slit    .ze-sim-level, .ze-sim-slit    .ze-sim-name { color: var(--c); }

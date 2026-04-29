@@ -1,0 +1,53 @@
+{
+  "mode": "per_dataset",
+  "v_star_passive": 0.3068528194400547,
+  "simulated_data": false,
+  "simulation_note": "Real data used.",
+  "per_dataset": {
+    "cuban": {
+      "estimate": 0.18749,
+      "ci_lo_95": 0.17968,
+      "ci_hi_95": 0.17968,
+      "ci_width": 0.0,
+      "se": 0.004110944752442076,
+      "n_bootstrap": 10000,
+      "n_subjects": 97,
+      "z0_hat": -2.172738557951301,
+      "a_hat": 0.0003489347510471792,
+      "cohens_d_vs_passive": -29.0354
+    },
+    "dortmund": {
+      "estimate": 0.5747990926106772,
+      "ci_lo_95": 0.5695810953776042,
+      "ci_hi_95": 0.5768173217773438,
+      "ci_width": 0.0072362263997396425,
+      "se": 0.0018187785345377626,
+      "n_bootstrap": 10000,
+      "n_subjects": 60,
+      "z0_hat": -0.03409675013052492,
+      "a_hat": -4.9495996414222587e-14,
+      "cohens_d_vs_passive": 147.3221
+    },
+    "lemon": {
+      "estimate": 0.5501598572404371,
+      "ci_lo_95": 0.5469065163934426,
+      "ci_hi_95": 0.5542000163934426,
+      "ci_width": 0.007293500000000064,
+      "se": 0.0017077263131357716,
+      "n_bootstrap": 10000,
+      "n_subjects": 24,
+      "z0_hat": -0.07803526637959612,
+      "a_hat": -9.364985884916283e-19,
+      "cohens_d_vs_passive": 142.4743
+    }
+  },
+  "cochran_q": {
+    "Q": 7687.674585566618,
+    "df": 2,
+    "p_value": 0.0,
+    "I2_pct": 99.97398433066151,
+    "pooled_estimate": 0.5302677028640451,
+    "heterogeneity_verdict": "HIGH heterogeneity \u2014 pooling INVALID"
+  },
+  "recommendation": "Report 3 datasets separately (Cuban / Dortmund / MPI-LEMON). I\u00b2=90.3% from prior computation \u2014 pooling is statistically invalid. Any claim about universal v*_active requires independent replication."
+}
