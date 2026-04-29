@@ -1,0 +1,206 @@
+[
+  {
+    "subject_id": "sub-032301",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EC",
+    "file": "sub-032301_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 477.38,
+    "summary": {
+      "chi_Ze_mean": 0.640861,
+      "chi_Ze_std": 0.054828,
+      "v_mean": 0.261049
+    },
+    "timestamp": "2026-03-21T14:16:31.891084"
+  },
+  {
+    "subject_id": "sub-032301",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EO",
+    "file": "sub-032301_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 471.44,
+    "summary": {
+      "chi_Ze_mean": 0.666624,
+      "chi_Ze_std": 0.069449,
+      "v_mean": 0.275057
+    },
+    "timestamp": "2026-03-21T14:16:32.394714"
+  },
+  {
+    "subject_id": "sub-032303",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EC",
+    "file": "sub-032303_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 61,
+    "duration_s": 477.1,
+    "summary": {
+      "chi_Ze_mean": 0.496714,
+      "chi_Ze_std": 0.018592,
+      "v_mean": 0.182678
+    },
+    "timestamp": "2026-03-21T14:16:32.939674"
+  },
+  {
+    "subject_id": "sub-032303",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EO",
+    "file": "sub-032303_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 61,
+    "duration_s": 478.98,
+    "summary": {
+      "chi_Ze_mean": 0.541579,
+      "chi_Ze_std": 0.044287,
+      "v_mean": 0.207071
+    },
+    "timestamp": "2026-03-21T14:16:33.466011"
+  },
+  {
+    "subject_id": "sub-032305",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EC",
+    "file": "sub-032305_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 60,
+    "duration_s": 464.04,
+    "summary": {
+      "chi_Ze_mean": 0.538758,
+      "chi_Ze_std": 0.028003,
+      "v_mean": 0.205537
+    },
+    "timestamp": "2026-03-21T14:16:33.982094"
+  },
+  {
+    "subject_id": "sub-032305",
+    "age": 67,
+    "age_bin": "65-70",
+    "group": "old",
+    "condition": "EO",
+    "file": "sub-032305_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 61,
+    "duration_s": 441.08,
+    "summary": {
+      "chi_Ze_mean": 0.610449,
+      "chi_Ze_std": 0.025397,
+      "v_mean": 0.244515
+    },
+    "timestamp": "2026-03-21T14:16:34.493594"
+  },
+  {
+    "subject_id": "sub-032302",
+    "age": 22,
+    "age_bin": "20-25",
+    "group": "young",
+    "condition": "EC",
+    "file": "sub-032302_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 60,
+    "duration_s": 478.05,
+    "summary": {
+      "chi_Ze_mean": 0.438183,
+      "chi_Ze_std": 0.010095,
+      "v_mean": 0.150856
+    },
+    "timestamp": "2026-03-21T14:16:35.009373"
+  },
+  {
+    "subject_id": "sub-032302",
+    "age": 22,
+    "age_bin": "20-25",
+    "group": "young",
+    "condition": "EO",
+    "file": "sub-032302_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 61,
+    "duration_s": 479.99,
+    "summary": {
+      "chi_Ze_mean": 0.481869,
+      "chi_Ze_std": 0.022785,
+      "v_mean": 0.174607
+    },
+    "timestamp": "2026-03-21T14:16:35.526910"
+  },
+  {
+    "subject_id": "sub-032307",
+    "age": 27,
+    "age_bin": "25-30",
+    "group": "young",
+    "condition": "EC",
+    "file": "sub-032307_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 476.16,
+    "summary": {
+      "chi_Ze_mean": 0.515639,
+      "chi_Ze_std": 0.030758,
+      "v_mean": 0.192968
+    },
+    "timestamp": "2026-03-21T14:16:36.041456"
+  },
+  {
+    "subject_id": "sub-032307",
+    "age": 27,
+    "age_bin": "25-30",
+    "group": "young",
+    "condition": "EO",
+    "file": "sub-032307_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 459.66,
+    "summary": {
+      "chi_Ze_mean": 0.53147,
+      "chi_Ze_std": 0.029698,
+      "v_mean": 0.201575
+    },
+    "timestamp": "2026-03-21T14:16:36.533766"
+  },
+  {
+    "subject_id": "sub-032310",
+    "age": 27,
+    "age_bin": "25-30",
+    "group": "young",
+    "condition": "EC",
+    "file": "sub-032310_EC.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 476.16,
+    "summary": {
+      "chi_Ze_mean": 0.516624,
+      "chi_Ze_std": 0.017966,
+      "v_mean": 0.193504
+    },
+    "timestamp": "2026-03-21T14:16:37.056952"
+  },
+  {
+    "subject_id": "sub-032310",
+    "age": 27,
+    "age_bin": "25-30",
+    "group": "young",
+    "condition": "EO",
+    "file": "sub-032310_EO.set",
+    "sfreq": 128.0,
+    "n_channels": 59,
+    "duration_s": 477.91,
+    "summary": {
+      "chi_Ze_mean": 0.541713,
+      "chi_Ze_std": 0.022964,
+      "v_mean": 0.207144
+    },
+    "timestamp": "2026-03-21T14:16:37.567179"
+  }
+]

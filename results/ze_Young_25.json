@@ -1,0 +1,28 @@
+{
+  "label": "Young_25",
+  "age": 25,
+  "sfreq": 160,
+  "n_channels": 1,
+  "duration_s": 30,
+  "channels": {
+    "Cz": {
+      "N": 4800,
+      "N_S": 2159,
+      "v": 0.449885,
+      "v_star": 0.45631,
+      "chi_Ze": 0.988183,
+      "tau": 4743.28,
+      "chi_max_living": 0.839,
+      "v_deviation": 0.006425
+    }
+  },
+  "summary": {
+    "chi_Ze_mean": 0.988183,
+    "chi_Ze_std": 0.0,
+    "chi_Ze_min": 0.988183,
+    "chi_Ze_max": 0.988183,
+    "v_mean": 0.449885,
+    "v_std": 0.0
+  },
+  "timestamp": "2026-03-21T04:59:55.748230"
+}

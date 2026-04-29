@@ -1,0 +1,3170 @@
+[
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0101_cross.mat",
+    "age": 23.80327796936035,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0201_cross.mat",
+    "age": 24.7431697845459,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRA0201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0301_cross.mat",
+    "age": 43.33879852294922,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA0301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0401_cross.mat",
+    "age": 45.890708923339844,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRA0401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0501_cross.mat",
+    "age": 38.30601119995117,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRA0501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0601_cross.mat",
+    "age": 39.87431716918945,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0701_cross.mat",
+    "age": 51.248634338378906,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA0701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0801_cross.mat",
+    "age": 25.28961753845215,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 11.3274,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.226548,
+    "chi_Ze": 0.577403,
+    "file": "ANRA0801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA0901_cross.mat",
+    "age": 34.34699630737305,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRA0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA1201_cross.mat",
+    "age": 65.91256713867188,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA1501_cross.mat",
+    "age": 64.66666412353516,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA1601_cross.mat",
+    "age": 37.15300369262695,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA1601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2101_cross.mat",
+    "age": 57.82240295410156,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA2101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2401_cross.mat",
+    "age": 28.967212677001953,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA2401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2601_cross.mat",
+    "age": 17.855192184448242,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA2601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2701_cross.mat",
+    "age": 12.437158584594727,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA2701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2801_cross.mat",
+    "age": 62.010929107666016,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 12.8898,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.257796,
+    "chi_Ze": 0.634876,
+    "file": "ANRA2801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA2901_cross.mat",
+    "age": 11.923497200012207,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRA2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA3101_cross.mat",
+    "age": 15.281420707702637,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA3101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA3601_cross.mat",
+    "age": 18.797813415527344,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA3701_cross.mat",
+    "age": 60.459014892578125,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRA3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA3801_cross.mat",
+    "age": 14.456284523010254,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA3901_cross.mat",
+    "age": 9.696721076965332,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4001_cross.mat",
+    "age": 16.371583938598633,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4101_cross.mat",
+    "age": 7.672131061553955,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA4101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4201_cross.mat",
+    "age": 17.469945907592773,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4601_cross.mat",
+    "age": 17.35792350769043,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA4601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4701_cross.mat",
+    "age": 15.054644584655762,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA4701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4801_cross.mat",
+    "age": 12.270491600036621,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA4801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA4901_cross.mat",
+    "age": 13.010929107666016,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRA4901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5001_cross.mat",
+    "age": 12.437158584594727,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA5001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5101_cross.mat",
+    "age": 23.035518646240234,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA5101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5201_cross.mat",
+    "age": 25.655736923217773,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRA5201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5401_cross.mat",
+    "age": 29.85792350769043,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA5401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5501_cross.mat",
+    "age": 31.83879852294922,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA5501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5601_cross.mat",
+    "age": 33.35245895385742,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA5601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5701_cross.mat",
+    "age": 37.30601119995117,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRA5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA5901_cross.mat",
+    "age": 52.74043655395508,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA5901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA6001_cross.mat",
+    "age": 47.573768615722656,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA6001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA6101_cross.mat",
+    "age": 71.59835815429688,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRA6101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA6301_cross.mat",
+    "age": 43.50819778442383,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRA6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA6501_cross.mat",
+    "age": 61.535518646240234,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA6701_cross.mat",
+    "age": 67.19945526123047,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA7001_cross.mat",
+    "age": 36.53278732299805,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRA7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA7101_cross.mat",
+    "age": 42.819671630859375,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA7101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA7401_cross.mat",
+    "age": 63.726776123046875,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA7401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA8101_cross.mat",
+    "age": 51.07650375366211,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA8201_cross.mat",
+    "age": 78.90164184570312,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA8801_cross.mat",
+    "age": 79.5928955078125,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRA8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA9001_cross.mat",
+    "age": 21.193988800048828,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRA9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA9401_cross.mat",
+    "age": 25.467212677001953,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRA9401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA9501_cross.mat",
+    "age": 64.4726791381836,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRA9501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA9601_cross.mat",
+    "age": 25.581966400146484,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRA9601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRA9901_cross.mat",
+    "age": 39.71311569213867,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRA9901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0001_cross.mat",
+    "age": 22.959016799926758,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0101_cross.mat",
+    "age": 27.254098892211914,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRB0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0201_cross.mat",
+    "age": 45.937156677246094,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB0201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0301_cross.mat",
+    "age": 60.13114929199219,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRB0301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0501_cross.mat",
+    "age": 46.90163803100586,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB0501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0601_cross.mat",
+    "age": 39.628414154052734,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRB0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB0901_cross.mat",
+    "age": 66.69945526123047,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB1101_cross.mat",
+    "age": 59.726776123046875,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB1101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB1201_cross.mat",
+    "age": 50.07650375366211,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRB1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB1401_cross.mat",
+    "age": 64.13934326171875,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB1401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB2301_cross.mat",
+    "age": 23.579235076904297,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB2401_cross.mat",
+    "age": 42.21857833862305,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB2401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB2501_cross.mat",
+    "age": 32.10109329223633,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB2501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB2801_cross.mat",
+    "age": 5.352458953857422,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB2801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB2901_cross.mat",
+    "age": 5.978142261505127,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3001_cross.mat",
+    "age": 9.286885261535645,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRB3001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3401_cross.mat",
+    "age": 6.882513523101807,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3501_cross.mat",
+    "age": 8.751365661621094,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3701_cross.mat",
+    "age": 7.032786846160889,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3801_cross.mat",
+    "age": 8.636611938476562,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB3901_cross.mat",
+    "age": 8.45355224609375,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4001_cross.mat",
+    "age": 8.745902061462402,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRB4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4201_cross.mat",
+    "age": 7.379781246185303,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4301_cross.mat",
+    "age": 6.562841415405273,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4401_cross.mat",
+    "age": 6.707650184631348,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRB4401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4501_cross.mat",
+    "age": 7.109289646148682,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB4501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4601_cross.mat",
+    "age": 6.830601215362549,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRB4601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4801_cross.mat",
+    "age": 10.387978553771973,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRB4801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB4901_cross.mat",
+    "age": 10.008196830749512,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB5201_cross.mat",
+    "age": 8.101093292236328,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB5201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB5301_cross.mat",
+    "age": 6.407104015350342,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRB5301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB5401_cross.mat",
+    "age": 10.631147384643555,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB5401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB5701_cross.mat",
+    "age": 58.93169403076172,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6101_cross.mat",
+    "age": 8.639344215393066,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB6101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6301_cross.mat",
+    "age": 9.879781723022461,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRB6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6401_cross.mat",
+    "age": 8.40437126159668,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB6401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6501_cross.mat",
+    "age": 10.989070892333984,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6801_cross.mat",
+    "age": 7.625682830810547,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB6801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB6901_cross.mat",
+    "age": 5.975409984588623,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB6901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7001_cross.mat",
+    "age": 9.617486000061035,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7201_cross.mat",
+    "age": 10.158470153808594,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB7201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7301_cross.mat",
+    "age": 7.639344215393066,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRB7301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7401_cross.mat",
+    "age": 7.303278923034668,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRB7401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7501_cross.mat",
+    "age": 10.040983200073242,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB7501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7701_cross.mat",
+    "age": 69.44261932373047,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRB7701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7801_cross.mat",
+    "age": 74.00546264648438,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB7801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB7901_cross.mat",
+    "age": 25.47541046142578,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRB7901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8001_cross.mat",
+    "age": 41.989070892333984,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8101_cross.mat",
+    "age": 70.46721649169922,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8201_cross.mat",
+    "age": 58.97814178466797,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRB8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8301_cross.mat",
+    "age": 31.420764923095703,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB8301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8601_cross.mat",
+    "age": 60.942623138427734,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRB8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8701_cross.mat",
+    "age": 63.32240295410156,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB8701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8801_cross.mat",
+    "age": 37.98360824584961,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB8901_cross.mat",
+    "age": 53.803279876708984,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRB8901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB9001_cross.mat",
+    "age": 11.0,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRB9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB9601_cross.mat",
+    "age": 76.2513656616211,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRB9601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRB9801_cross.mat",
+    "age": 40.06830596923828,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRB9801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0001_cross.mat",
+    "age": 58.10109329223633,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0101_cross.mat",
+    "age": 53.778690338134766,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 11.718,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.23436,
+    "chi_Ze": 0.591771,
+    "file": "ANRC0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0401_cross.mat",
+    "age": 11.948087692260742,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC0401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0601_cross.mat",
+    "age": 13.978141784667969,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0701_cross.mat",
+    "age": 35.57650375366211,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC0701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC0901_cross.mat",
+    "age": 12.803278923034668,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1101_cross.mat",
+    "age": 14.472677230834961,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC1101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1201_cross.mat",
+    "age": 13.510929107666016,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1301_cross.mat",
+    "age": 70.76502990722656,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1501_cross.mat",
+    "age": 13.868852615356445,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1701_cross.mat",
+    "age": 18.469945907592773,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC1801_cross.mat",
+    "age": 97.0,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC1801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC2301_cross.mat",
+    "age": 63.174861907958984,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRC2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC2601_cross.mat",
+    "age": 46.27595520019531,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRC2601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC2701_cross.mat",
+    "age": 79.73497009277344,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRC2701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC2901_cross.mat",
+    "age": 50.03824996948242,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRC2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3001_cross.mat",
+    "age": 57.27049255371094,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC3001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3201_cross.mat",
+    "age": 30.442623138427734,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRC3201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3301_cross.mat",
+    "age": 34.103824615478516,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC3301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3401_cross.mat",
+    "age": 62.010929107666016,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3601_cross.mat",
+    "age": 63.814208984375,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3801_cross.mat",
+    "age": 55.84699630737305,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRC3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC3901_cross.mat",
+    "age": 68.3415298461914,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRC3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC4001_cross.mat",
+    "age": 70.57103729248047,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC4101_cross.mat",
+    "age": 67.72677612304688,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC4101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC4201_cross.mat",
+    "age": 75.36885070800781,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRC4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC5101_cross.mat",
+    "age": 16.2568302154541,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRC5101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC5801_cross.mat",
+    "age": 16.724042892456055,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 12.1086,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.242172,
+    "chi_Ze": 0.60614,
+    "file": "ANRC5801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC5901_cross.mat",
+    "age": 15.524590492248535,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRC5901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC6201_cross.mat",
+    "age": 17.969945907592773,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC6201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC6401_cross.mat",
+    "age": 15.366120338439941,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRC6401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC6601_cross.mat",
+    "age": 15.336065292358398,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRC6601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC6701_cross.mat",
+    "age": 15.185791969299316,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC6901_cross.mat",
+    "age": 16.693988800048828,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC6901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC7001_cross.mat",
+    "age": 11.426229476928711,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRC7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC7101_cross.mat",
+    "age": 11.306011199951172,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC7101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC7201_cross.mat",
+    "age": 15.98633861541748,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 11.3274,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.226548,
+    "chi_Ze": 0.577403,
+    "file": "ANRC7201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8001_cross.mat",
+    "age": 17.497268676757812,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8101_cross.mat",
+    "age": 23.366119384765625,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 12.4992,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.249984,
+    "chi_Ze": 0.620508,
+    "file": "ANRC8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8201_cross.mat",
+    "age": 18.702186584472656,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8501_cross.mat",
+    "age": 6.191256999969482,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC8501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8601_cross.mat",
+    "age": 6.079235076904297,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRC8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8701_cross.mat",
+    "age": 6.221311569213867,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRC8701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8801_cross.mat",
+    "age": 7.306010723114014,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC8901_cross.mat",
+    "age": 5.767759799957275,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC8901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9001_cross.mat",
+    "age": 8.79781436920166,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9101_cross.mat",
+    "age": 8.5819673538208,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRC9101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9201_cross.mat",
+    "age": 18.48087501525879,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRC9201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9301_cross.mat",
+    "age": 13.289617538452148,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC9301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9501_cross.mat",
+    "age": 85.0,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRC9501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9701_cross.mat",
+    "age": 17.374317169189453,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRC9701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRC9901_cross.mat",
+    "age": 14.819672584533691,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRC9901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD0001_cross.mat",
+    "age": 14.494535446166992,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRD0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD1001_cross.mat",
+    "age": 12.278688430786133,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRD1001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD1201_cross.mat",
+    "age": 7.469945430755615,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRD1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD1401_cross.mat",
+    "age": 6.5409836769104,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRD1401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD1501_cross.mat",
+    "age": 5.918032646179199,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRD1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD2001_cross.mat",
+    "age": 13.603825569152832,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRD2001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD2301_cross.mat",
+    "age": 33.185791015625,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRD2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3101_cross.mat",
+    "age": 78.60929107666016,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRD3101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3201_cross.mat",
+    "age": 75.79781341552734,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRD3201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3401_cross.mat",
+    "age": 7.396174907684326,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRD3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3601_cross.mat",
+    "age": 18.732240676879883,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRD3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3701_cross.mat",
+    "age": 13.35792350769043,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRD3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD3901_cross.mat",
+    "age": 16.240436553955078,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRD3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD4001_cross.mat",
+    "age": 12.792349815368652,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRD4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD5601_cross.mat",
+    "age": 17.11475372314453,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRD5601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD5701_cross.mat",
+    "age": 68.14480590820312,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRD5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6001_cross.mat",
+    "age": 16.207651138305664,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRD6001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6201_cross.mat",
+    "age": 60.92896270751953,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.9838,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.179676,
+    "chi_Ze": 0.491192,
+    "file": "ANRD6201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6301_cross.mat",
+    "age": 11.101093292236328,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRD6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6501_cross.mat",
+    "age": 10.803278923034668,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRD6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6601_cross.mat",
+    "age": 10.767759323120117,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRD6601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6701_cross.mat",
+    "age": 11.051912307739258,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.2026,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.164052,
+    "chi_Ze": 0.462455,
+    "file": "ANRD6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD6801_cross.mat",
+    "age": 11.521858215332031,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRD6801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD7901_cross.mat",
+    "age": 14.59562873840332,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 11.3274,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.226548,
+    "chi_Ze": 0.577403,
+    "file": "ANRD7901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8001_cross.mat",
+    "age": 14.956284523010254,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRD8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8201_cross.mat",
+    "age": 26.48087501525879,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 8.5932,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.171864,
+    "chi_Ze": 0.476823,
+    "file": "ANRD8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8301_cross.mat",
+    "age": 43.196720123291016,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 7.812,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.15624,
+    "chi_Ze": 0.448086,
+    "file": "ANRD8301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8501_cross.mat",
+    "age": 33.50819778442383,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRD8501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8601_cross.mat",
+    "age": 13.84426212310791,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.9368,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.218736,
+    "chi_Ze": 0.563034,
+    "file": "ANRD8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRD8801_cross.mat",
+    "age": 44.26776123046875,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRD8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRE0101_cross.mat",
+    "age": 12.355191230773926,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 10.1556,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.203112,
+    "chi_Ze": 0.534297,
+    "file": "ANRE0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRJ9701_cross.mat",
+    "age": 69.4071044921875,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 9.765,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.1953,
+    "chi_Ze": 0.519929,
+    "file": "ANRJ9701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRJ9801_cross.mat",
+    "age": 50.65300369262695,
+    "sex": "F",
+    "n_channels": 19,
+    "f_peak": 9.3744,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.187488,
+    "chi_Ze": 0.50556,
+    "file": "ANRJ9801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "method": "proxy_cuban_mcr",
+    "filepath": "/home/oem/Desktop/EEG/data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/ANRJ9901_cross.mat",
+    "age": 18.778688430786133,
+    "sex": "M",
+    "n_channels": 19,
+    "f_peak": 10.5462,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.210924,
+    "chi_Ze": 0.548666,
+    "file": "ANRJ9901_cross.mat",
+    "condition": "EC"
+  }
+]

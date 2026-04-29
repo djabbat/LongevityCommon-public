@@ -1,0 +1,1784 @@
+[
+  {
+    "age": 23.8,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 24.74,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRA0201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 43.34,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA0301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 45.89,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRA0401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 38.31,
+    "sex": "F",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRA0501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 39.87,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 51.25,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA0701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 25.29,
+    "sex": "F",
+    "alpha_peak_hz": 11.3274,
+    "v": 0.22655,
+    "chi_Ze": 0.5774,
+    "file": "ANRA0801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 34.35,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRA0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 65.91,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 64.67,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 37.15,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA1601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 57.82,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA2101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 28.97,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA2401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.86,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA2601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.44,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA2701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 62.01,
+    "sex": "M",
+    "alpha_peak_hz": 12.8898,
+    "v": 0.2578,
+    "chi_Ze": 0.63488,
+    "file": "ANRA2801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.92,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRA2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.28,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA3101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.8,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 60.46,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRA3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.46,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 9.7,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.37,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.67,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA4101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.47,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.36,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA4601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.05,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA4701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.27,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA4801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.01,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRA4901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.44,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA5001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 23.04,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA5101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 25.66,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRA5201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 29.86,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA5401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 31.84,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA5501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 33.35,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA5601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 37.31,
+    "sex": "F",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRA5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 52.74,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA5901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 47.57,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA6001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 71.6,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRA6101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 43.51,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRA6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 61.54,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 67.2,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 36.53,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRA7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 42.82,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA7101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 63.73,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA7401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 51.08,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 78.9,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 79.59,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRA8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 21.19,
+    "sex": "F",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRA9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 25.47,
+    "sex": "F",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRA9401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 64.47,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRA9501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 25.58,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRA9601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 39.71,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRA9901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 22.96,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 27.25,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRB0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 45.94,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB0201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 60.13,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRB0301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 46.9,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB0501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 39.63,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRB0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 66.7,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 59.73,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB1101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 50.08,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRB1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 64.14,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB1401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 23.58,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 42.22,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB2401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 32.1,
+    "sex": "F",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB2501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 5.35,
+    "sex": "M",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB2801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 5.98,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 9.29,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRB3001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.88,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.75,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.03,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.64,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.45,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.75,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRB4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.38,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.56,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.71,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRB4401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.11,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB4501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.83,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRB4601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.39,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRB4801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.01,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB4901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.1,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB5201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.41,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRB5301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.63,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB5401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 58.93,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.64,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB6101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 9.88,
+    "sex": "F",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRB6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.4,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB6401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.99,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.63,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB6801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 5.98,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB6901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 9.62,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.16,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB7201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.64,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRB7301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.3,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRB7401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.04,
+    "sex": "F",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB7501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 69.44,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRB7701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 74.01,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB7801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 25.48,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRB7901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 41.99,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 70.47,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 58.98,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRB8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 31.42,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB8301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 60.94,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRB8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 63.32,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB8701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 37.98,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 53.8,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRB8901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.0,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRB9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 76.25,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRB9601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 40.07,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRB9801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 58.1,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 53.78,
+    "sex": "F",
+    "alpha_peak_hz": 11.718,
+    "v": 0.23436,
+    "chi_Ze": 0.59177,
+    "file": "ANRC0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.95,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC0401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.98,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC0601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 35.58,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC0701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.8,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC0901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.47,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC1101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.51,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 70.77,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.87,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.47,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC1701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 97.0,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC1801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 63.17,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRC2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 46.28,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRC2601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 79.73,
+    "sex": "M",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRC2701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 50.04,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRC2901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 57.27,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC3001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 30.44,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRC3201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 34.1,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC3301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 62.01,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 63.81,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 55.85,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRC3801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 68.34,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRC3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 70.57,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 67.73,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC4101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 75.37,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRC4201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.26,
+    "sex": "F",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRC5101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.72,
+    "sex": "F",
+    "alpha_peak_hz": 12.1086,
+    "v": 0.24217,
+    "chi_Ze": 0.60614,
+    "file": "ANRC5801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.52,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRC5901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.97,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC6201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.37,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRC6401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.34,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRC6601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.19,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.69,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC6901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.43,
+    "sex": "F",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRC7001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.31,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC7101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 15.99,
+    "sex": "M",
+    "alpha_peak_hz": 11.3274,
+    "v": 0.22655,
+    "chi_Ze": 0.5774,
+    "file": "ANRC7201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.5,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 23.37,
+    "sex": "F",
+    "alpha_peak_hz": 12.4992,
+    "v": 0.24998,
+    "chi_Ze": 0.62051,
+    "file": "ANRC8101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.7,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.19,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC8501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.08,
+    "sex": "F",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRC8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.22,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRC8701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.31,
+    "sex": "M",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 5.77,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC8901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.8,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC9001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 8.58,
+    "sex": "M",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRC9101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.48,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRC9201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.29,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC9301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 85.0,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRC9501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.37,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRC9701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.82,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRC9901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.49,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRD0001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.28,
+    "sex": "F",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRD1001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.47,
+    "sex": "M",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRD1201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 6.54,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRD1401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 5.92,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRD1501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.6,
+    "sex": "F",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRD2001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 33.19,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRD2301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 78.61,
+    "sex": "M",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRD3101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 75.8,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRD3201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 7.4,
+    "sex": "M",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRD3401_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.73,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRD3601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.36,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRD3701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.24,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRD3901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.79,
+    "sex": "M",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRD4001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 17.11,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRD5601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 68.14,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRD5701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 16.21,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRD6001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 60.93,
+    "sex": "F",
+    "alpha_peak_hz": 8.9838,
+    "v": 0.17968,
+    "chi_Ze": 0.49119,
+    "file": "ANRD6201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.1,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRD6301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.8,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRD6501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 10.77,
+    "sex": "M",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRD6601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.05,
+    "sex": "F",
+    "alpha_peak_hz": 8.2026,
+    "v": 0.16405,
+    "chi_Ze": 0.46245,
+    "file": "ANRD6701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 11.52,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRD6801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.6,
+    "sex": "F",
+    "alpha_peak_hz": 11.3274,
+    "v": 0.22655,
+    "chi_Ze": 0.5774,
+    "file": "ANRD7901_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 14.96,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRD8001_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 26.48,
+    "sex": "F",
+    "alpha_peak_hz": 8.5932,
+    "v": 0.17186,
+    "chi_Ze": 0.47682,
+    "file": "ANRD8201_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 43.2,
+    "sex": "M",
+    "alpha_peak_hz": 7.812,
+    "v": 0.15624,
+    "chi_Ze": 0.44809,
+    "file": "ANRD8301_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 33.51,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRD8501_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 13.84,
+    "sex": "M",
+    "alpha_peak_hz": 10.9368,
+    "v": 0.21874,
+    "chi_Ze": 0.56303,
+    "file": "ANRD8601_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 44.27,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRD8801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 12.36,
+    "sex": "F",
+    "alpha_peak_hz": 10.1556,
+    "v": 0.20311,
+    "chi_Ze": 0.5343,
+    "file": "ANRE0101_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 69.41,
+    "sex": "M",
+    "alpha_peak_hz": 9.765,
+    "v": 0.1953,
+    "chi_Ze": 0.51993,
+    "file": "ANRJ9701_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 50.65,
+    "sex": "F",
+    "alpha_peak_hz": 9.3744,
+    "v": 0.18749,
+    "chi_Ze": 0.50556,
+    "file": "ANRJ9801_cross.mat",
+    "condition": "EC"
+  },
+  {
+    "age": 18.78,
+    "sex": "M",
+    "alpha_peak_hz": 10.5462,
+    "v": 0.21092,
+    "chi_Ze": 0.54867,
+    "file": "ANRJ9901_cross.mat",
+    "condition": "EC"
+  }
+]

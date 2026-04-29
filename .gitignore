@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Data (large files — obtain from original sources)
+data/cuban/oldgandalf-FirstWaveCubanHumanNormativeEEGProject-3783da7/EyesClose/
+data/cuban/*.zip
+data/lemon/sub-*/
+data/zenodo/*.eeg
+data/zenodo/*.vhdr
+data/zenodo/*.vmrk
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~

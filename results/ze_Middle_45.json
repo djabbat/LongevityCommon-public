@@ -1,0 +1,28 @@
+{
+  "label": "Middle_45",
+  "age": 45,
+  "sfreq": 160,
+  "n_channels": 1,
+  "duration_s": 30,
+  "channels": {
+    "Cz": {
+      "N": 4800,
+      "N_S": 1319,
+      "v": 0.274849,
+      "v_star": 0.45631,
+      "chi_Ze": 0.666242,
+      "tau": 3197.96,
+      "chi_max_living": 0.839,
+      "v_deviation": 0.181461
+    }
+  },
+  "summary": {
+    "chi_Ze_mean": 0.666242,
+    "chi_Ze_std": 0.0,
+    "chi_Ze_min": 0.666242,
+    "chi_Ze_max": 0.666242,
+    "v_mean": 0.274849,
+    "v_std": 0.0
+  },
+  "timestamp": "2026-03-21T04:59:55.748733"
+}

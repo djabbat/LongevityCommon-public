@@ -1,0 +1,47 @@
+{
+  "label": "Elder_72",
+  "age": 72,
+  "sfreq": 128.0,
+  "n_channels": 1,
+  "duration_s": 60,
+  "channels": {
+    "Cz": {
+      "N": 7680,
+      "N_S": 1020,
+      "v": 0.13283,
+      "v_star": 0.45631,
+      "chi_Ze": 0.405028,
+      "chi_max_living": 0.839,
+      "tau": 3110.62,
+      "v_deviation": 0.32348
+    }
+  },
+  "summary": {
+    "chi_Ze_mean": 0.405028,
+    "chi_Ze_std": 0.0,
+    "chi_Ze_min": 0.405028,
+    "chi_Ze_max": 0.405028,
+    "v_mean": 0.13283,
+    "v_std": 0.0
+  },
+  "proxy": {
+    "method": "proxy",
+    "f_peak": 8.5,
+    "f_band": [
+      7.5,
+      13.0
+    ],
+    "v_peak": 0.132812,
+    "chi_Ze": 0.404996
+  },
+  "narrowband": {
+    "method": "narrowband_Ze",
+    "lowcut": 8.0,
+    "highcut": 12.0,
+    "N": 7680,
+    "N_S": 1021,
+    "v": 0.13296,
+    "chi_Ze": 0.405268
+  },
+  "timestamp": "2026-03-28T15:33:53.209133"
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "subject_id": "sub-032301",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.25,
+    "v_peak": 0.16016,
+    "chi_Ze_peak": 0.45529
+  },
+  {
+    "subject_id": "sub-032302",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 7.75,
+    "v_peak": 0.12109,
+    "chi_Ze_peak": 0.38344
+  },
+  {
+    "subject_id": "sub-032303",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 8.0,
+    "v_peak": 0.125,
+    "chi_Ze_peak": 0.39063
+  },
+  {
+    "subject_id": "sub-032305",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 7.5,
+    "v_peak": 0.11719,
+    "chi_Ze_peak": 0.37626
+  },
+  {
+    "subject_id": "sub-032307",
+    "age_bin": "25-30",
+    "group": "young",
+    "alpha_peak_hz": 9.25,
+    "v_peak": 0.14453,
+    "chi_Ze_peak": 0.42655
+  },
+  {
+    "subject_id": "sub-032310",
+    "age_bin": "25-30",
+    "group": "young",
+    "alpha_peak_hz": 12.0,
+    "v_peak": 0.1875,
+    "chi_Ze_peak": 0.50558
+  },
+  {
+    "subject_id": "sub-032323",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 10.5,
+    "v_peak": 0.16406,
+    "chi_Ze_peak": 0.46247
+  },
+  {
+    "subject_id": "sub-032329",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.25,
+    "v_peak": 0.16016,
+    "chi_Ze_peak": 0.45529
+  },
+  {
+    "subject_id": "sub-032333",
+    "age_bin": "70-75",
+    "group": "old",
+    "alpha_peak_hz": 10.75,
+    "v_peak": 0.16797,
+    "chi_Ze_peak": 0.46966
+  },
+  {
+    "subject_id": "sub-032337",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.5,
+    "v_peak": 0.16406,
+    "chi_Ze_peak": 0.46247
+  },
+  {
+    "subject_id": "sub-032338",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 7.5,
+    "v_peak": 0.11719,
+    "chi_Ze_peak": 0.37626
+  },
+  {
+    "subject_id": "sub-032340",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.0,
+    "v_peak": 0.15625,
+    "chi_Ze_peak": 0.4481
+  },
+  {
+    "subject_id": "sub-032344",
+    "age_bin": "25-30",
+    "group": "young",
+    "alpha_peak_hz": 7.5,
+    "v_peak": 0.11719,
+    "chi_Ze_peak": 0.37626
+  },
+  {
+    "subject_id": "sub-032353",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 8.0,
+    "v_peak": 0.125,
+    "chi_Ze_peak": 0.39063
+  },
+  {
+    "subject_id": "sub-032385",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 8.75,
+    "v_peak": 0.13672,
+    "chi_Ze_peak": 0.41218
+  },
+  {
+    "subject_id": "sub-032389",
+    "age_bin": "25-30",
+    "group": "young",
+    "alpha_peak_hz": 10.25,
+    "v_peak": 0.16016,
+    "chi_Ze_peak": 0.45529
+  },
+  {
+    "subject_id": "sub-032390",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 11.25,
+    "v_peak": 0.17578,
+    "chi_Ze_peak": 0.48403
+  },
+  {
+    "subject_id": "sub-032392",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 8.0,
+    "v_peak": 0.125,
+    "chi_Ze_peak": 0.39063
+  },
+  {
+    "subject_id": "sub-032400",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 11.25,
+    "v_peak": 0.17578,
+    "chi_Ze_peak": 0.48403
+  },
+  {
+    "subject_id": "sub-032414",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 7.5,
+    "v_peak": 0.11719,
+    "chi_Ze_peak": 0.37626
+  },
+  {
+    "subject_id": "sub-032421",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 7.5,
+    "v_peak": 0.11719,
+    "chi_Ze_peak": 0.37626
+  },
+  {
+    "subject_id": "sub-032430",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.75,
+    "v_peak": 0.16797,
+    "chi_Ze_peak": 0.46966
+  },
+  {
+    "subject_id": "sub-032442",
+    "age_bin": "70-75",
+    "group": "old",
+    "alpha_peak_hz": 9.75,
+    "v_peak": 0.15234,
+    "chi_Ze_peak": 0.44092
+  },
+  {
+    "subject_id": "sub-032458",
+    "age_bin": "65-70",
+    "group": "old",
+    "alpha_peak_hz": 10.25,
+    "v_peak": 0.16016,
+    "chi_Ze_peak": 0.45529
+  },
+  {
+    "subject_id": "sub-032459",
+    "age_bin": "70-75",
+    "group": "old",
+    "alpha_peak_hz": 10.5,
+    "v_peak": 0.16406,
+    "chi_Ze_peak": 0.46247
+  },
+  {
+    "subject_id": "sub-032467",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 10.375,
+    "v_peak": 0.16211,
+    "chi_Ze_peak": 0.45888
+  },
+  {
+    "subject_id": "sub-032491",
+    "age_bin": "70-75",
+    "group": "old",
+    "alpha_peak_hz": 8.25,
+    "v_peak": 0.12891,
+    "chi_Ze_peak": 0.39781
+  },
+  {
+    "subject_id": "sub-032495",
+    "age_bin": "70-75",
+    "group": "old",
+    "alpha_peak_hz": 8.25,
+    "v_peak": 0.12891,
+    "chi_Ze_peak": 0.39781
+  },
+  {
+    "subject_id": "sub-032508",
+    "age_bin": "25-30",
+    "group": "young",
+    "alpha_peak_hz": 10.0,
+    "v_peak": 0.15625,
+    "chi_Ze_peak": 0.4481
+  },
+  {
+    "subject_id": "sub-032525",
+    "age_bin": "20-25",
+    "group": "young",
+    "alpha_peak_hz": 11.0,
+    "v_peak": 0.17188,
+    "chi_Ze_peak": 0.47684
+  }
+]
