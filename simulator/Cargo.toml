@@ -1,0 +1,3 @@
+[workspace]
+members = ["ze-core", "ze-runner"]
+resolver = "2"
