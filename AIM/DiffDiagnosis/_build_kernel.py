@@ -549,7 +549,7 @@ time-to-diagnosis.
 ## 8. Open formal questions
 Где модель ломается (см. OPEN_PROBLEMS.md).
 
-С формулами через `\(...\)` или `$$...$$`. Markdown.
+С формулами через `\\(...\\)` или `$$...$$`. Markdown.
 """.strip()
 
     if filename == "DESIGN.md":

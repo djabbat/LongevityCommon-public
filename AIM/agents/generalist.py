@@ -398,18 +398,57 @@ def _maybe_sandbox(command: str) -> list[str]:
     return ["/bin/sh", "-c", command]
 
 
+_BASH_ALLOW = ("ls", "cat", "head", "tail", "wc", "grep", "find",
+               "git", "python", "python3", "pytest", "pip", "echo",
+               "diff", "stat", "file", "which")
+# Shell metacharacters that enable command chaining / IO redirection /
+# subshell execution. If any of these appears in the command, the
+# whitelist on "first token" is meaningless.
+_BASH_META_RE = re.compile(r"[;&|<>`\n\r]|\$\(")
+# Token blacklist that's checked AFTER shlex.split, in case a chained
+# command sneaks past _BASH_META_RE via a quoting trick.
+_BASH_DANGEROUS_TOKENS = {
+    "rm", "mv", "cp", "chmod", "chown", "dd", "mkfs",
+    "sudo", "su", "doas", "kill", "killall",
+    "curl", "wget", "ncat", "nc", "socat", "ssh", "scp", "sftp",
+}
+
+
 @register_tool(
     "bash",
-    "Run a shell command (whitelisted: ls, cat, head, tail, wc, grep, find, git status/log/diff, python3 -c, pytest). 60s timeout. Returns stdout+stderr (truncated). Optional bubblewrap sandbox via AIM_SANDBOX=1.",
+    "Run a shell command. Whitelist on first token: ls, cat, head, tail, "
+    "wc, grep, find, git, python/python3 (one-liners only via -c), pytest, "
+    "pip, echo, diff, stat, file, which. REJECTS commands containing shell "
+    "metacharacters (; & | < > ` $( newline) or dangerous tokens "
+    "(rm/mv/cp/chmod/sudo/curl/wget/ssh/scp/nc/kill). 60s timeout. Optional "
+    "bubblewrap sandbox via AIM_SANDBOX=1.",
     {"command": "shell command string"},
 )
 def _t_bash(command: str) -> str:
-    allow = ("ls", "cat", "head", "tail", "wc", "grep", "find",
-             "git", "python", "python3", "pytest", "pip", "echo",
-             "diff", "stat", "file", "which")
-    first = (shlex.split(command) or [""])[0].split("/")[-1]
-    if first not in allow:
-        return f"ERROR:PERMISSION:command '{first}' not whitelisted; allowed: {allow}"
+    if not isinstance(command, str):
+        return "ERROR:INVALID_INPUT:command must be a string"
+    if _BASH_META_RE.search(command):
+        return ("ERROR:PERMISSION:shell metacharacters disallowed (; & | < > "
+                "` $( newline). Run separate bash calls instead of chaining.")
+    try:
+        toks = shlex.split(command)
+    except ValueError as e:
+        return f"ERROR:INVALID_INPUT:cannot parse command: {e}"
+    if not toks:
+        return "ERROR:INVALID_INPUT:empty command"
+    first = toks[0].split("/")[-1]
+    if first not in _BASH_ALLOW:
+        return (f"ERROR:PERMISSION:command '{first}' not whitelisted; "
+                f"allowed: {_BASH_ALLOW}")
+    # Even after first-token whitelist, scan tokens for known-dangerous
+    # binaries that might appear as args (e.g. `python3 -c "import os; ..."`
+    # is already blocked by the metachar check; this catches `xargs rm`-style
+    # tricks, `find ... -exec rm`, etc.).
+    for t in toks[1:]:
+        bare = t.split("/")[-1]
+        if bare in _BASH_DANGEROUS_TOKENS:
+            return (f"ERROR:PERMISSION:dangerous token '{bare}' not allowed "
+                    "as argument (deny-list)")
     cmd_list = _maybe_sandbox(command)
     try:
         proc = subprocess.run(cmd_list, capture_output=True,
@@ -590,7 +629,7 @@ def _with_timeout(fn, args, timeout: float = 5.0):
     "Semantic search over Claude memory + cross-project Desktop memory. Returns top-k passages.",
     {"query": "string", "k": "int default 6", "timeout_s": "float default 5"},
 )
-def _t_memory_recall(query: str, k: int = 6, timeout_s: float = 5.0) -> str:
+def _t_memory_recall(query: str, k: int = 6, timeout_s: float = 10.0) -> str:
     def _do():
         from agents.memory_index import retrieve
         return retrieve(query, k=k)
@@ -633,12 +672,56 @@ def _t_web_search(query: str, n: int = 8) -> str:
     return json.dumps(hits, ensure_ascii=False)[:6000]
 
 
+_WEB_FETCH_DEFAULT_ALLOW = (
+    "pubmed.ncbi.nlm.nih.gov", "www.ncbi.nlm.nih.gov", "ncbi.nlm.nih.gov",
+    "doi.org", "dx.doi.org", "api.crossref.org", "search.crossref.org",
+    "scholar.google.com", "europepmc.org", "www.europepmc.org",
+    "elifesciences.org", "www.biorxiv.org", "www.medrxiv.org",
+    "longevity.ge", "www.longevity.ge", "drjaba.com", "www.drjaba.com",
+    "github.com", "raw.githubusercontent.com", "gist.github.com",
+    "arxiv.org", "www.arxiv.org",
+    "huggingface.co",
+    "ec.europa.eu",  # EIC Pathfinder
+)
+
+
+def _web_fetch_host_allowed(url: str) -> tuple[bool, str]:
+    from urllib.parse import urlparse
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except Exception:
+        return False, "unparseable URL"
+    if not host:
+        return False, "no hostname in URL"
+    extra = os.environ.get("AIM_WEB_FETCH_ALLOW", "")
+    extra_set = {h.strip().lower() for h in extra.split(",") if h.strip()}
+    allow = set(_WEB_FETCH_DEFAULT_ALLOW) | extra_set
+    if host in allow:
+        return True, host
+    # Allow exact-suffix subdomain match (e.g. eu-west-1.foo.bar matches
+    # "foo.bar"). Only when the suffix has at least one dot, to avoid
+    # accidentally allowing "*.com".
+    for d in allow:
+        if "." in d and host.endswith("." + d):
+            return True, host
+    return False, host
+
+
 @register_tool(
     "web_fetch",
-    "Fetch a URL, strip HTML to plain text. Returns up to ~8000 chars of readable content.",
+    "Fetch a URL, strip HTML to plain text. ALLOWLIST-gated: only "
+    "scientific/repo domains are accepted by default (pubmed/doi/crossref/"
+    "europepmc/elife/biorxiv/medrxiv/arxiv/scholar/longevity.ge/drjaba.com/"
+    "github/huggingface/ec.europa.eu). Extend via AIM_WEB_FETCH_ALLOW env "
+    "(comma-separated hostnames). Returns up to ~8000 chars of readable text.",
     {"url": "absolute URL", "max_chars": "int default 8000"},
 )
 def _t_web_fetch(url: str, max_chars: int = 8000) -> str:
+    ok, host = _web_fetch_host_allowed(url)
+    if not ok:
+        return (f"ERROR:PERMISSION:web_fetch host {host!r} not in allowlist. "
+                "Add to AIM_WEB_FETCH_ALLOW env (csv) or use one of the "
+                "default science/repo hosts.")
     from tools.web import web_fetch
     return web_fetch(url, max_chars=max_chars)
 
