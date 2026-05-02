@@ -20,14 +20,14 @@ import os, sys, json, time, traceback
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# Подключаем llm.py из ~/Desktop/AIM
-ROOT_AIM = Path.home() / "Desktop" / "AIM"
+# Подключаем llm.py из ~/Desktop/LongevityCommon/AIM
+ROOT_AIM = Path.home() / "Desktop" / "LongevityCommon" / "AIM"
 sys.path.insert(0, str(ROOT_AIM))
 os.chdir(ROOT_AIM)  # llm.py делает relative imports из agents/
 
 from llm import ask_deep  # noqa: E402
 
-ROOT = Path.home() / "Desktop" / "AIM" / "DiffDiagnosis"
+ROOT = ROOT_AIM / "DiffDiagnosis"
 SRC = ROOT / "sources"
 LOG = ROOT / "_build.log"
 SRC.mkdir(parents=True, exist_ok=True)
