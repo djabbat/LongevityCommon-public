@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
-# ai_loop.sh — launcher for the "AIM AI" Desktop icon.
-# Calls the standalone ai_loop.py so stdin stays bound to the terminal.
-
-cd "$(cd "$(dirname "$0")/../.." && pwd)"
+# Thin launcher → ai_loop.py (canonical). The .py file owns the input-sanitizer
+# (shell-prompt strip), banner, and streaming loop. Don't fork logic into the
+# heredoc form — it desyncs from .py and breaks input() on stdin-attached TTY.
+cd "/home/oem/Desktop/LongevityCommon/AIM"
 [ -d venv ] && source venv/bin/activate
-python3 scripts/desktop/ai_loop.py
-echo
-echo "(window stays open — close it manually or press Enter)"
-read -r _
+exec python3 "/home/oem/Desktop/LongevityCommon/AIM/scripts/desktop/ai_loop.py"
