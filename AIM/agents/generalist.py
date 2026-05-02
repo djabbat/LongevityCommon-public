@@ -25,6 +25,7 @@ import json
 import logging
 import os
 import platform
+import re
 import shlex
 import subprocess
 import threading
@@ -101,6 +102,40 @@ def _post_write_verify(p: Path) -> Optional[str]:
                 pass
     except Exception as e:
         return f"WARN:post-write verify failed ({suf}): {e}"
+    return None
+
+
+def _gate_external(action_type: str, payload: dict,
+                   text_for_verifiability: str = "",
+                   user_confirmed: bool = False,
+                   require_consent: bool = True,
+                   require_verifiability: bool = False) -> Optional[str]:
+    """Run kernel L_CONSENT + L_VERIFIABILITY before a side-effect tool.
+
+    Returns ERROR string when blocked, None when ok.
+
+    - L_CONSENT: any external-blast action (email send, web fetch a public URL,
+      writing a manuscript or letter) must have user_confirmed=True OR set
+      AIM_AUTO_CONSENT=1 (CLI confirms once, AIM acts within session).
+    - L_VERIFIABILITY: when text_for_verifiability is non-empty AND
+      require_verifiability is True, every PMID/DOI in it must resolve.
+    """
+    from agents.kernel import (
+        Decision, evaluate_l_consent, evaluate_l_verifiability,
+    )
+    auto = os.environ.get("AIM_AUTO_CONSENT") == "1"
+    ctx = {"user_confirmed": bool(user_confirmed) or auto}
+    d = Decision(id="ext", description=action_type,
+                 action_type=action_type, payload=payload,
+                 meta={"text": text_for_verifiability} if text_for_verifiability else {})
+    if require_consent:
+        ok, reason = evaluate_l_consent(d, {}, ctx)
+        if not ok:
+            return f"ERROR:PERMISSION:{reason}"
+    if require_verifiability and text_for_verifiability:
+        ok, reason = evaluate_l_verifiability(d, {}, ctx)
+        if not ok:
+            return f"ERROR:PERMISSION:{reason}"
     return None
 
 
@@ -663,16 +698,26 @@ def _t_search_pubmed(query: str, n: int = 8) -> str:
     {"action": "diagnose|treatment|labs|chat", "input": "free text"},
 )
 def _t_delegate_doctor(action: str, input: str) -> str:
-    try:
-        from agents.doctor import DoctorAgent
-        d = DoctorAgent()
-        fn = {"diagnose": d.diagnose, "treatment": d.treatment,
-              "labs": d.interpret_labs, "chat": d.chat}.get(action)
-        if not fn:
-            return f"ERROR:INVALID_INPUT:unknown doctor action '{action}'"
-        return fn(input)
-    except Exception as e:
-        return f"ERROR:INTERNAL:doctor: {e}"
+    from agents.doctor import DoctorAgent
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
+
+    fn_map = {"diagnose":  ("dx",        lambda: DoctorAgent().diagnose(input)),
+              "treatment": ("treatment", lambda: DoctorAgent().treatment(input)),
+              "labs":      ("test",      lambda: DoctorAgent().interpret_labs(input)),
+              "chat":      ("chat",      lambda: DoctorAgent().chat(input))}
+    if action not in fn_map:
+        return f"ERROR:INVALID_INPUT:unknown doctor action '{action}'"
+    action_type, service_fn = fn_map[action]
+
+    decision = Decision(
+        id=f"doctor.{action}",
+        description=f"clinical {action}",
+        action_type=action_type,
+        payload={"input": str(input)[:2000]},
+    )
+    # `chat` is conversational, not a clinical decision — skip Ze scoring.
+    return orchestrate(decision, service_fn, skip_ze=(action == "chat"))
 
 
 @register_tool(
@@ -689,27 +734,47 @@ def _t_delegate_doctor(action: str, input: str) -> str:
 )
 def _t_delegate_writer(action: str, args: dict) -> str:
     from agents import writer as W
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
     args = args or {}
-    try:
-        if action == "review":
-            return W.review(args["text"], focus=args.get("focus", "peer-review"),
-                            lang=args.get("lang", "en"))
-        if action == "edit":
-            return W.edit(args["text"], mode=args.get("mode", "tighten"),
-                          lang=args.get("lang", "en"))
-        if action == "cover_letter":
-            return W.cover_letter(args["manuscript"], args["journal"],
-                                  author=args.get("author", "Jaba Tkemaladze"),
-                                  lang=args.get("lang", "en"))
-        if action == "response":
-            return W.response_to_reviewers(args["manuscript"], args["reviews"],
-                                           lang=args.get("lang", "en"))
-        if action == "md_to_docx":
-            out = W.md_to_docx(args["md"], args["docx"])
-            return f"OK → {out}"
-    except Exception as e:
-        return f"ERROR:INTERNAL:writer.{action} failed: {e}"
-    return f"ERROR:INVALID_INPUT:unknown writer action '{action}'"
+
+    # md_to_docx is a format conversion — no kernel pipeline.
+    if action == "md_to_docx":
+        try:
+            return f"OK → {W.md_to_docx(args['md'], args['docx'])}"
+        except Exception as e:
+            return f"ERROR:INTERNAL:writer.md_to_docx failed: {e}"
+
+    fn_map = {
+        "review":       ("peer_review_emit",
+                         lambda: W.review(args["text"],
+                                          focus=args.get("focus", "peer-review"),
+                                          lang=args.get("lang", "en"))),
+        "edit":         ("emit_text",
+                         lambda: W.edit(args["text"],
+                                        mode=args.get("mode", "tighten"),
+                                        lang=args.get("lang", "en"))),
+        "cover_letter": ("send_letter",
+                         lambda: W.cover_letter(
+                             args["manuscript"], args["journal"],
+                             author=args.get("author", "Jaba Tkemaladze"),
+                             lang=args.get("lang", "en"))),
+        "response":     ("peer_review_emit",
+                         lambda: W.response_to_reviewers(
+                             args["manuscript"], args["reviews"],
+                             lang=args.get("lang", "en"))),
+    }
+    if action not in fn_map:
+        return f"ERROR:INVALID_INPUT:unknown writer action '{action}'"
+    action_type, service_fn = fn_map[action]
+
+    decision = Decision(
+        id=f"writer.{action}",
+        description=f"writer.{action}",
+        action_type=action_type,
+        payload={"args": {k: str(v)[:200] for k, v in args.items()}},
+    )
+    return orchestrate(decision, service_fn)
 
 
 @register_tool(
@@ -720,7 +785,11 @@ def _t_delegate_writer(action: str, args: dict) -> str:
 )
 def _t_delegate_email(action: str, args: dict | None = None) -> str:
     from agents import email_agent as E
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
     args = args or {}
+
+    # Read-only ops: no kernel pipeline.
     try:
         if action == "list":
             return json.dumps(E.list_threads(q=args.get("q", "newer_than:7d"),
@@ -731,28 +800,56 @@ def _t_delegate_email(action: str, args: dict | None = None) -> str:
                               ensure_ascii=False)[:6000]
         if action == "get":
             t = E.get_thread(args["thread_id"])
-            # truncate giant payload
             return json.dumps({"id": t.get("id"),
                                "n": len(t.get("messages", [])),
                                "snippet": t.get("snippet", "")},
                               ensure_ascii=False)
-        if action == "draft":
-            r = E.draft(args["to"], args["subject"], args["body"],
-                        thread_id=args.get("thread_id"),
-                        cc=args.get("cc"), bcc=args.get("bcc"))
-            return f"DRAFT created: id={r.get('id')}"
-        if action == "send":
-            r = E.send(args["to"], args["subject"], args["body"],
-                       thread_id=args.get("thread_id"),
-                       cc=args.get("cc"), bcc=args.get("bcc"),
-                       user_confirmed=bool(args.get("user_confirmed")))
-            return f"SENT id={r.get('id')} threadId={r.get('threadId')}"
         if action == "labels":
             return json.dumps(E.list_labels(), ensure_ascii=False)[:4000]
-    except PermissionError as e:
-        return f"BLOCKED by kernel: {e}"
     except Exception as e:
         return f"ERROR:INTERNAL:email.{action} failed: {e}"
+
+    # Side-effect ops go through orchestrator (L0-L3 + L_PRIVACY + L_CONSENT
+    # for send; defense-in-depth — email_agent also keeps inner checks).
+    if action == "draft":
+        decision = Decision(
+            id="email.draft",
+            description="draft email",
+            action_type="external_api_call_with_data",
+            payload={"to": args.get("to"), "subject": args.get("subject"),
+                     "body": (args.get("body") or "")[:8000]},
+        )
+        try:
+            return orchestrate(
+                decision,
+                lambda: f"DRAFT created: id={E.draft(args['to'], args['subject'], args['body'], thread_id=args.get('thread_id'), cc=args.get('cc'), bcc=args.get('bcc')).get('id')}",
+                
+            )
+        except PermissionError as e:
+            return f"BLOCKED by kernel: {e}"
+
+    if action == "send":
+        decision = Decision(
+            id="email.send",
+            description="send email",
+            action_type="email_send",
+            payload={"to": args.get("to"), "subject": args.get("subject"),
+                     "body": (args.get("body") or "")[:8000]},
+        )
+        ctx = {"user_confirmed": bool(args.get("user_confirmed"))}
+        try:
+            return orchestrate(
+                decision,
+                lambda: (lambda r: f"SENT id={r.get('id')} threadId={r.get('threadId')}")(
+                    E.send(args["to"], args["subject"], args["body"],
+                           thread_id=args.get("thread_id"),
+                           cc=args.get("cc"), bcc=args.get("bcc"),
+                           user_confirmed=bool(args.get("user_confirmed")))),
+                context=ctx, 
+            )
+        except PermissionError as e:
+            return f"BLOCKED by kernel: {e}"
+
     return f"ERROR:INVALID_INPUT:unknown email action '{action}'"
 
 
@@ -799,7 +896,27 @@ def _t_delegate_coder(files: list[str], instruction: str,
                       test_cmd: Optional[str] = None,
                       max_iters: int = 3) -> str:
     from agents.coder import CoderAgent
-    try:
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
+
+    # Pre-flight L_PRIVACY: code edits in Patients/ require explicit override.
+    for p in (files or []):
+        if "Patients/" in str(p) or "/Patients/" in str(p):
+            if os.environ.get("AIM_ALLOW_PATIENT_WRITE") != "1":
+                return ("ERROR:PERMISSION:coder blocked under L_PRIVACY — "
+                        f"path '{p}' is inside Patients/. Set "
+                        "AIM_ALLOW_PATIENT_WRITE=1 to override.")
+
+    decision = Decision(
+        id="coder.edit",
+        description=f"code edit: {(instruction or '')[:80]}",
+        action_type="code_edit",
+        payload={"files": list(files or []),
+                 "instruction": str(instruction)[:1000],
+                 "test_cmd": test_cmd or ""},
+    )
+
+    def _service():
         agent = CoderAgent(files)
         if test_cmd:
             res = agent.edit_and_test(instruction, test_cmd, max_iters=max_iters)
@@ -807,8 +924,8 @@ def _t_delegate_coder(files: list[str], instruction: str,
             return (f"ok={res.ok} iters={res.iters}\n"
                     f"--- last test output ---\n{tail}")
         return agent.edit(instruction)[:6000]
-    except Exception as e:
-        return f"ERROR:INTERNAL:coder.delegate: {e}"
+
+    return orchestrate(decision, _service)
 
 
 @register_tool(
@@ -818,23 +935,42 @@ def _t_delegate_coder(files: list[str], instruction: str,
 )
 def _t_delegate_researcher(action: str, args: dict) -> str:
     from agents import researcher as R
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
     args = args or {}
-    try:
-        if action == "find":
+
+    # `find` returns search rows (not emitted prose) and `verify_text` /
+    # `formulate_queries` are pure utilities — none need the orchestrator.
+    if action == "find":
+        try:
             rows = R.find(args["query"], n=args.get("n", 10),
                           source=args.get("source", "pubmed"))
             return json.dumps(rows, ensure_ascii=False)[:6000]
-        if action == "summarise":
-            return R.summarise(args["records"], args.get("focus", ""),
-                               lang=args.get("lang", "en"))
-        if action == "verify_text":
+        except Exception as e:
+            return f"ERROR:INTERNAL:researcher.find failed: {e}"
+    if action == "verify_text":
+        try:
             rep = R.verify_text(args["text"], mode=args.get("mode", "annotate"))
             return rep.summary() + "\n\n" + rep.text[:4000]
-        if action == "formulate_queries":
+        except Exception as e:
+            return f"ERROR:INTERNAL:researcher.verify_text failed: {e}"
+    if action == "formulate_queries":
+        try:
             return json.dumps(R.formulate_queries(args["topic"],
                               n=args.get("n", 5)), ensure_ascii=False)
-    except Exception as e:
-        return f"ERROR:INTERNAL:researcher.{action} failed: {e}"
+        except Exception as e:
+            return f"ERROR:INTERNAL:researcher.formulate_queries failed: {e}"
+
+    if action == "summarise":
+        decision = Decision(
+            id="researcher.summarise", description="summarise",
+            action_type="emit_text",
+            payload={"records_n": len(args.get("records", []) or [])},
+        )
+        service_fn = lambda: R.summarise(  # noqa: E731
+            args["records"], args.get("focus", ""), lang=args.get("lang", "en"))
+        return orchestrate(decision, service_fn)
+
     return f"ERROR:INVALID_INPUT:unknown researcher action '{action}'"
 
 
@@ -849,32 +985,49 @@ def _t_delegate_parallel(tasks: list[str], max_iters: int = 6,
                          synthesise: bool = True) -> str:
     if not isinstance(tasks, list) or not tasks:
         return "ERROR:INVALID_INPUT:tasks must be a non-empty list of strings"
-    results: list[str] = [""] * len(tasks)
-    with ThreadPoolExecutor(max_workers=min(len(tasks), 4)) as pool:
-        futs = {pool.submit(run, t, max_iters=max_iters, speculative=False): i
-                for i, t in enumerate(tasks)}
-        for fut in as_completed(futs):
-            i = futs[fut]
-            try:
-                results[i] = fut.result().get("answer", "")
-            except Exception as e:
-                results[i] = f"[sub-task failed: {e}]"
-    if not synthesise:
-        return json.dumps([{"task": t, "answer": r}
-                           for t, r in zip(tasks, results)],
-                          ensure_ascii=False)[:6000]
-    blocks = "\n\n".join(f"=== Sub-task {i+1}: {tasks[i]} ===\n{results[i]}"
-                         for i in range(len(tasks)))
-    syn_prompt = (
-        "You are synthesising parallel sub-task results into one coherent "
-        "answer. Quote only the substance; remove redundancy; preserve every "
-        "factual claim that appeared in any sub-result.\n\n" + blocks
+
+    from agents.orchestrator import orchestrate
+    from agents.kernel import Decision
+
+    decision = Decision(
+        id="parallel.dispatch",
+        description=f"parallel run of {len(tasks)} sub-tasks",
+        action_type="parallel_dispatch",
+        payload={"n_tasks": len(tasks),
+                 "first_task": str(tasks[0])[:200]},
     )
-    try:
-        from llm import ask_critical as _ask
-    except Exception:
-        from llm import ask_deep as _ask
-    return _ask(syn_prompt)
+
+    def _service():
+        results: list[str] = [""] * len(tasks)
+        with ThreadPoolExecutor(max_workers=min(len(tasks), 4)) as pool:
+            futs = {pool.submit(run, t, max_iters=max_iters,
+                                speculative=False): i
+                    for i, t in enumerate(tasks)}
+            for fut in as_completed(futs):
+                i = futs[fut]
+                try:
+                    results[i] = fut.result().get("answer", "")
+                except Exception as e:
+                    results[i] = f"[sub-task failed: {e}]"
+        if not synthesise:
+            return json.dumps([{"task": t, "answer": r}
+                               for t, r in zip(tasks, results)],
+                              ensure_ascii=False)[:6000]
+        blocks = "\n\n".join(
+            f"=== Sub-task {i+1}: {tasks[i]} ===\n{results[i]}"
+            for i in range(len(tasks)))
+        syn_prompt = (
+            "You are synthesising parallel sub-task results into one coherent "
+            "answer. Quote only the substance; remove redundancy; preserve every "
+            "factual claim that appeared in any sub-result.\n\n" + blocks
+        )
+        try:
+            from llm import ask_critical as _ask
+        except Exception:
+            from llm import ask_deep as _ask
+        return _ask(syn_prompt)
+
+    return orchestrate(decision, _service)
 
 
 @register_tool(
@@ -947,6 +1100,109 @@ def _t_kernel_check(action_type: str, payload: dict, context: dict | None = None
     }, ensure_ascii=False)
 
 
+@register_tool(
+    "ze_verify",
+    "Calibrate a factual claim BEFORE asserting it. Pass a hypothesis (what "
+    "you predict the code/file says) and an observation (verbatim grep or "
+    "view_file output you actually got). Returns match_score ∈ [0,1], a diff "
+    "of missing/extra tokens, and a verdict (MATCH/PARTIAL/MISMATCH). "
+    "MANDATORY before stating any specific file:line, function name, count, "
+    "schema column, or quoted code line in a final answer. Records to "
+    "ze_events with action_type='ze_verify_claim' for trend analysis.",
+    {"hypothesis": "what you predict (e.g. 'phi formula on orchestrator.py:121 returns 1.0 default')",
+     "observation": "verbatim grep / view_file output you got"},
+    examples=[{
+        "call": {"tool": "ze_verify",
+                 "args": {"hypothesis": "evaluate_l_privacy has 4 callers outside kernel.py",
+                          "observation": "agents/orchestrator.py:160: ok = evaluate_l_privacy(...)\nagents/generalist.py:148: from agents.kernel import evaluate_l_privacy\nagents/email_agent.py:193: from agents.kernel import evaluate_l_privacy"}},
+    }],
+)
+def _t_ze_verify(hypothesis: str, observation: str) -> str:
+    """Hypothesis-vs-observation calibration. Built-in Ze routine.
+
+    Computes a Jaccard-style match score on tokens, returns the
+    asymmetric diff (what was claimed but not seen, and vice-versa),
+    and persists the calibration event so trend analysis can show
+    whether the agent is over- or under-confident.
+    """
+    if not isinstance(hypothesis, str) or not hypothesis.strip():
+        return json.dumps({"match_score": 0.0, "verdict": "INVALID",
+                           "diff": "empty hypothesis"}, ensure_ascii=False)
+    if not isinstance(observation, str) or not observation.strip():
+        return json.dumps({"match_score": 0.0, "verdict": "INVALID",
+                           "diff": "empty observation"}, ensure_ascii=False)
+
+    # English+Russian stop words + connective phrases that don't anchor a code claim.
+    _STOP = {"at", "in", "on", "of", "the", "a", "an", "is", "are", "was",
+             "be", "to", "for", "with", "from", "by", "as", "and", "or",
+             "not", "no", "yes", "returns", "default", "value", "formula",
+             "exists", "has", "have", "do", "does", "if", "else", "function",
+             "method", "class", "true", "false",
+             "и", "на", "в", "с", "по", "из", "для", "это", "что", "есть"}
+
+    def _toks(s: str) -> set[str]:
+        # Tokens: alphanumerics + underscore + slash + dot + colon (keeps
+        # file.py:line refs intact), length ≥ 2, lowercased, stop-words removed.
+        raw = {t.lower() for t in re.findall(r"[A-Za-z0-9_./:]{2,}", s)}
+        return {t for t in raw if t not in _STOP}
+
+    h_tok = _toks(hypothesis)
+    o_tok = _toks(observation)
+    if not h_tok:
+        return json.dumps({"match_score": 0.0, "verdict": "INVALID",
+                           "diff": "no anchoring tokens in hypothesis after "
+                                   "stop-word filter"}, ensure_ascii=False)
+
+    # Substring-aware match: a hypothesis token counts as found if it's
+    # equal to OR a substring of any observation token. This handles cases
+    # like "orchestrator.py" (hypothesis) vs "agents/orchestrator.py:113"
+    # (observation) — same file, just longer prefix in observation.
+    o_blob = " ".join(o_tok) + " "
+    matched = {t for t in h_tok if t in o_tok or t in o_blob}
+
+    overlap = len(matched) / len(h_tok)
+    only_in_h = sorted(h_tok - matched)[:15]
+    extra_in_o = sorted(o_tok - h_tok)[:15]
+
+    if overlap >= 0.70:
+        verdict = "MATCH"
+    elif overlap >= 0.40:
+        verdict = "PARTIAL"
+    else:
+        verdict = "MISMATCH"
+
+    # Persist calibration event so we can build a trend.
+    try:
+        from agents.kernel import Decision
+        from agents.orchestrator import _persist_ze_event, _ZeMetrics
+        d = Decision(id="ze_verify_claim",
+                     description=hypothesis[:80],
+                     action_type="ze_verify_claim",
+                     payload={"hypothesis": hypothesis[:1000],
+                              "observation": observation[:2000]})
+        m = _ZeMetrics(
+            impedance_before=1.0 - overlap,  # before verify: full uncertainty about claim
+            impedance_after=0.0 if verdict == "MATCH" else (1.0 - overlap),
+            instant_c=overlap if verdict == "MATCH" else -(1.0 - overlap),
+            phi_ze=overlap,                  # calibration score
+            utility=overlap,
+        )
+        _persist_ze_event(d, blocked_at=None, metrics=m,
+                          output_chars=len(observation))
+    except Exception as e:
+        log.debug(f"ze_verify persist failed: {e}")
+
+    return json.dumps({
+        "match_score": round(overlap, 3),
+        "verdict": verdict,
+        "missing_from_observation": only_in_h,
+        "extra_in_observation": extra_in_o,
+        "advice": ("OK to assert" if verdict == "MATCH"
+                   else "DO NOT ASSERT — fix hypothesis to match observation, "
+                        "or quote observation verbatim instead"),
+    }, ensure_ascii=False)
+
+
 # ── Tool-loop driver ───────────────────────────────────────────────────────
 
 
@@ -1012,8 +1268,48 @@ ABSOLUTE RULES:
      git_push_public, telegram_broadcast), call kernel_check. If consent
      not granted, ask the user before proceeding.
   3. Patient data NEVER leaves the machine in tool calls.
-  4. Russian/English/Georgian — match the user's language.
-  5. Keep outputs concise. Prefer pointed answers over walls of text.
+  4. INPUT IS NATURAL LANGUAGE BY DEFAULT, NOT A SHELL COMMAND.
+     Detect the language the user is *trying to write in* — including when
+     they type it in Latin/ASCII transliteration. Then reply in that same
+     language, written in its NATIVE script (alphabet/abjad/syllabary),
+     unless the user explicitly types in Latin and asks for a Latin reply.
+
+     Supported languages = UN-6 + Georgian, with their canonical scripts:
+       • Russian       → Cyrillic   (translit: "proverit", "rasskaji")
+       • Georgian      → Mkhedruli  (translit: "gamarjoba", "rogor xar")
+       • Arabic        → Arabic abjad (translit: "salam", "ahlan", "kayf")
+       • Chinese       → Hanzi 简体 (translit/pinyin: "ni hao", "xie xie")
+       • French        → Latin w/ accents (ASCII: "francais" → "français")
+       • Spanish       → Latin w/ accents (ASCII: "como estas" → "¿cómo estás?")
+       • English       → Latin
+
+     Heuristic: if the input is Latin-only but has tokens that don't form
+     valid English/French/Spanish words AND match a translit pattern (e.g.
+     "ch/sh/zh/kh/ts/iu/ia" for Russian, "kh/gh/ts/ch/dz/ph/q/w/x" for
+     Georgian, "kh/sh/dh/q/3/7" for Arabic, "ng/zh/x/q" + tone-less syllables
+     for pinyin) — treat it as transliterated, not English. Do NOT echo
+     the translit back to the user; reply in native script.
+  5. Use the `bash` tool ONLY when the user's intent is clearly to execute
+     a shell command (verb like "run", "execute", or a recognizable command
+     verb such as ls/cat/grep/git/python/pytest/curl as the FIRST token
+     after stripping any shell-prompt prefix). If the input is a question,
+     a request to explain/check/think/describe, or a transliterated phrase
+     in a natural language — answer it as text via `final`, do not call
+     bash. When in doubt, treat as natural language.
+  6. Self-introspection questions ("what can you do", "your architecture",
+     "your tools", "your capabilities", in any language or translit) →
+     answer directly with a concise summary of your role + tool list +
+     decision-kernel laws. Do NOT invoke `bash`, `read_file`, or any tool
+     to answer them.
+  6b. CALIBRATION — for any DETAILED claim about the codebase (specific
+     file:line numbers, exact function bodies, schema columns, list counts,
+     verbatim quotes), you MUST call `ze_verify(hypothesis, observation)`
+     after grep/view_file and BEFORE writing the claim into a final answer.
+     If verdict ≠ MATCH, do NOT assert your hypothesis — quote the observation
+     verbatim instead. This applies especially to audit / self-diagnosis /
+     architecture-review tasks. Skipping ze_verify on such claims is treated
+     as a hallucination event.
+  7. Keep outputs concise. Prefer pointed answers over walls of text.
 """
 
 
@@ -1163,7 +1459,21 @@ def run(task: str, *, max_iters: int = 10, kernel: bool = True,
         except Exception as e:
             log.debug(f"prefetcher disabled: {e}")
 
-    sys_prompt = SYSTEM_PROMPT + "\n\n" + _format_tools_block()
+    from pathlib import Path as _Path
+    _AIM_ROOT = _Path(__file__).resolve().parent.parent
+    _self_locator = (
+        "RUNTIME LOCATION:\n"
+        f"  AIM root  = {_AIM_ROOT}\n"
+        f"  agents/   = {_AIM_ROOT}/agents\n"
+        f"  cli/      = {_AIM_ROOT}/cli\n"
+        f"  scripts/  = {_AIM_ROOT}/scripts\n"
+        f"  web/      = {_AIM_ROOT}/web\n"
+        f"  tools/    = {_AIM_ROOT}/tools\n"
+        "When the user asks introspection questions about AIM itself, read\n"
+        "files relative to AIM root above. Do NOT guess paths like\n"
+        "/home/<user>/Desktop/AIM — that path does not exist.\n"
+    )
+    sys_prompt = SYSTEM_PROMPT + "\n\n" + _self_locator + "\n" + _format_tools_block()
 
     # On critical tasks, use ensemble to ground the first plan across providers.
     if critical and ensemble:
@@ -1304,10 +1614,32 @@ def run(task: str, *, max_iters: int = 10, kernel: bool = True,
             if _prev_sigint is not None:
                 try: _signal.signal(_signal.SIGINT, _prev_sigint)
                 except Exception: pass
+            # Auto Ze-verify on final answer: scan every <file>:<line> ref
+            # against the file system. Broken refs are surfaced as a header
+            # so the user (or downstream agent) sees them. Best-effort —
+            # never block on Ze-verify failure here; the answer still goes out.
+            broken_refs: list[str] = []
+            try:
+                from agents.orchestrator import _ze_verify_output
+                _vr = _ze_verify_output(final_text)
+                if _vr.bad:
+                    broken_refs = list(_vr.bad)
+                    head = "; ".join(broken_refs[:5])
+                    extra = "" if len(broken_refs) <= 5 else f"; +{len(broken_refs)-5} more"
+                    final_text = (
+                        f"[Ze-verify] {_vr.ok}/{_vr.total} refs OK; "
+                        f"BROKEN ({len(broken_refs)}): {head}{extra}\n\n"
+                        + final_text
+                    )
+            except Exception as _e:
+                log.debug(f"final-stage Ze-verify failed: {_e}")
+
             emit({"type": "final", "answer": final_text,
-                  "tools_used": tools_used, "iters": it + 1})
+                  "tools_used": tools_used, "iters": it + 1,
+                  "broken_refs": broken_refs})
             return {"answer": final_text, "trace": trace,
-                    "tools_used": tools_used, "iters": it + 1}
+                    "tools_used": tools_used, "iters": it + 1,
+                    "broken_refs": broken_refs}
 
         # Multi-action pipeline (A3) — mixed sequential + parallel groups
         if isinstance(action.get("actions"), list) and action["actions"]:

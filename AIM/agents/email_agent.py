@@ -173,11 +173,15 @@ def send(to: str, subject: str, body: str, *,
          thread_id: Optional[str] = None,
          cc: Optional[str] = None, bcc: Optional[str] = None,
          user_confirmed: bool = False) -> dict:
-    """Send an email. Hard-gated by L_CONSENT + L_PRIVACY."""
-    if not user_confirmed:
-        raise PermissionError(
-            "L_CONSENT: email_send requires user_confirmed=True. "
-            "Pass user_confirmed=True only AFTER explicit user approval.")
+    """Send an email. Hard-gated by L_CONSENT + L_PRIVACY (kernel-enforced)."""
+    from agents.kernel import Decision, evaluate_l_consent
+    d = Decision(id="email", description="email_send",
+                 action_type="email_send",
+                 payload={"to": to, "subject": subject, "body_len": len(body)})
+    ok, reason = evaluate_l_consent(
+        d, patient={}, context={"user_confirmed": bool(user_confirmed)})
+    if not ok:
+        raise PermissionError(reason)
     _kernel_check_privacy(body, "email_send")
     svc = _service()
     msg = _build_message(to, subject, body, cc=cc, bcc=bcc, thread_id=thread_id)

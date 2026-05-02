@@ -920,12 +920,50 @@ def warmup_deepseek_cache(prefix: str, max_tokens: int = 4) -> bool:
 # ── Статус провайдеров ────────────────────────────────────────────────────────
 
 def providers_status() -> dict:
-    """Какие LLM-провайдеры доступны."""
+    """Какие LLM-провайдеры доступны.
+
+    `tier_chain` — selected primary per tier (first available).
+    `tier_fallbacks` — full ordered fallback chain per tier (matches the
+    actual code-paths in ask_critical/ask_deep/ask/ask_long/ask_fast).
+    """
     has_claude  = anthropic_available()
     has_gemini  = gemini_available()
     has_ds      = bool(DEEPSEEK_API_KEY)
     has_ollama  = ollama_available()
     has_groq    = bool(GROQ_API_KEY)
+
+    def _filter(seq: list[tuple[bool, str]]) -> list[str]:
+        return [m for ok, m in seq if ok]
+
+    critical_chain = _filter([
+        (has_claude, "claude-opus-4-7"),
+        (has_gemini, Models.GEMINI_PRO),
+        (has_ds,     Models.DS_REASONER),
+        (has_ollama, Models.OLLAMA_REASONER),
+    ])
+    reasoning_chain = _filter([
+        (has_ds,     Models.DS_REASONER),
+        (has_claude, "claude-opus-4-7"),
+        (has_gemini, Models.GEMINI_PRO),
+        (has_ollama, Models.OLLAMA_REASONER),
+    ])
+    long_chain = _filter([
+        (has_ds,     Models.DS_CHAT),       # 1M ctx
+        (has_gemini, Models.GEMINI_PRO),    # 2M ctx
+        (has_ollama, Models.OLLAMA_CHAT),
+    ])
+    default_chain = _filter([
+        (has_ds,     Models.DS_CHAT),
+        (has_gemini, Models.GEMINI_FLASH),
+        (has_ollama, Models.OLLAMA_CHAT),
+        (has_groq,   Models.GROQ_LLAMA),
+    ])
+    fast_chain = _filter([
+        (has_groq,   Models.GROQ_LLAMA_FAST),
+        (has_ollama, Models.OLLAMA_FAST),
+        (has_ds,     Models.DS_CHAT),
+    ])
+
     return {
         "anthropic": has_claude,
         "gemini":    has_gemini,
@@ -934,20 +972,17 @@ def providers_status() -> dict:
         "ollama":    has_ollama,
         "ollama_url": Endpoints.OLLAMA,
         "tier_chain": {
-            "critical":   ("claude-opus-4-7"     if has_claude
-                           else Models.GEMINI_PRO if has_gemini
-                           else Models.DS_REASONER if has_ds
-                           else Models.OLLAMA_REASONER),
-            "reasoning":  (Models.DS_REASONER    if has_ds
-                           else "claude-opus-4-7" if has_claude
-                           else Models.GEMINI_PRO if has_gemini
-                           else Models.OLLAMA_REASONER),
-            "default":    (Models.DS_CHAT        if has_ds
-                           else Models.GEMINI_FLASH if has_gemini
-                           else Models.OLLAMA_CHAT if has_ollama
-                           else Models.GROQ_LLAMA),
-            "fast":       (Models.GROQ_LLAMA_FAST if has_groq
-                           else Models.OLLAMA_FAST if has_ollama
-                           else Models.DS_CHAT),
+            "critical":  critical_chain[0]  if critical_chain  else None,
+            "reasoning": reasoning_chain[0] if reasoning_chain else None,
+            "long":      long_chain[0]      if long_chain      else None,
+            "default":   default_chain[0]   if default_chain   else None,
+            "fast":      fast_chain[0]      if fast_chain      else None,
+        },
+        "tier_fallbacks": {
+            "critical":  critical_chain,
+            "reasoning": reasoning_chain,
+            "long":      long_chain,
+            "default":   default_chain,
+            "fast":      fast_chain,
         },
     }

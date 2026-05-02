@@ -85,11 +85,30 @@ CREATE TABLE IF NOT EXISTS ai_events_archive (
     override_reason TEXT
 );
 
+CREATE TABLE IF NOT EXISTS ze_events (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    ts              TEXT NOT NULL,
+    decision_id     TEXT NOT NULL,
+    action_type     TEXT NOT NULL,
+    blocked_at      TEXT,            -- gate name on block ('L0-3','L_PRIVACY',
+                                     -- 'L_CONSENT','L_VERIFIABILITY') or NULL on pass
+    impedance_before REAL,
+    impedance_after  REAL,
+    instant_c       REAL,
+    phi_ze          REAL,
+    utility         REAL,
+    payload_chars   INTEGER,
+    output_chars    INTEGER
+);
+
 CREATE INDEX IF NOT EXISTS idx_patients_folder ON patients(folder);
 CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id);
 CREATE INDEX IF NOT EXISTS idx_cache_hash ON llm_cache(hash);
 CREATE INDEX IF NOT EXISTS idx_archive_patient ON ai_events_archive(patient_id);
 CREATE INDEX IF NOT EXISTS idx_archive_ts ON ai_events_archive(ts);
+CREATE INDEX IF NOT EXISTS idx_ze_ts          ON ze_events(ts);
+CREATE INDEX IF NOT EXISTS idx_ze_action      ON ze_events(action_type);
+CREATE INDEX IF NOT EXISTS idx_ze_blocked     ON ze_events(blocked_at);
 """
 
 def init_db():
