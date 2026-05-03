@@ -93,6 +93,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ai-distillation"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "rusqlite",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "aim-ai-findings-to-evals"
 version = "0.1.0"
 dependencies = [
@@ -198,6 +209,18 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
+]
+
+[[package]]
+name = "aim-ai-reflexion"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "once_cell",
+ "regex",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
