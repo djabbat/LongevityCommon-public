@@ -169,7 +169,25 @@
     "html[data-theme=\"dark\"] .longevity-platform-title{color:#fff !important}",
     "html[data-theme=\"dark\"] .section > h2,html[data-theme=\"dark\"] .section > h3,html[data-theme=\"dark\"] .sections .section > h2,html[data-theme=\"dark\"] .sections .section > h3{background:#15171f !important;color:#fff !important;border-color:#2a2f40 !important}",
     "html[data-theme=\"dark\"] .section{border-top-color:#2a2f40 !important}",
-    "html[data-theme=\"dark\"] .section::before,html[data-theme=\"dark\"] .section::after{border-color:#2a2f40 !important}"
+    "html[data-theme=\"dark\"] .section::before,html[data-theme=\"dark\"] .section::after{border-color:#2a2f40 !important}",
+    /* Project essence panel — collapsible info block injected on Phoenix subdomains */
+    ".lc-essence{max-width:1100px !important;margin:18px auto !important;padding:0 24px !important;font-family:Inter,-apple-system,system-ui,sans-serif !important;display:block !important;width:100% !important;box-sizing:border-box !important}",
+    ".lc-essence-toggle{width:100% !important;display:flex !important;align-items:center !important;justify-content:space-between !important;gap:12px !important;background:rgba(79,70,229,0.08) !important;border:1px solid rgba(79,70,229,0.25) !important;border-radius:6px !important;padding:12px 16px !important;cursor:pointer !important;font-size:15px !important;font-weight:600 !important;color:#1e1b4b !important;font-family:inherit !important;text-align:left !important;line-height:1.3 !important}",
+    ".lc-essence-toggle:hover{background:rgba(79,70,229,0.14) !important;border-color:rgba(79,70,229,0.45) !important}",
+    ".lc-essence-title{flex:1 !important;color:#1e1b4b !important}",
+    ".lc-essence-chev{color:#4f46e5 !important;font-size:14px !important}",
+    ".lc-essence-body{margin-top:12px !important;padding:18px 22px !important;background:#fff !important;border:1px solid #e2e8f0 !important;border-left:3px solid #4f46e5 !important;border-radius:0 6px 6px 0 !important;font-size:15px !important;line-height:1.6 !important;color:#1f2937 !important}",
+    ".lc-essence-body p{margin:0 0 12px !important}",
+    ".lc-essence-body p:last-child{margin-bottom:0 !important}",
+    ".lc-essence-body code{background:#f1f5f9 !important;padding:1px 6px !important;border-radius:3px !important;font-family:ui-monospace,Menlo,monospace !important;font-size:13px !important;color:#1e293b !important}",
+    ".lc-essence-body a{color:#4f46e5 !important;text-decoration:underline !important}",
+    "html[data-theme=\"dark\"] .lc-essence-toggle{background:rgba(99,102,241,0.18) !important;border-color:rgba(129,140,248,0.4) !important;color:#e0e7ff !important}",
+    "html[data-theme=\"dark\"] .lc-essence-toggle:hover{background:rgba(99,102,241,0.28) !important;border-color:rgba(129,140,248,0.6) !important}",
+    "html[data-theme=\"dark\"] .lc-essence-title{color:#e0e7ff !important}",
+    "html[data-theme=\"dark\"] .lc-essence-chev{color:#a5b4fc !important}",
+    "html[data-theme=\"dark\"] .lc-essence-body{background:#15171f !important;border-color:#2a2f40 !important;border-left-color:#818cf8 !important;color:#d8dce4 !important}",
+    "html[data-theme=\"dark\"] .lc-essence-body code{background:#2a2f40 !important;color:#e0e3eb !important}",
+    "html[data-theme=\"dark\"] .lc-essence-body a{color:#a5b4fc !important}"
   ].join("\n");
 
   // Favicon — one emoji per subdomain. Idempotent: skip if a non-default
@@ -202,12 +220,80 @@
     document.head.appendChild(link);
   }
 
+  // Project essence — rich "what is this project, why, how to use" block
+  // injected on Phoenix subdomains where the home page is a live tool
+  // (Ze simulator, BioSense dashboard, FCLC orchestrator). The block is
+  // collapsible and remembers its state via localStorage. Static landings
+  // (MCOA, CDATA, Hive) carry their own essence in-page and are skipped.
+  function injectEssence(){
+    var essences = {
+      "ze.longevity.ge": {
+        title: "Ze Theory · entropic-geometric ansatz",
+        body:
+          "<p><strong>The interactive widget on this page</strong> simulates the central law of Ze Theory: <code>dτ_Ze/dt = −α · I(Z)</code>, where <code>I(Z)</code> is the Kullback-Leibler divergence between actual and modelled state. From this single ansatz the simulator <em>derives mathematically</em> a quadratic CHSH deformation, the LGI-QFI bound (Abboud 2026), and the universal fixed point <code>v* = 0.45631</code> at <code>k_λ = 1</code>.</p>" +
+          "<p><strong>Why it exists.</strong> The aging field has decoupled \"information\" (epigenetic clocks, biomarkers) from \"thermodynamics\" (entropy production, dissipation). Ze Theory unifies them via a single quantity: prediction error. A system that predicts itself well burns less time; a system whose model decays burns more. The χ_Ze fixed point is what falls out of the variational principle <code>F = E − T·S − λ·I_pred</code>.</p>" +
+          "<p><strong>Status.</strong> Internal manuscript, not peer-reviewed (Tkemaladze 2026, <em>Longevity Horizon</em> 2(5), DOI <a href=\"https://doi.org/10.65649/xf5vp867\">10.65649/xf5vp867</a>). Mathematical derivations passing CI; biological extension is hypothesis-stage — BioSense empirically confirms the v* fixed point on AoU N=500.</p>" +
+          "<p><strong>How to use.</strong> Drag <code>k_λ</code>, <code>δ</code>, and <code>i</code> sliders below to watch the CHSH deformation and decay curves update in real time. The simulator runs entirely server-side; no data is sent except the slider values. Read the <a href=\"/about\">/about</a> page for the full derivation and references.</p>" +
+          "<p><strong>For:</strong> theorists · physicists checking the CHSH/LGI/QFI derivation · readers cross-validating the v* fixed point.</p>"
+      },
+      "biosense.longevity.ge": {
+        title: "BioSense · wearable χ_Ze biomarker",
+        body:
+          "<p><strong>The dashboard on this page</strong> reads sample EEG / HRV / respiration / sleep traces and computes the χ_Ze aging-activity biomarker continuously. Variational principle: <code>F = E − T·S − λ·I_pred</code>. Theoretical fixed point <code>v* = 0.45631</code>; sensitivity range <code>[0.32, 0.58]</code> for <code>k_λ ∈ [0.5, 2.0]</code>.</p>" +
+          "<p><strong>Empirical validation (2026).</strong> Swept-v* search on All-of-Us N=500 returned <code>v*_optimal = 0.451 (95% CI 0.443–0.459)</code> — consistent with the theoretical prediction. Confirmatory pre-registered N≥2000 trial pending EIC funding.</p>" +
+          "<p><strong>Honest disclosure.</strong> The multimodal weights (0.30, 0.30, 0.20, 0.20) for EEG · HRV · respiration · sleep are <em>post-hoc</em> pilot fits, not theory-fixed. They will be re-derived under the pre-registered protocol before the confirmatory trial.</p>" +
+          "<p><strong>Privacy.</strong> Raw signals never leave the device; only the scalar χ_Ze is exported. The on-device estimator is open-source (Python/NumPy reference, mobile WebUI). For federated cohort studies see <a href=\"https://fclc.longevity.ge\">FCLC</a>.</p>" +
+          "<p><strong>For:</strong> wearable-device engineers · sleep scientists · exacerbation-prediction clinicians · AoU/UK Biobank reusers.</p>"
+      },
+      "fclc.longevity.ge": {
+        title: "FCLC · federated clinical learning cooperative",
+        body:
+          "<p><strong>The orchestrator dashboard on this page</strong> shows live federation rounds, ε spent (Renyi-DP accountant), Krum-rejected updates, and the contribution leaderboard. Each participating clinic deploys a local node; raw patient data never leaves the clinic.</p>" +
+          "<p><strong>Privacy stack.</strong> Renyi differential privacy (Mironov 2017, ε ≤ 1.0/round, ε_total ≈ 0.43 at σ=1.5, q=0.013, T=5), k-anonymity (k ≥ 7), Krum Byzantine-robust aggregation (tolerates ≤ 25% malicious clients), SecAgg+ secure aggregation (Bonawitz 2017 + Shamir secret sharing). v13.4 PASS milestone reached on all unit tests.</p>" +
+          "<p><strong>Threat model (explicit).</strong> Secure ONLY against semi-honest server + Byzantine clients. NOT secure against active server collusion or a malicious server. <strong>GDPR Article 9 blocker</strong> until FCLC v14 (active-adversary migration, planned Q1 2027).</p>" +
+          "<p><strong>Role in the ecosystem.</strong> FCLC is the privacy-preserving infrastructure that lets MCOA counter-weight w_i(tissue) be calibrated across multi-site cohorts without raw data transfer. Without FCLC, MCOA cannot reach the N≥2000 falsification cohort required by Axiom M4.</p>" +
+          "<p><strong>For:</strong> hospital IT · GDPR / DPO officers · clinical AI engineers wanting to participate in MCOA validation · federation researchers studying SecAgg/RDP composition.</p>"
+      }
+    };
+    var e = essences[host];
+    if (!e) return;
+    var KEY = "lc_essence_" + host;
+    var collapsed = localStorage.getItem(KEY) === "1";
+    var wrap = document.createElement("section");
+    wrap.className = "lc-essence";
+    wrap.setAttribute("aria-label", "Project essence");
+    wrap.innerHTML =
+      '<button type="button" class="lc-essence-toggle" aria-expanded="' + (!collapsed) + '">' +
+        '<span class="lc-essence-title">ℹ ' + e.title + '</span>' +
+        '<span class="lc-essence-chev">' + (collapsed ? "▸" : "▾") + '</span>' +
+      '</button>' +
+      '<div class="lc-essence-body" ' + (collapsed ? 'hidden' : '') + '>' + e.body + '</div>';
+    // Insert after eco-bar (which is body's first child by now).
+    var bar = document.querySelector(".eco-bar-injected");
+    if (bar && bar.nextSibling) {
+      document.body.insertBefore(wrap, bar.nextSibling);
+    } else {
+      document.body.appendChild(wrap);
+    }
+    var btn = wrap.querySelector(".lc-essence-toggle");
+    var bodyEl = wrap.querySelector(".lc-essence-body");
+    var chev = wrap.querySelector(".lc-essence-chev");
+    btn.addEventListener("click", function(){
+      var nowCollapsed = !bodyEl.hidden;
+      bodyEl.hidden = nowCollapsed;
+      btn.setAttribute("aria-expanded", String(!nowCollapsed));
+      chev.textContent = nowCollapsed ? "▸" : "▾";
+      localStorage.setItem(KEY, nowCollapsed ? "1" : "0");
+    });
+  }
+
   function init(){
     document.head.appendChild(style);
     ensureFavicon();
     var div = document.createElement("div");
     div.innerHTML = html;
     document.body.insertBefore(div.firstChild, document.body.firstChild);
+    injectEssence();
     var btn = document.querySelector(".theme-toggle-i");
     function syncIcon(){
       var dark = document.documentElement.getAttribute("data-theme") === "dark";
