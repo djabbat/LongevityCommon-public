@@ -1,0 +1,36 @@
+[Unit]
+Description=FCLC Web — Phoenix orchestrator dashboard (native)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=exec
+User=jaba
+Group=jaba
+WorkingDirectory=/opt/fclc-web
+
+Environment="PORT=4003"
+Environment="PHX_HOST=fclc.longevity.ge"
+Environment="PHX_SERVER=true"
+Environment="LANG=en_US.UTF-8"
+Environment="LC_ALL=en_US.UTF-8"
+Environment="FCLC_SERVER_URL=http://127.0.0.1:4002"
+Environment="FCLC_API_TOKEN=1d944b5e472979ffa426ac77e95b3277914ca4986cb0b2e5"
+Environment="SECRET_KEY_BASE=bc40dbfaa67e9b685fd88531a0b865f8791e6cb73cd134dc985cb76fb45830b5"
+Environment="ERL_FLAGS=-kernel inet_dist_listen_min 9100 -kernel inet_dist_listen_max 9100"
+Environment="RELEASE_COOKIE=fclc-web-prod-cookie"
+
+ExecStart=/opt/fclc-web/bin/fclc_web start
+ExecStop=/opt/fclc-web/bin/fclc_web stop
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/fclc-web/tmp /tmp
+
+[Install]
+WantedBy=multi-user.target

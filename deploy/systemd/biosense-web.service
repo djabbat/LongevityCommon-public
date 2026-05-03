@@ -1,0 +1,35 @@
+[Unit]
+Description=BioSense Web — Phoenix dashboard (native)
+After=network.target
+Wants=network.target
+
+[Service]
+Type=exec
+User=jaba
+Group=jaba
+WorkingDirectory=/opt/biosense-web
+
+Environment="PORT=4501"
+Environment="PHX_HOST=biosense.longevity.ge"
+Environment="PHX_SERVER=true"
+Environment="LANG=en_US.UTF-8"
+Environment="LC_ALL=en_US.UTF-8"
+Environment="BIOSENSE_BACKEND_URL=http://127.0.0.1:4502"
+Environment="SECRET_KEY_BASE=IVUk0znP5fY4RXntURIZWjhLD-0c9vuSTV_XzKivL9-pXsC012sB7hoOk_29sLej"
+Environment="LONGEVITYCOMMON_VERSION=v5.6"
+Environment="RELEASE_COOKIE=biosense-web-prod-cookie"
+
+ExecStart=/opt/biosense-web/bin/biosense_web start
+ExecStop=/opt/biosense-web/bin/biosense_web stop
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/opt/biosense-web/tmp /tmp
+
+[Install]
+WantedBy=multi-user.target
