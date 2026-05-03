@@ -101,6 +101,15 @@ def _build_parser() -> argparse.ArgumentParser:
     g = sub.add_parser("do", help="freeform task dispatcher")
     g.add_argument("query", nargs="+", help="natural-language request")
 
+    # setup-key — interactive provider-key setup; writes to ~/.aim_env
+    g = sub.add_parser("setup-key",
+                       help="set/replace personal LLM provider keys (DeepSeek, Groq, Anthropic, Gemini)")
+    g.add_argument("--provider", action="append", default=None,
+                   choices=["deepseek", "groq", "anthropic", "gemini"],
+                   help="restrict to these providers (repeatable; default: all)")
+    g.add_argument("--status", action="store_true",
+                   help="just show which keys are currently set, without prompting")
+
     # serve — long-running daemon (G10)
     g = sub.add_parser("serve", help="run AIM as a foreground daemon")
     g.add_argument("--once", action="store_true",
@@ -604,6 +613,15 @@ def _cmd_diag(args) -> int:
     return 0
 
 
+def _cmd_setup_key(args) -> int:
+    from key_setup import run_interactive, show_status
+    if args.status:
+        show_status()
+        return 0
+    run_interactive(args.provider)
+    return 0
+
+
 _HANDLERS: dict[str, Callable] = {
     "brief":     _cmd_brief,
     "recall":    _cmd_recall,
@@ -620,6 +638,7 @@ _HANDLERS: dict[str, Callable] = {
     "escalate":  _cmd_escalate,
     "health":    _cmd_health,
     "version":   _cmd_version,
+    "setup-key": _cmd_setup_key,
 }
 
 

@@ -5,6 +5,19 @@ Architecture:
     AIM Node (per-user, local)     →  validates token via hub_client, runs LLM
                                        with the user's own DeepSeek/Groq keys
 
+**INVARIANT: the Hub MUST NEVER store, accept, or proxy LLM provider keys.**
+Each AIM user holds their own DeepSeek / Groq / Anthropic / Gemini key,
+billed to their own provider account. Keys live on the node — either in
+``~/.aim_env`` (single-user CLI) or in ``agents/user_keys.py``'s on-disk
+store (multi-tenant Telegram / web). The hub schema below has no
+``api_key`` column; if you ever feel tempted to add one, stop and re-read
+this comment. Adding LLM-key storage to the hub would make the platform
+liable for users' provider quotas and break the per-user billing model.
+
+The :func:`_assert_no_llm_key_columns` self-check below runs at import time
+and raises if a future migration accidentally introduces a key-storage
+column.
+
 This module is loaded ONLY when AIM_ROLE=hub. Node processes never touch it.
 
 Cross-platform:
@@ -148,6 +161,42 @@ CREATE INDEX IF NOT EXISTS idx_nodes_seen ON nodes(last_seen);
 def init_hub_db() -> None:
     with _conn() as con:
         con.executescript(SCHEMA)
+        _assert_no_llm_key_columns(con)
+
+
+# Banned column names — anything resembling cloud LLM credentials. Hub schema
+# must never carry these. If a future migration adds one, fail loudly at
+# startup so the issue is caught before the hub silently starts holding
+# users' provider keys.
+_BANNED_KEY_COLUMNS = {
+    "api_key", "deepseek_api_key", "deepseek_key", "ds_key",
+    "groq_api_key", "groq_key", "anthropic_api_key", "anthropic_key",
+    "claude_api_key", "openai_api_key", "openai_key",
+    "gemini_api_key", "gemini_key", "google_api_key",
+    "llm_api_key", "llm_key", "provider_key", "provider_api_key",
+}
+
+
+def _assert_no_llm_key_columns(con: sqlite3.Connection) -> None:
+    """Hub-side invariant: no LLM provider keys are ever stored on the hub.
+
+    Each AIM user holds their own provider keys on the node side
+    (~/.aim_env or agents/user_keys.py). Storing them on the hub would
+    break the per-user billing model and concentrate credential risk.
+    """
+    for (table_name,) in con.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall():
+        for col in con.execute(f"PRAGMA table_info({table_name})").fetchall():
+            cname = col[1].lower()
+            if cname in _BANNED_KEY_COLUMNS:
+                raise RuntimeError(
+                    f"Hub schema contains banned column "
+                    f"{table_name}.{cname!r}. The Hub MUST NOT store LLM "
+                    f"provider keys; per-user keys live on the node "
+                    f"(~/.aim_env or ~/.cache/aim/user_keys.json). "
+                    f"Drop this column or move the key store node-side."
+                )
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────────

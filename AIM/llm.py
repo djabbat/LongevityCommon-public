@@ -13,12 +13,23 @@ from typing import Optional
 from openai import OpenAI, APITimeoutError
 
 from config import (
-    DEEPSEEK_API_KEY, GROQ_API_KEY, ANTHROPIC_API_KEY, GEMINI_API_KEY,
     Models, Endpoints,
     REASONING_KEYWORDS,
     LLM_TEMPERATURE, LLM_MAX_TOKENS, LLM_MAX_TOKENS_LONG, LLM_TIMEOUT, LLM_CONNECT_TIMEOUT,
     SUPPORTED_LANGS,
 )
+
+# Per-user key resolver. Returns the effective key for the active context
+# (thread-local override → env). Each AIM user holds their own DeepSeek /
+# Groq / Anthropic / Gemini key — the platform NEVER shares a single key.
+# See user_keys.py (kept at top level to avoid circular imports through
+# agents/__init__.py, which re-exports doctor → llm).
+from user_keys import get_key as _get_key
+
+def _ds_key() -> str:        return _get_key("deepseek")
+def _groq_key() -> str:      return _get_key("groq")
+def _anthropic_key() -> str: return _get_key("anthropic")
+def _gemini_key() -> str:    return _get_key("gemini")
 
 log = logging.getLogger("aim.llm")
 
@@ -180,10 +191,10 @@ def _client(base_url: str, api_key: str) -> OpenAI:
     return OpenAI(base_url=base_url, api_key=api_key, timeout=timeout)
 
 def _deepseek() -> OpenAI:
-    return _client(Endpoints.DEEPSEEK, DEEPSEEK_API_KEY)
+    return _client(Endpoints.DEEPSEEK, _ds_key())
 
 def _groq() -> OpenAI:
-    return _client(Endpoints.GROQ, GROQ_API_KEY)
+    return _client(Endpoints.GROQ, _groq_key())
 
 
 # ── Ollama (local LLM via OpenAI-compat /v1) ────────────────────────────────
@@ -234,12 +245,12 @@ _GEMINI_WORKING_MODEL: Optional[str] = None
 def gemini_available() -> bool:
     if _GEMINI_DISABLED_THIS_SESSION:
         return False
-    return bool(GEMINI_API_KEY)
+    return bool(_gemini_key())
 
 
 def _gemini() -> OpenAI:
     """Gemini exposes an OpenAI-compatible /v1beta/openai surface — same client."""
-    return _client(Endpoints.GEMINI, GEMINI_API_KEY)
+    return _client(Endpoints.GEMINI, _gemini_key())
 
 
 def _gemini_call_one(model: str, msgs: list[dict],
@@ -332,29 +343,39 @@ def _gemini_chat(prompt: str, *, system: str = "", model: Optional[str] = None,
 #
 # Used by ask_critical(), ensemble adjudication, and tools/vision.see().
 # Native messages API (not OpenAI-compatible). Falls through to ds-v4-pro
-# when ANTHROPIC_API_KEY is missing.
+# when no Anthropic key is set for the active user/context.
+#
+# Per-key client cache: per-user keys mean we can't share a single Anthropic()
+# instance. We cache per (key) so repeat calls within the same context are
+# cheap, while a context-switch transparently picks up the new user's key.
 
-_ANTHROPIC_CLIENT = None
+_ANTHROPIC_CLIENTS: dict[str, object] = {}
+_ANTHROPIC_CLIENTS_LOCK = threading.Lock()
 
 
 def anthropic_available() -> bool:
-    return bool(ANTHROPIC_API_KEY)
+    return bool(_anthropic_key())
 
 
 def _anthropic():
-    global _ANTHROPIC_CLIENT
-    if _ANTHROPIC_CLIENT is not None:
-        return _ANTHROPIC_CLIENT
-    try:
-        from anthropic import Anthropic
-    except ImportError:
-        log.warning("anthropic SDK not installed; pip install anthropic")
+    key = _anthropic_key()
+    if not key:
         return None
-    _ANTHROPIC_CLIENT = Anthropic(
-        api_key=ANTHROPIC_API_KEY,
-        timeout=httpx.Timeout(LLM_TIMEOUT, connect=LLM_CONNECT_TIMEOUT),
-    )
-    return _ANTHROPIC_CLIENT
+    with _ANTHROPIC_CLIENTS_LOCK:
+        cached = _ANTHROPIC_CLIENTS.get(key)
+        if cached is not None:
+            return cached
+        try:
+            from anthropic import Anthropic
+        except ImportError:
+            log.warning("anthropic SDK not installed; pip install anthropic")
+            return None
+        client = Anthropic(
+            api_key=key,
+            timeout=httpx.Timeout(LLM_TIMEOUT, connect=LLM_CONNECT_TIMEOUT),
+        )
+        _ANTHROPIC_CLIENTS[key] = client
+        return client
 
 
 def _claude_chat(prompt: str, *, system: str = "", model: Optional[str] = None,
@@ -456,10 +477,10 @@ def _route(prompt: str, lang: Optional[str], system: str) -> tuple[str, str, Ope
             from agents.smart_routing import route as _sr_route
             r = _sr_route(prompt + "\n" + (system or ""))
             model = r["model"]
-            if model.startswith("deepseek-") and DEEPSEEK_API_KEY:
+            if model.startswith("deepseek-") and _ds_key():
                 log.info(f"SmartRouter → {model} (tier={r['tier']})")
                 return model, "deepseek", _deepseek()
-            if model.startswith("llama-") and GROQ_API_KEY:
+            if model.startswith("llama-") and _groq_key():
                 log.info(f"SmartRouter → {model} (tier={r['tier']})")
                 return model, "groq", _groq()
             if (model.startswith("qwen") or model.startswith("llama3")) and ollama_available():
@@ -473,7 +494,7 @@ def _route(prompt: str, lang: Optional[str], system: str) -> tuple[str, str, Ope
     is_long = total_tokens > 30_000
 
     # PRIMARY PATH — DeepSeek-V4 cloud (chosen as default 2026-04-30).
-    if DEEPSEEK_API_KEY:
+    if _ds_key():
         if is_reasoning:
             log.info("Router → DeepSeek-V4-pro (reasoner)")
             return Models.DS_REASONER, "deepseek", _deepseek()
@@ -484,7 +505,7 @@ def _route(prompt: str, lang: Optional[str], system: str) -> tuple[str, str, Ope
         return Models.DS_CHAT, "deepseek", _deepseek()
 
     # FALLBACKS — only when DeepSeek key is missing or breaker is open.
-    if GROQ_API_KEY and total_tokens < 3_000 and not is_reasoning:
+    if _groq_key() and total_tokens < 3_000 and not is_reasoning:
         log.info("Router → Groq (no DS key — cloud fallback)")
         return Models.GROQ_LLAMA, "groq", _groq()
 
@@ -496,8 +517,16 @@ def _route(prompt: str, lang: Optional[str], system: str) -> tuple[str, str, Ope
         return Models.OLLAMA_CHAT, "ollama", _ollama()
 
     raise RuntimeError(
-        "No LLM provider available. Set DEEPSEEK_API_KEY in ~/.aim_env "
-        "(primary) or run Ollama locally as offline fallback."
+        "No LLM provider available for the active user.\n"
+        "  • Primary:  set DEEPSEEK_API_KEY in ~/.aim_env\n"
+        "             (get a personal key at https://platform.deepseek.com/api_keys)\n"
+        "  • Free:    set GEMINI_API_KEY (https://aistudio.google.com/apikey)\n"
+        "             or GROQ_API_KEY (https://console.groq.com/keys)\n"
+        "  • Offline: install Ollama (https://ollama.com) and pull qwen2.5:7b\n"
+        "  • CLI:     run `python -m aim_cli setup-key` for an interactive prompt\n"
+        "  • Telegram: send /setkey to the bot\n"
+        "Each AIM user MUST hold their own provider key — billing goes to "
+        "their own account; the platform never shares a single key."
     )
 
 # ── Основной вызов ────────────────────────────────────────────────────────────
@@ -652,9 +681,9 @@ def _fallback(prompt: str, system: str, failed_provider: str, err: Exception) ->
 
     chain = []
     # Cloud-first per user 2026-04-30: DeepSeek primary, Groq next, Ollama last.
-    if failed_provider != "deepseek" and DEEPSEEK_API_KEY:
+    if failed_provider != "deepseek" and _ds_key():
         chain.append((Models.DS_CHAT, _deepseek()))
-    if failed_provider != "groq" and GROQ_API_KEY:
+    if failed_provider != "groq" and _groq_key():
         chain.append((Models.GROQ_LLAMA, _groq()))
     if failed_provider != "ollama" and ollama_available():
         chain.append((Models.OLLAMA_CHAT, _ollama()))
@@ -703,7 +732,7 @@ def ask_critical(prompt: str, system: str = "", lang: str = None,
         if out:
             return out
         log.warning("ask_critical: Gemini unavailable, falling back to DS-V4-pro")
-    if DEEPSEEK_API_KEY:
+    if _ds_key():
         return ask_deep(prompt, system=system, lang=lang)
     return ask(prompt, system=system, lang=lang, max_tokens=max_tokens)
 
@@ -712,7 +741,7 @@ def ask_fast(prompt: str, lang: str = None) -> str:
     """Быстрый ответ. Приоритет (cloud-first per user 2026-04-30):
        Groq → DeepSeek-V4-flash → Ollama qwen2.5:3b (offline)."""
     # Groq is fastest for short prompts on cloud
-    if GROQ_API_KEY and _count_tokens(prompt) < 3_000:
+    if _groq_key() and _count_tokens(prompt) < 3_000:
         try:
             _breaker_for("groq").before_call()
             _limiter_for("groq").acquire()
@@ -728,7 +757,7 @@ def ask_fast(prompt: str, lang: str = None) -> str:
             _breaker_for("groq").on_failure()
             log.warning(f"ask_fast: groq failed: {e}; trying DeepSeek")
 
-    if DEEPSEEK_API_KEY:
+    if _ds_key():
         return ask(prompt, lang=lang, temperature=0.2)
 
     # Offline fallback
@@ -776,7 +805,7 @@ def ask_deep(prompt: str, system: str = "", lang: str = None) -> str:
     messages.append({"role": "user", "content": prompt})
 
     # Primary: cloud reasoner
-    if DEEPSEEK_API_KEY:
+    if _ds_key():
         try:
             resp = _deepseek().chat.completions.create(
                 model=Models.DS_REASONER,
@@ -820,7 +849,7 @@ def ask_long(prompt: str, system: str = "", lang: str = None,
 
     Falls back to ask() (which prefers Ollama) if DeepSeek key missing.
     """
-    if DEEPSEEK_API_KEY:
+    if _ds_key():
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
@@ -852,7 +881,7 @@ def stream_deepseek(prompt: str, system: str = "", model: Optional[str] = None,
         for chunk in stream_deepseek(prompt, system=SYSTEM_PROMPT_RU):
             print(chunk, end="", flush=True)
     """
-    if not DEEPSEEK_API_KEY:
+    if not _ds_key():
         yield ask(prompt, system=system)
         return
 
@@ -895,7 +924,7 @@ def warmup_deepseek_cache(prefix: str, max_tokens: int = 4) -> bool:
 
     Returns True if the warmup call succeeded.
     """
-    if not DEEPSEEK_API_KEY:
+    if not _ds_key():
         return False
     if len(prefix) < 200:
         return False  # cache only kicks in past 64 tokens; 200 chars is the floor
@@ -928,9 +957,9 @@ def providers_status() -> dict:
     """
     has_claude  = anthropic_available()
     has_gemini  = gemini_available()
-    has_ds      = bool(DEEPSEEK_API_KEY)
+    has_ds      = bool(_ds_key())
     has_ollama  = ollama_available()
-    has_groq    = bool(GROQ_API_KEY)
+    has_groq    = bool(_groq_key())
 
     def _filter(seq: list[tuple[bool, str]]) -> list[str]:
         return [m for ok, m in seq if ok]

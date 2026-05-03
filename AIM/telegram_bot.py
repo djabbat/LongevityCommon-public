@@ -34,10 +34,22 @@ from telegram.ext import (
 )
 
 from agents import DoctorAgent, IntakeAgent, LangAgent
+from user_keys import (
+    user_context as _user_keys_ctx,
+    set_keys as _set_user_keys,
+    clear_keys as _clear_user_keys,
+    which_provider_keys as _which_user_keys,
+    PROVIDERS as _KEY_PROVIDERS,
+)
 from db import upsert_patient, new_session, save_message, get_history
 from i18n import t
 from config import SUPPORTED_LANGS, DEFAULT_LANG
 from llm import _detect_lang
+
+
+def _tg_uid(update: Update) -> str:
+    """Stable per-user-key id for a Telegram user: 'tg:<numeric_id>'."""
+    return f"tg:{update.effective_user.id}"
 
 log = logging.getLogger("aim.telegram")
 
@@ -170,6 +182,106 @@ def _consume_link_code(code: str, tg_id: int) -> dict | None:
     return None
 
 
+# ── Per-user provider keys (DeepSeek / Groq / Anthropic / Gemini) ───────────
+#
+# Each Telegram user must register THEIR OWN provider key. The bot never
+# proxies through a shared key — billing goes to the user's own provider
+# account. Keys live on the node (this process) in ~/.cache/aim/user_keys.json
+# (chmod 0600), never on the hub. See agents/user_keys.py.
+
+_PROVIDER_LINKS = {
+    "deepseek":  "https://platform.deepseek.com/api_keys",
+    "groq":      "https://console.groq.com/keys",
+    "anthropic": "https://console.anthropic.com/settings/keys",
+    "gemini":    "https://aistudio.google.com/apikey  (free, no card)",
+}
+
+
+async def cmd_setkey(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """/setkey <provider> <api_key> — register your own provider key.
+
+    Example:  /setkey deepseek sk-XXXXXXXXXXXXXXXX
+    Providers: deepseek | groq | anthropic | gemini
+    """
+    if not _check_auth(update):
+        return IDLE
+    args = context.args or []
+    if len(args) < 2:
+        msg = ["Использование: /setkey <provider> <api_key>",
+               "",
+               "Provider — где ВЫ сами получаете свой ключ:"]
+        for p in _KEY_PROVIDERS:
+            msg.append(f"  • {p:<10} {_PROVIDER_LINKS[p]}")
+        msg += ["",
+                "Ключ хранится локально на ноде, в зашифрованном по chmod 0600 файле.",
+                "Биллинг идёт на ВАШ провайдерский аккаунт.",
+                "Бот никогда не использует чужой ключ."]
+        # Try to delete the message so the key isn't left in chat history,
+        # but only if we have permission.
+        await update.message.reply_text("\n".join(msg))
+        return IDLE
+    provider = args[0].lower().strip()
+    if provider not in _KEY_PROVIDERS:
+        await update.message.reply_text(
+            f"Неизвестный provider: {provider!r}.\n"
+            f"Доступны: {', '.join(_KEY_PROVIDERS)}")
+        return IDLE
+    key = args[1].strip()
+    _set_user_keys(_tg_uid(update), **{provider: key})
+    # Best-effort: scrub the user's message so the key doesn't sit in history.
+    try:
+        await update.message.delete()
+    except Exception:
+        pass
+    await update.message.reply_text(
+        f"✅ Ключ для {provider} сохранён локально на ноде.\n"
+        f"   Биллинг → ваш аккаунт у провайдера.\n"
+        f"   Сменить:  /setkey {provider} <новый_ключ>\n"
+        f"   Удалить:  /clearkey {provider}\n"
+        f"   Сводка:   /whichkey")
+    return IDLE
+
+
+async def cmd_clearkey(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """/clearkey [provider]  — delete one provider key, or all if no arg."""
+    if not _check_auth(update):
+        return IDLE
+    args = context.args or []
+    uid = _tg_uid(update)
+    if not args:
+        _clear_user_keys(uid)
+        await update.message.reply_text(
+            "✅ Все ваши ключи удалены с этой ноды.\n"
+            "Бот больше не может делать LLM-вызовы от вашего имени, "
+            "пока вы не зарегистрируете новый ключ через /setkey.")
+        return IDLE
+    provider = args[0].lower().strip()
+    if provider not in _KEY_PROVIDERS:
+        await update.message.reply_text(
+            f"Неизвестный provider: {provider!r}.")
+        return IDLE
+    _clear_user_keys(uid, provider)
+    await update.message.reply_text(f"✅ Ключ {provider} удалён.")
+    return IDLE
+
+
+async def cmd_whichkey(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """/whichkey — show which providers you have a key for (no values printed)."""
+    if not _check_auth(update):
+        return IDLE
+    keys = _which_user_keys(_tg_uid(update))
+    if not keys:
+        await update.message.reply_text(
+            "У вас не зарегистрировано ни одного ключа. /setkey <provider> <api_key>")
+        return IDLE
+    lines = ["Ваши провайдеры (значения не показываются):"]
+    for p in _KEY_PROVIDERS:
+        mark = "✓" if p in keys else "·"
+        lines.append(f"  {mark} {p}")
+    await update.message.reply_text("\n".join(lines))
+    return IDLE
+
+
 def _main_keyboard(lang: str) -> ReplyKeyboardMarkup:
     buttons = [
         [KeyboardButton(t("m4", lang)), KeyboardButton(t("m5", lang))],
@@ -252,14 +364,25 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await update.message.reply_text(f"Целевой язык ({langs_str}):")
         return AWAITING_TRANSLATE_TARGET
 
-    # Свободный диалог
+    # Свободный диалог — LLM-вызов от имени конкретного юзера
     await update.message.reply_text(t("thinking", lang))
     sid = st["session_id"]
     if not sid:
         sid = new_session(None, lang)
         st["session_id"] = sid
     history = get_history(sid, limit=6)
-    result = doctor.chat(text, history=history, lang=lang, session_id=sid)
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = doctor.chat(text, history=history, lang=lang, session_id=sid)
+    except RuntimeError as e:
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "У вас не зарегистрирован API-ключ.\n"
+                "Зарегистрируйте свой ключ DeepSeek (или Groq/Gemini/Anthropic) — "
+                "/setkey deepseek <ключ>. Получить ключ: "
+                "https://platform.deepseek.com/api_keys")
+            return IDLE
+        raise
     await update.message.reply_text(result)
     return IDLE
 
@@ -273,7 +396,16 @@ async def receive_symptoms(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     symptoms = update.message.text or ""
 
     await update.message.reply_text(t("thinking", lang))
-    result = doctor.diagnose(symptoms, lang=lang, session_id=st["session_id"])
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = doctor.diagnose(symptoms, lang=lang, session_id=st["session_id"])
+    except RuntimeError as e:
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "Нет ключа провайдера. /setkey deepseek <ключ> "
+                "(https://platform.deepseek.com/api_keys)")
+            return IDLE
+        raise
     await update.message.reply_text(result, reply_markup=_main_keyboard(lang))
     return IDLE
 
@@ -287,7 +419,16 @@ async def receive_diagnosis(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     diagnosis = update.message.text or ""
 
     await update.message.reply_text(t("thinking", lang))
-    result = doctor.treatment_plan(diagnosis, lang=lang, session_id=st["session_id"])
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = doctor.treatment_plan(diagnosis, lang=lang, session_id=st["session_id"])
+    except RuntimeError as e:
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "Нет ключа провайдера. /setkey deepseek <ключ> "
+                "(https://platform.deepseek.com/api_keys)")
+            return IDLE
+        raise
     await update.message.reply_text(result, reply_markup=_main_keyboard(lang))
     return IDLE
 
@@ -318,8 +459,18 @@ async def receive_translate_text(update: Update, context: ContextTypes.DEFAULT_T
     text = update.message.text or ""
 
     await update.message.reply_text(t("thinking", lang))
-    result = lang_agent.translate(text, target_lang=target, translation_type="medical",
-                                  session_id=st["session_id"])
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = lang_agent.translate(text, target_lang=target,
+                                          translation_type="medical",
+                                          session_id=st["session_id"])
+    except RuntimeError as e:
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "Нет ключа провайдера. /setkey deepseek <ключ> "
+                "(https://platform.deepseek.com/api_keys)")
+            return IDLE
+        raise
     await update.message.reply_text(result, reply_markup=_main_keyboard(lang))
     return IDLE
 
@@ -342,7 +493,18 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
         tmp_path = Path(tmp.name)
     await file.download_to_drive(str(tmp_path))
 
-    result = intake.process_file(tmp_path, lang=lang, session_id=st["session_id"])
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = intake.process_file(tmp_path, lang=lang,
+                                         session_id=st["session_id"])
+    except RuntimeError as e:
+        tmp_path.unlink(missing_ok=True)
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "Нет ключа провайдера. /setkey deepseek <ключ> "
+                "(https://platform.deepseek.com/api_keys)")
+            return IDLE
+        raise
     tmp_path.unlink(missing_ok=True)
     await update.message.reply_text(result, reply_markup=_main_keyboard(lang))
     return IDLE
@@ -370,7 +532,18 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         tmp_path = Path(tmp.name)
     await file.download_to_drive(str(tmp_path))
 
-    result = intake.process_file(tmp_path, lang=lang, session_id=st["session_id"])
+    try:
+        with _user_keys_ctx(_tg_uid(update)):
+            result = intake.process_file(tmp_path, lang=lang,
+                                         session_id=st["session_id"])
+    except RuntimeError as e:
+        tmp_path.unlink(missing_ok=True)
+        if "No LLM provider available" in str(e):
+            await update.message.reply_text(
+                "Нет ключа провайдера. /setkey deepseek <ключ> "
+                "(https://platform.deepseek.com/api_keys)")
+            return IDLE
+        raise
     tmp_path.unlink(missing_ok=True)
     await update.message.reply_text(result, reply_markup=_main_keyboard(lang))
     return IDLE
@@ -422,6 +595,9 @@ def main():
     app.add_handler(conv)
     app.add_handler(CommandHandler("lang", cmd_lang))
     app.add_handler(CommandHandler("link", cmd_link))
+    app.add_handler(CommandHandler("setkey", cmd_setkey))
+    app.add_handler(CommandHandler("clearkey", cmd_clearkey))
+    app.add_handler(CommandHandler("whichkey", cmd_whichkey))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(MessageHandler(filters.Document.ALL, handle_document))
 
