@@ -129,6 +129,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ai-explainer"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-cases",
+ "aim-ai-health",
+ "aim-ai-ledger",
+ "aim-ai-prompt-versions",
+ "aim-ai-regression",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "aim-ai-finding-validator"
 version = "0.1.0"
 dependencies = [
