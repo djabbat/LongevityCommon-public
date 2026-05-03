@@ -118,19 +118,22 @@
       <button type="button" data-os="mac">🍎 macOS</button>
       <button type="button" data-os="windows">🪟 Windows</button>
     </div>
-    <pre id="install-cmd" data-os="linux"><code>git clone https://github.com/djabbat/LongevityCommon-public.git
-cd LongevityCommon-public/AIM
+    <pre id="install-cmd" data-os="linux"><code>curl -L -o aim.tar.gz https://github.com/djabbat/AIM-public/releases/latest/download/aim-0.1.0-linux.tar.gz
+tar -xzf aim.tar.gz
+cd aim-0.1.0-linux
 bash scripts/install_node.sh</code></pre>
-    <pre id="install-cmd-mac" data-os="mac" hidden><code>git clone https://github.com/djabbat/LongevityCommon-public.git
-cd LongevityCommon-public/AIM
+    <pre id="install-cmd-mac" data-os="mac" hidden><code>curl -L -o aim.tar.gz https://github.com/djabbat/AIM-public/releases/latest/download/aim-0.1.0-macos.tar.gz
+tar -xzf aim.tar.gz
+cd aim-0.1.0-macos
 bash scripts/install_node.sh</code></pre>
-    <pre id="install-cmd-win" data-os="windows" hidden><code>git clone https://github.com/djabbat/LongevityCommon-public.git
-cd LongevityCommon-public\AIM
+    <pre id="install-cmd-win" data-os="windows" hidden><code>Invoke-WebRequest -Uri https://github.com/djabbat/AIM-public/releases/latest/download/aim-0.1.0-windows.zip -OutFile aim.zip
+Expand-Archive aim.zip
+cd aim-0.1.0-windows
 powershell -ExecutionPolicy Bypass -File scripts\install_node.ps1</code></pre>
     <p class="os-note muted">
       Detected: <span id="os-detected">…</span>.
-      Source: <a href="https://github.com/djabbat/LongevityCommon-public" target="_blank" rel="noopener">djabbat/LongevityCommon-public</a> →
-      <code>AIM/</code>.
+      Releases: <a href="https://github.com/djabbat/AIM-public/releases" target="_blank" rel="noopener">djabbat/AIM-public</a> ·
+      Source clone: <code>git clone https://github.com/djabbat/AIM-public.git</code>.
     </p>
   </div>
 </section>
