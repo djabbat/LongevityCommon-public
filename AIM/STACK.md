@@ -31,6 +31,12 @@
 | OCR | `rapidocr_onnxruntime`, `tesseract` | tesseract-rs незрелый, ONNX Runtime Rust есть но без полного OCR pipeline |
 | PDF text extraction | `pymupdf`, `pdfplumber` | `lopdf` / `pdfium-render` ограничены |
 | WhatsApp pipeline | существующий `agents/intake.py` | работает, шим через subprocess из Rust |
+| TTS офлайн (v7.2) | `xtts-v2`, `pyttsx3`, `espeak-ng` | нет нативного Rust voice cloning |
+| Talking-head офлайн (v7.2) | `SadTalker`, `Wav2Lip` | PyTorch-only, нет Rust-портов |
+| 3D mesh офлайн (v7.2) | `Hunyuan3D`, `TripoSR`, Microsoft `Trellis` | diffusion-based, PyTorch-only |
+| 3D scripting (v7.2) | Blender `bpy` | Blender Python — единственный API; вызов `blender --background --python` |
+| Молекулярная визуализация (v7.2) | `RDKit`, `py3Dmol`, PyMOL | хемоинформатика — только Python; рендерим в GLB → Three.js |
+| DICOM 3D (v7.2) | 3D Slicer (`vtk`, `pydicom`) | медицинская визуализация — Python экосистема |
 
 **Все эти Python-блоки вызываются из Rust через subprocess или unix
 socket.** Они не получают новой функциональности — только сохранение
