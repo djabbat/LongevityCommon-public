@@ -1,0 +1,144 @@
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+@import "tailwindcss" source(none);
+@source "../css";
+@source "../js";
+@source "../../lib/aim_web_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+/* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
+   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
+   Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
+@plugin "../vendor/daisyui" {
+  themes: false;
+}
+
+/* daisyUI theme plugin. You can update this file by fetching the latest version with:
+  curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
+  We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
+  on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
+@plugin "../vendor/daisyui-theme" {
+  name: "dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(30.33% 0.016 252.42);
+  --color-base-200: oklch(25.26% 0.014 253.1);
+  --color-base-300: oklch(20.15% 0.012 254.09);
+  --color-base-content: oklch(97.807% 0.029 256.847);
+  --color-primary: oklch(58% 0.233 277.117);
+  --color-primary-content: oklch(96% 0.018 272.314);
+  --color-secondary: oklch(58% 0.233 277.117);
+  --color-secondary-content: oklch(96% 0.018 272.314);
+  --color-accent: oklch(60% 0.25 292.717);
+  --color-accent-content: oklch(96% 0.016 293.756);
+  --color-neutral: oklch(37% 0.044 257.287);
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(60% 0.118 184.704);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "../vendor/daisyui-theme" {
+  name: "light";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(98% 0 0);
+  --color-base-200: oklch(96% 0.001 286.375);
+  --color-base-300: oklch(92% 0.004 286.32);
+  --color-base-content: oklch(21% 0.006 285.885);
+  --color-primary: oklch(70% 0.213 47.604);
+  --color-primary-content: oklch(98% 0.016 73.684);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(0% 0 0);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(44% 0.017 285.786);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.21875rem;
+  --size-field: 0.21875rem;
+  --border: 1.5px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Use the data attribute for dark mode  */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session], [data-phx-teleported-src] { display: contents }
+
+/* This file is for your main application CSS */
+
+/* AIM HiveLive — minimal layout matching the rest of LongevityCommon */
+.container { max-width: 1100px; margin: 0 auto; padding: 24px; font-family: -apple-system, system-ui, sans-serif; }
+.hdr h1 { margin: 0 0 6px; font-size: 28px; }
+.hdr .lead { margin: 0 0 18px; color: #52525b; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 18px; }
+.card { background: #fff; border: 1px solid #e4e4e7; border-radius: 8px; padding: 16px 18px; }
+.card h2 { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: #18181b; text-transform: uppercase; letter-spacing: 0.06em; }
+.card.err { background: #fef2f2; border-color: #fecaca; }
+.card.err h2 { color: #b91c1c; }
+.kv { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #f4f4f5; font-size: 14px; }
+.kv:last-child { border-bottom: none; }
+.kv .k { color: #71717a; }
+.kv .v { font-weight: 500; color: #18181b; }
+.kv .v.ok { color: #16a34a; }
+.kv .v.num { font-family: ui-monospace, monospace; }
+.muted { color: #71717a; font-size: 13px; }
+.small { font-size: 12px; }
+.mono { font-family: ui-monospace, monospace; }
+.bar { height: 6px; background: #f4f4f5; border-radius: 3px; overflow: hidden; margin: 10px 0 4px; }
+.bar-fill { height: 100%; background: #4f46e5; transition: width 0.3s; }
+table.updates { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.updates th { text-align: left; color: #71717a; font-weight: 500; padding: 6px 8px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; border-bottom: 1px solid #e4e4e7; }
+table.updates td { padding: 6px 8px; border-bottom: 1px solid #f4f4f5; }
+.pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; background: #f4f4f5; color: #52525b; }
+.pill.skill { background: #dbeafe; color: #1e40af; }
+.pill.prompt_patch { background: #fef3c7; color: #92400e; }
+.pill.eval_case { background: #d1fae5; color: #065f46; }
+
+[data-theme="dark"] .card { background: #15171f; border-color: #2a2f40; color: #d8dce4; }
+[data-theme="dark"] .card h2 { color: #fff; }
+[data-theme="dark"] .kv { border-color: #2a2f40; }
+[data-theme="dark"] .kv .v { color: #e0e3eb; }
+[data-theme="dark"] .muted { color: #a1a1aa; }
+[data-theme="dark"] .bar { background: #2a2f40; }
+[data-theme="dark"] table.updates th { border-color: #2a2f40; color: #a1a1aa; }
+[data-theme="dark"] table.updates td { border-color: #2a2f40; }
+[data-theme="dark"] .pill { background: #2a2f40; color: #d8dce4; }
+[data-theme="dark"] body { background: #0f1117; color: #e0e3eb; }
