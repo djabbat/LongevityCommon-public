@@ -38,6 +38,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ai-case-archiver"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-ledger",
+ "aim-ai-meta-evaluator",
+ "chrono",
+ "glob",
+ "once_cell",
+ "regex",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
 name = "aim-ai-cases"
 version = "0.1.0"
 dependencies = [
@@ -64,6 +80,18 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
+]
+
+[[package]]
+name = "aim-ai-findings-to-evals"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -116,6 +144,19 @@ version = "0.1.0"
 dependencies = [
  "once_cell",
  "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "aim-ai-morning-brief"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-case-archiver",
+ "aim-ai-ledger",
+ "aim-ai-regression",
  "serde",
  "serde_json",
  "tempfile",
