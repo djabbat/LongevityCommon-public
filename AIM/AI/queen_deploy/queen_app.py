@@ -31,13 +31,15 @@ from pathlib import Path
 from typing import Optional
 
 # Make sibling AI.ai.* importable when running from queen_deploy/.
+# queen_deploy is at AIM/AI/queen_deploy → up 2 levels gets us to AIM/.
 _HERE = Path(__file__).resolve().parent
-_AIM_ROOT = _HERE.parent.parent.parent     # → ~/Desktop/LongevityCommon/AIM
+_AIM_ROOT = _HERE.parent.parent            # → AIM/
 if str(_AIM_ROOT) not in sys.path:
     sys.path.insert(0, str(_AIM_ROOT))
 
 from fastapi import FastAPI, HTTPException, Header, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from AI.ai.hive_queen import (
     accept_contribution,
@@ -185,3 +187,14 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={"error": exc.detail, "status": exc.status_code},
     )
+
+
+# ── static landing page (/, /style.css, /favicon.ico) ──────────
+
+
+_WEB_DIR = _HERE / "web"
+if _WEB_DIR.exists():
+    # Serve everything else under web/ as static. Mounted LAST so
+    # API routes win.
+    app.mount("/", StaticFiles(directory=str(_WEB_DIR), html=True),
+               name="landing")
