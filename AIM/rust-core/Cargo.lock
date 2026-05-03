@@ -24,6 +24,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ai-auto-sweep"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-case-archiver",
+ "aim-ai-cases",
+ "aim-ai-health",
+ "aim-ai-ledger",
+ "aim-ai-prompt-impact",
+ "aim-ai-prompt-versions",
+ "aim-ai-suppressions",
+ "chrono",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "aim-ai-backup"
 version = "0.1.0"
 dependencies = [
@@ -105,6 +123,17 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "rusqlite",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "aim-ai-finding-validator"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "regex",
  "serde",
  "tempfile",
  "thiserror 2.0.18",
