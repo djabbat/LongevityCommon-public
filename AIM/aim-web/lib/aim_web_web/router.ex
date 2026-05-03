@@ -19,6 +19,7 @@ defmodule AimWebWeb.Router do
 
     live "/", HiveLive, :index
     live "/hive", HiveLive, :index
+    live "/diag", DiagLive, :index
   end
 
   # Other scopes may use custom stacks.

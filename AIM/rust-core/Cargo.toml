@@ -11,6 +11,9 @@ members = [
     "crates/aim-hive-worker",
     "crates/aim-hive-queen",
     "crates/aim-hive-consumer",
+    "crates/aim-ai-ledger",
+    "crates/aim-ai-regression",
+    "crates/aim-ai-health",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
