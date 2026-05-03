@@ -52,25 +52,29 @@ services:
     ports:
       - "127.0.0.1:4401:4001"
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:4001/healthz"]
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/4001"]
       interval: 10s
       timeout: 3s
       retries: 5
 
-  ze-web:
-    build:
-      context: ../Ze/ze-web
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      <<: *common-env
-      ZE_BACKEND_URL: "http://ze-backend:4001"
-      SECRET_KEY_BASE: ${ZE_WEB_SECRET_KEY_BASE:?Missing ZE_WEB_SECRET_KEY_BASE — generate via mix phx.gen.secret}
-      PHX_HOST: "${ZE_PHX_HOST:-ze.longevity.ge}"
-    ports:
-      - "127.0.0.1:4400:4000"
-    depends_on:
-      - ze-backend
+  # ze-web removed from Docker 2026-05-04 — runs natively as
+  # ze-web.service (see deploy/systemd/ze-web.service). The Phoenix
+  # release lives in /opt/ze-web/. Backend (ze-backend) remains here.
+  #
+  # ze-web:
+  #   build:
+  #     context: ../Ze/ze-web
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     <<: *common-env
+  #     ZE_BACKEND_URL: "http://ze-backend:4001"
+  #     SECRET_KEY_BASE: ${ZE_WEB_SECRET_KEY_BASE:?Missing ZE_WEB_SECRET_KEY_BASE — generate via mix phx.gen.secret}
+  #     PHX_HOST: "${ZE_PHX_HOST:-ze.longevity.ge}"
+  #   ports:
+  #     - "127.0.0.1:4400:4000"
+  #   depends_on:
+  #     - ze-backend
 
   # ── BioSense subproject ───────────────────────────────────────────────────
   # Server-mapped to 4501-4502 to avoid conflict; external via biosense.longevity.ge.
@@ -84,25 +88,30 @@ services:
     ports:
       - "127.0.0.1:4502:4101"
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:4101/healthz"]
+      test: ["CMD", "bash", "-c", "</dev/tcp/127.0.0.1/4101"]
       interval: 10s
       timeout: 3s
       retries: 5
 
-  biosense-web:
-    build:
-      context: ../BioSense/biosense-web
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      <<: *common-env
-      BIOSENSE_BACKEND_URL: "http://biosense-backend:4101"
-      SECRET_KEY_BASE: ${BIOSENSE_WEB_SECRET_KEY_BASE:?Missing BIOSENSE_WEB_SECRET_KEY_BASE — generate via mix phx.gen.secret}
-      PHX_HOST: "${BIOSENSE_PHX_HOST:-biosense.longevity.ge}"
-    ports:
-      - "127.0.0.1:4501:4100"
-    depends_on:
-      - biosense-backend
+  # biosense-web removed from Docker 2026-05-04 — runs natively as
+  # biosense-web.service (see deploy/systemd/biosense-web.service).
+  # The Phoenix release lives in /opt/biosense-web/. Backend
+  # (biosense-backend) remains here.
+  #
+  # biosense-web:
+  #   build:
+  #     context: ../BioSense/biosense-web
+  #     dockerfile: Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     <<: *common-env
+  #     BIOSENSE_BACKEND_URL: "http://biosense-backend:4101"
+  #     SECRET_KEY_BASE: ${BIOSENSE_WEB_SECRET_KEY_BASE:?Missing BIOSENSE_WEB_SECRET_KEY_BASE — generate via mix phx.gen.secret}
+  #     PHX_HOST: "${BIOSENSE_PHX_HOST:-biosense.longevity.ge}"
+  #   ports:
+  #     - "127.0.0.1:4501:4100"
+  #   depends_on:
+  #     - biosense-backend
 
   # ── Social layer (umbrella) ───────────────────────────────────────────────
   # Server-mapped to 4600+ to avoid conflict with drjaba-app on 8080.
