@@ -1,0 +1,17 @@
+[package]
+name = "aim-ai-safety-gate"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "AIM AI — pre-flight safety gate (SG1). Cooldown + daily budget gates before triggering self-diagnostic. Rust port of AI/ai/safety_gate.py."
+
+[dependencies]
+aim-ai-ledger = { path = "../aim-ai-ledger" }
+
+serde = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

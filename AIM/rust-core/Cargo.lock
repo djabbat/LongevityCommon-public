@@ -129,10 +129,23 @@ name = "aim-ai-regression"
 version = "0.1.0"
 dependencies = [
  "aim-ai-ledger",
+ "aim-ai-suppressions",
  "once_cell",
  "regex",
  "serde",
  "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "aim-ai-safety-gate"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-ledger",
+ "chrono",
+ "serde",
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
@@ -149,6 +162,18 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
+]
+
+[[package]]
+name = "aim-ai-suppressions"
+version = "0.1.0"
+dependencies = [
+ "aim-ai-ledger",
+ "chrono",
+ "rusqlite",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -288,6 +313,15 @@ dependencies = [
  "thiserror 2.0.18",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "aim-i18n"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

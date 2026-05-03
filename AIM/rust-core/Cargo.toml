@@ -20,6 +20,9 @@ members = [
     "crates/aim-ai-meta-evaluator",
     "crates/aim-ai-stable-run",
     "crates/aim-ai-dashboard",
+    "crates/aim-ai-safety-gate",
+    "crates/aim-ai-suppressions",
+    "crates/aim-i18n",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
