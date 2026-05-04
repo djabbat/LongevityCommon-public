@@ -68,6 +68,7 @@ members = [
     "crates/aim-skill-synthesis",
     "crates/aim-reflexion",
     "crates/aim-ensemble",
+    "crates/aim-debate",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
