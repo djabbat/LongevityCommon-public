@@ -58,6 +58,7 @@ members = [
     "crates/aim-ast-verify",
     "crates/aim-adaptive-limiter",
     "crates/aim-request-deduplicator",
+    "crates/aim-feature-flags",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
