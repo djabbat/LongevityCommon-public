@@ -944,6 +944,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-own-pubs-tracker"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "parking_lot",
+ "regex",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "aim-pattern-miner"
 version = "0.1.0"
 dependencies = [
