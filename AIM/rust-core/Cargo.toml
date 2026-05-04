@@ -111,6 +111,8 @@ members = [
     "crates/aim-kernel",
     "crates/aim-email-agent",
     "crates/aim-graph",
+    "crates/aim-hooks",
+    "crates/aim-tracing",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
