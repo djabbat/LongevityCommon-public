@@ -909,6 +909,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-tool-synthesis"
+version = "0.1.0"
+dependencies = [
+ "aim-pattern-miner",
+ "chrono",
+ "parking_lot",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
 name = "aim-worktree"
 version = "0.1.0"
 dependencies = [
