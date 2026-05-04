@@ -81,6 +81,7 @@ members = [
     "crates/aim-quick-action",
     "crates/aim-speculative",
     "crates/aim-impact-analyser",
+    "crates/aim-unicode-guard",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
