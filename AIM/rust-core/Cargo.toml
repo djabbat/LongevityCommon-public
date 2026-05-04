@@ -143,6 +143,8 @@ members = [
     "crates/aim-readme-generator",
     "crates/aim-project-export",
     "crates/aim-project-pdf-export",
+    "crates/aim-project-graph",
+    "crates/aim-auth",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
