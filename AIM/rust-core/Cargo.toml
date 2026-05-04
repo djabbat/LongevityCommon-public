@@ -51,6 +51,7 @@ members = [
     "crates/aim-hub-auth",
     "crates/aim-pattern-miner",
     "crates/aim-evals",
+    "crates/aim-literature-watch",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
