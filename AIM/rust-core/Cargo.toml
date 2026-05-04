@@ -131,6 +131,8 @@ members = [
     "crates/aim-escalation-engine",
     "crates/aim-routines",
     "crates/aim-job-queue",
+    "crates/aim-pi-agent",
+    "crates/aim-self-health",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
