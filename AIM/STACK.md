@@ -2,7 +2,8 @@
 
 **Дата установки:** 2026-05-04
 **Источник:** прямая директива пользователя ("delai vse na Rust",
-"frontend na Phoenix", "prodoljit razvitie AIM — na Rust i Phoenix").
+"frontend na Phoenix", "prodoljit razvitie AIM — na Rust i Phoenix",
+"v Docker ne pomeschat po vozmojnosti nichego" 2026-05-04).
 
 ---
 
@@ -17,6 +18,14 @@
   `/opt/aim-*/`, native, без Docker runtime)
 
 **Никаких новых модулей на Python без явной необходимости.**
+
+**НИКАКОГО Docker.** Ни runtime, ни build-time, ни dev-окружения.
+Развёртывание = native systemd units (`mix release` для Phoenix,
+`cargo build --release` + `systemd unit` для Rust). Ни Dockerfile,
+ни docker-compose.yml, ни OCI-images в новых модулях.
+
+Исключения только если пользователь явно попросит. По умолчанию —
+без Docker даже для тестов CI / sandbox / build-isolation.
 
 ---
 
@@ -79,8 +88,13 @@ sprint — Phase 1 (Hive layer на Rust).
 сработать проверка: "это Phase X миграции, или это shim для существующей
 OCR/PDF-зависимости?". Если ни то ни другое — правило нарушено.
 
+То же самое для Docker: если кто-то собирается создать `Dockerfile`,
+`docker-compose.yml`, `.dockerignore` или `OCI image` — сработать
+проверка: "пользователь явно попросил Docker?". Если нет — правило
+нарушено, использовать systemd / native release.
+
 При сомнении — спросить пользователя. Не писать Python "потому что
-быстрее".
+быстрее"; не писать Docker "потому что проще".
 
 ---
 
