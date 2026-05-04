@@ -76,6 +76,7 @@ members = [
     "crates/aim-stakeholder-tracker",
     "crates/aim-project-owner",
     "crates/aim-project-state-machine",
+    "crates/aim-smart-fallback",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
