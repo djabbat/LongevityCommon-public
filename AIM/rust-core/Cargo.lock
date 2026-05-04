@@ -984,6 +984,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-memory-remediator"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+ "walkdir",
+]
+
+[[package]]
 name = "aim-memory-versioning"
 version = "0.1.0"
 dependencies = [
