@@ -24,6 +24,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ab-router"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "libm",
+ "parking_lot",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
 name = "aim-adaptive-limiter"
 version = "0.1.0"
 dependencies = [

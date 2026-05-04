@@ -61,6 +61,7 @@ members = [
     "crates/aim-feature-flags",
     "crates/aim-llm-cache",
     "crates/aim-permission",
+    "crates/aim-ab-router",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
