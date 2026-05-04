@@ -597,6 +597,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-ensemble"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "parking_lot",
+ "regex",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "aim-escalation"
 version = "0.1.0"
 dependencies = [
@@ -909,6 +923,22 @@ dependencies = [
  "tower-http",
  "tracing",
  "uuid",
+]
+
+[[package]]
+name = "aim-reflexion"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "chrono",
+ "parking_lot",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
