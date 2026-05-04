@@ -89,6 +89,7 @@ members = [
     "crates/aim-recall-perf",
     "crates/aim-memory-health",
     "crates/aim-health-extended",
+    "crates/aim-profile",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently

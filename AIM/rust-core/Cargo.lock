@@ -1011,6 +1011,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-profile"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
 name = "aim-project-owner"
 version = "0.1.0"
 dependencies = [
