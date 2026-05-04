@@ -78,6 +78,7 @@ members = [
     "crates/aim-project-state-machine",
     "crates/aim-smart-fallback",
     "crates/aim-smart-context",
+    "crates/aim-quick-action",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
