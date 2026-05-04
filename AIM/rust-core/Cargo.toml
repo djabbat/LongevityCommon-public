@@ -155,6 +155,8 @@ members = [
     "crates/aim-embed-daemon",
     "crates/aim-complexity-classifier",
     "crates/aim-async-reindex",
+    "crates/aim-recall-cli",
+    "crates/aim-router-ab-test",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
