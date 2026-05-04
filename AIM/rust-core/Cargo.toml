@@ -103,6 +103,8 @@ members = [
     "crates/aim-memory-tui",
     "crates/aim-coder",
     "crates/aim-orchestrator",
+    "crates/aim-writer",
+    "crates/aim-researcher",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
