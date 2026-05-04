@@ -824,6 +824,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-impact-analyser"
+version = "0.1.0"
+dependencies = [
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tracing",
+ "walkdir",
+]
+
+[[package]]
 name = "aim-kpi-tracker"
 version = "0.1.0"
 dependencies = [
@@ -1097,6 +1110,19 @@ dependencies = [
  "serde_json",
  "tempfile",
  "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "aim-speculative"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "parking_lot",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
  "tracing",
 ]
 
