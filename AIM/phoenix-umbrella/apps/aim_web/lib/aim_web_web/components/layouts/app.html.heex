@@ -18,6 +18,7 @@
     </nav>
   </div>
 </div>
+<%= unless assigns[:skip_layout_header] do %>
 <header class="header">
   <div class="header-inner">
     <a href="/" class="brand"><span class="logo">⌬</span>AIM</a>
@@ -31,6 +32,7 @@
     </nav>
   </div>
 </header>
+<% end %>
 <%= @inner_content %>
 <footer class="aim-footer">
   AIM · 178 Rust crates · 2531 tests · 0 warnings ·

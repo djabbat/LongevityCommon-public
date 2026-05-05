@@ -7,7 +7,10 @@ defmodule AimWeb.HomeLive do
   """
   use AimWeb, :live_view
 
-  def mount(_params, _session, socket), do: {:ok, socket}
+  # Suppress the layout's own header — HomeLive renders its own header
+  # AFTER the hero (between the indigo banner and the quicknav cards).
+  def mount(_params, _session, socket),
+    do: {:ok, assign(socket, :skip_layout_header, true)}
 
   def render(assigns) do
     ~H"""
@@ -34,6 +37,20 @@ defmodule AimWeb.HomeLive do
         </div>
       </div>
     </section>
+
+    <header class="header">
+      <div class="header-inner">
+        <a href="/" class="brand"><span class="logo">⌬</span>AIM</a>
+        <nav>
+          <a href="/dashboard"><%= t("home.menu.dashboard", @locale) %></a>
+          <a href="/chat"><%= t("nav.chat", @locale) %></a>
+          <a href="/intake"><%= t("nav.intake", @locale) %></a>
+          <a href="/cases"><%= t("nav.cases", @locale) %></a>
+          <a href="/drugs"><%= t("home.menu.drugs", @locale) %></a>
+          <a href="/settings"><%= t("home.menu.settings", @locale) %></a>
+        </nav>
+      </div>
+    </header>
 
     <main class="container">
       <h2 class="section-title">Capabilities</h2>
