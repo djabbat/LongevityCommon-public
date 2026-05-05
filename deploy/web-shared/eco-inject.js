@@ -228,7 +228,15 @@
      * !important wins over subdomain-specific styles, but we leave
      * page-internal selectors (`.simulator`, `.results`, …) alone.
      */
-    "html .container,html .hero-inner,html .footer-inner,html .page-inner{max-width:1100px !important;margin-left:auto !important;margin-right:auto !important;box-sizing:border-box !important}",
+    /* Width contract — every <header>/<footer>/page-section inner
+     * wrapper centers on the same 1100px column so every subdomain's
+     * own header lines up with the eco-bar above it. Covers Phoenix
+     * (.header-inner), Hive (.container), AIM (.aim-subnav-inner),
+     * static landings (.page-hero-inner / .footer-inner). */
+    "html .container,html .hero-inner,html .footer-inner,html .page-inner,html .header-inner,html .site-header > div,html .topnav,html .aim-subnav-inner,html .page-hero-inner,html .donate-inner{max-width:1100px !important;margin-left:auto !important;margin-right:auto !important;padding-left:1.5rem !important;padding-right:1.5rem !important;box-sizing:border-box !important;width:100% !important}",
+    /* The outer <header> itself spans full width — centering happens
+     * on its inner wrapper. */
+    "html header.site-header,html header.header,html .aim-subnav,html .eco-bar-injected{width:100% !important;display:block !important}",
     "html .container{padding:4.5rem 2rem !important}",
     /* NOTE: hero gradient/background is owned by each subdomain — Hive
      * has its own light fade, AIM has its own native styles, home has
