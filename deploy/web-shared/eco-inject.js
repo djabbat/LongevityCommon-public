@@ -23,6 +23,7 @@
     ["https://biosense.longevity.ge","BioSense","biosense.longevity.ge",null],
     ["https://fclc.longevity.ge","FCLC","fclc.longevity.ge",null],
     ["https://hive.longevity.ge","Hive","hive.longevity.ge",null],
+    ["https://aim.longevity.ge","AIM","aim.longevity.ge",null],
     ["https://longevity.ge/rescience/","Annals","longevity.ge","/rescience/"],
     ["https://longevity.ge/team/","Team","longevity.ge","/team/"],
     ["https://longevity.ge/#donate","Donate",null,null],
