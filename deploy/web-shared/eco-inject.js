@@ -72,7 +72,10 @@
     ".theme-toggle-i:hover{background:rgba(255,255,255,0.12) !important}",
     "html[data-theme=\"dark\"] body{background:#0f1117 !important;color:#e0e3eb !important}",
     "html[data-theme=\"dark\"] .eco-bar-injected{background:rgba(6,8,15,0.97) !important}",
-    "html[data-theme=\"dark\"] .header,html[data-theme=\"dark\"] .card,html[data-theme=\"dark\"] section,html[data-theme=\"dark\"] .axiom{background:#15171f !important;color:#d8dce4 !important;border-color:#2a2f40 !important}",
+    /* NOTE: section deliberately removed — it was repainting .hero's
+     * indigo gradient to dark gray. Generic <section> dark style is
+     * handled per-class below; .hero/.donate keep their brand bg. */
+    "html[data-theme=\"dark\"] .header,html[data-theme=\"dark\"] .card,html[data-theme=\"dark\"] .axiom{background:#15171f !important;color:#d8dce4 !important;border-color:#2a2f40 !important}",
     "html[data-theme=\"dark\"] h1,html[data-theme=\"dark\"] h2,html[data-theme=\"dark\"] h3,html[data-theme=\"dark\"] h4{color:#fff !important}",
     "html[data-theme=\"dark\"] code,html[data-theme=\"dark\"] .formula,html[data-theme=\"dark\"] .badge{background:#2a2f40 !important;color:#e0e3eb !important}",
     "html[data-theme=\"dark\"] a{color:#88a8ff !important}",
@@ -269,7 +272,7 @@
     /* HERO must stay indigo + white in BOTH themes. Highest specificity
      * via html.html attribute trick + tag selector chain. !important on
      * everything so subdomain CSS or our broad dark fallback can't win. */
-    "html .hero,html body .hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important;padding:4rem 2.5rem !important;position:relative !important;overflow:hidden !important}",
+    "html .hero,html body .hero,html[data-theme=\"dark\"] .hero,html[data-theme=\"dark\"] body .hero,html[data-theme=\"dark\"] body section.hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important;padding:4rem 2.5rem !important;position:relative !important;overflow:hidden !important}",
     "html .hero::before,html body .hero::before{content:'' !important;position:absolute !important;top:0 !important;right:0 !important;width:60% !important;height:100% !important;background:radial-gradient(circle at top right,rgba(167,139,250,0.25),transparent 60%) !important;pointer-events:none !important}",
     "html .hero,html .hero *,html body .hero,html body .hero *{color:#fff !important}",
     "html .hero h1,html .hero h2,html .hero h3,html .hero h4,html .hero .hero-title,html .hero strong,html .hero em,html .hero a,html body .hero h1{color:#fff !important;background:transparent !important}",
@@ -485,7 +488,9 @@
   // text descendant so it beats any subdomain CSS or our broad dark
   // cascade. Scoped to home (longevity.ge) and AIM Phoenix native hero.
   function forceHeroBranding(){
-    if (host !== "longevity.ge" && host !== "aim.longevity.ge") return;
+    // Apply to every host that has a .hero (home, AIM, future);
+    // skip Hive because we already display:none its native hero.
+    if (host === "hive.longevity.ge") return;
     var heroes = document.querySelectorAll('.hero');
     var grad = 'linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%)';
     heroes.forEach(function(h){
