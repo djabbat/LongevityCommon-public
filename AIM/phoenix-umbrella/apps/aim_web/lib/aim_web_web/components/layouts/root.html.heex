@@ -6,7 +6,7 @@
     <meta name="csrf-token" content={Plug.CSRFProtection.get_csrf_token()} />
     <title><%= AimWeb.I18n.t("app.title", assigns[:locale] || :en) %> · LongevityCommon</title>
     <link rel="icon" type="image/svg+xml"
-          href={"data:image/svg+xml;utf8," <> URI.encode(~s(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#e0e7ff"/><circle cx="50" cy="50" r="32" fill="#312e81"/><circle cx="50" cy="50" r="14" fill="#a5b4fc"/></svg>))} />
+          href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22%23e0e7ff%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2232%22%20fill%3D%22%23312e81%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2214%22%20fill%3D%22%23a5b4fc%22/%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
