@@ -457,8 +457,10 @@
   function injectSubHero(){
     var spec = SUB_HERO[host];
     if (!spec) return;
-    // Skip if the page already has its own hero / branded banner.
-    if (document.querySelector(".hero") || document.querySelector(".lc-sub-hero")) return;
+    // Idempotent — only skip if WE already injected one. Native
+    // <section class="hero"> from the page itself (e.g. hive's light
+    // fade) is allowed to coexist below our indigo banner.
+    if (document.querySelector(".lc-sub-hero")) return;
     var sec = document.createElement("section");
     sec.className = "lc-sub-hero";
     sec.innerHTML =
@@ -478,6 +480,24 @@
     }
   }
 
+  // Force the home `.hero` (Georgia Longevity Alliance banner) to
+  // indigo + white in BOTH themes — applied as inline style so it
+  // beats any subdomain CSS or our broad dark cascade. Limited to
+  // the home host so subdomain pages with their own .hero (e.g.
+  // hive's light fade) keep their look.
+  function forceHeroBranding(){
+    if (host !== "longevity.ge") return;
+    var heroes = document.querySelectorAll('.hero');
+    var grad = 'linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%)';
+    heroes.forEach(function(h){
+      h.style.setProperty('background', grad, 'important');
+      h.style.setProperty('color', '#fff', 'important');
+      h.querySelectorAll('h1,h2,h3,h4,p,span,div,a,strong,em,li').forEach(function(el){
+        el.style.setProperty('color', '#fff', 'important');
+      });
+    });
+  }
+
   function init(){
     document.head.appendChild(style);
     ensureFavicon();
@@ -485,6 +505,7 @@
     // <div class="eco-bar-injected"> server-side. Don't add a second one.
     if (document.querySelector(".eco-bar-injected")) {
       injectSubHero();
+      forceHeroBranding();
       injectEssence();
       return;
     }
@@ -492,6 +513,7 @@
     div.innerHTML = html;
     document.body.insertBefore(div.firstChild, document.body.firstChild);
     injectSubHero();
+    forceHeroBranding();
     injectEssence();
     var btn = document.querySelector(".theme-toggle-i");
     function syncIcon(){
