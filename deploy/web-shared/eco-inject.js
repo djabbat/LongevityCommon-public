@@ -481,20 +481,34 @@
   }
 
   // Force the home `.hero` (Georgia Longevity Alliance banner) to
-  // indigo + white in BOTH themes — applied as inline style so it
-  // beats any subdomain CSS or our broad dark cascade. Limited to
-  // the home host so subdomain pages with their own .hero (e.g.
-  // hive's light fade) keep their look.
+  // indigo + white in BOTH themes — applied as inline style on every
+  // text descendant so it beats any subdomain CSS or our broad dark
+  // cascade. Scoped to home (longevity.ge) and AIM Phoenix native hero.
   function forceHeroBranding(){
-    if (host !== "longevity.ge") return;
+    if (host !== "longevity.ge" && host !== "aim.longevity.ge") return;
     var heroes = document.querySelectorAll('.hero');
     var grad = 'linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%)';
     heroes.forEach(function(h){
       h.style.setProperty('background', grad, 'important');
       h.style.setProperty('color', '#fff', 'important');
-      h.querySelectorAll('h1,h2,h3,h4,p,span,div,a,strong,em,li').forEach(function(el){
-        el.style.setProperty('color', '#fff', 'important');
-      });
+      // Walk every descendant — force inline color:white !important.
+      var all = h.querySelectorAll('*');
+      for (var i = 0; i < all.length; i++) {
+        all[i].style.setProperty('color', '#fff', 'important');
+      }
+    });
+  }
+
+  // On Hive: a duplicate hero appears because the page already ships
+  // a native <section class="hero"> covering the same topic. Hide the
+  // native one — our injected .lc-sub-hero is the canonical brand
+  // banner now.
+  function dedupeHiveHero(){
+    if (host !== "hive.longevity.ge") return;
+    document.querySelectorAll('section.hero').forEach(function(h){
+      if (!h.classList.contains('lc-sub-hero')) {
+        h.style.setProperty('display', 'none', 'important');
+      }
     });
   }
 
@@ -505,6 +519,7 @@
     // <div class="eco-bar-injected"> server-side. Don't add a second one.
     if (document.querySelector(".eco-bar-injected")) {
       injectSubHero();
+      dedupeHiveHero();
       forceHeroBranding();
       injectEssence();
       return;
@@ -513,6 +528,7 @@
     div.innerHTML = html;
     document.body.insertBefore(div.firstChild, document.body.firstChild);
     injectSubHero();
+    dedupeHiveHero();
     forceHeroBranding();
     injectEssence();
     var btn = document.querySelector(".theme-toggle-i");
