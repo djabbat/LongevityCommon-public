@@ -513,16 +513,8 @@
         '<h1>' + spec.title + '</h1>' +
         '<p>' + spec.desc + '</p>' +
       '</div>';
-    // Order: eco-bar → site own-header → lc-sub-hero → content.
-    // Insert AFTER the page's own <header> if present, otherwise
-    // directly after the eco-bar.
-    var ownHeader = document.querySelector(
-      "header.site-header, header.header, .aim-subnav, header[data-aim-subnav]"
-    );
-    if (ownHeader && ownHeader.parentNode) {
-      ownHeader.parentNode.insertBefore(sec, ownHeader.nextSibling);
-      return;
-    }
+    // Order: eco-bar → lc-sub-hero → site own-header → content.
+    // Insert directly after the eco-bar, BEFORE any own-header.
     var bar = document.querySelector(".eco-bar-injected");
     if (bar && bar.nextSibling) {
       document.body.insertBefore(sec, bar.nextSibling);
@@ -530,6 +522,71 @@
       document.body.appendChild(sec);
     } else {
       document.body.insertBefore(sec, document.body.firstChild);
+    }
+  }
+
+  // Inject a uniform own-header for hosts that don't ship one (home,
+  // mcoa, cdata static landings). Sits directly UNDER lc-sub-hero so
+  // every subdomain has the same chrome: eco-bar → hero → own-header.
+  var INJECTED_NAV = {
+    "longevity.ge": [
+      ["/", "Home"],
+      ["/team/", "Team"],
+      ["/research/", "Research"],
+      ["/grants/", "Grants"],
+      ["/publications/", "Publications"],
+      ["/contact/", "Contact"],
+      ["/rescience/", "Annals"]
+    ],
+    "mcoa.longevity.ge": [
+      ["/", "Overview"],
+      ["#counters", "Counters"],
+      ["#l-tissue", "L_tissue"],
+      ["#references", "References"],
+      ["https://longevity.ge/rescience/", "Annals"]
+    ],
+    "cdata.longevity.ge": [
+      ["/", "Overview"],
+      ["#hypothesis", "Hypothesis"],
+      ["#mcai", "MCAI"],
+      ["#kaede", "Kaede"],
+      ["#references", "References"]
+    ]
+  };
+  var INJECTED_BRAND = {
+    "longevity.ge": "🌱 GLA",
+    "mcoa.longevity.ge": "🧮 MCOA",
+    "cdata.longevity.ge": "🔬 CDATA"
+  };
+
+  function injectOwnHeader(){
+    var nav = INJECTED_NAV[host];
+    if (!nav) return;
+    if (document.querySelector("header.header, header.site-header, .aim-subnav, .lc-own-header")) return;
+    var h = document.createElement("header");
+    h.className = "header lc-own-header";
+    var path = window.location.pathname;
+    var links = nav.map(function(p){
+      var isExternal = p[0].indexOf("http") === 0 || p[0].indexOf("//") === 0;
+      var isActive = !isExternal && (path === p[0] || (p[0] !== "/" && path.indexOf(p[0]) === 0));
+      return '<a href="' + p[0] + '"' + (isActive ? ' class="active"' : '') + '>' + p[1] + '</a>';
+    }).join("");
+    h.innerHTML =
+      '<div class="header-inner">' +
+        '<a href="/" class="brand">' + (INJECTED_BRAND[host] || host) + '</a>' +
+        '<nav>' + links + '</nav>' +
+      '</div>';
+    // Insert AFTER the lc-sub-hero (or after eco-bar if no hero on host).
+    var hero = document.querySelector(".lc-sub-hero, .hero, .page-hero");
+    if (hero && hero.parentNode) {
+      hero.parentNode.insertBefore(h, hero.nextSibling);
+      return;
+    }
+    var bar = document.querySelector(".eco-bar-injected");
+    if (bar) {
+      document.body.insertBefore(h, bar.nextSibling);
+    } else {
+      document.body.insertBefore(h, document.body.firstChild);
     }
   }
 
@@ -610,10 +667,19 @@
     });
   }
 
-  // On Hive: a duplicate hero appears because the page already ships
-  // a native <section class="hero"> covering the same topic. Hide the
-  // native one — our injected .lc-sub-hero is the canonical brand
-  // banner now.
+  // Move every page's own <header> below the lc-sub-hero so every
+  // subdomain follows the same vertical order:
+  //   eco-bar → indigo hero → own-header → content → lang-bar → footer
+  function relocateOwnHeader(){
+    var hero = document.querySelector(".lc-sub-hero, .hero, .page-hero");
+    if (!hero || !hero.parentNode) return;
+    var ownHeader = document.querySelector("header.site-header, header.header, .aim-subnav");
+    if (!ownHeader || ownHeader.classList.contains("lc-own-header")) return;
+    // If already placed after the hero, do nothing.
+    if (hero.compareDocumentPosition(ownHeader) & Node.DOCUMENT_POSITION_FOLLOWING) return;
+    hero.parentNode.insertBefore(ownHeader, hero.nextSibling);
+  }
+
   function dedupeHiveHero(){
     if (host !== "hive.longevity.ge") return;
     document.querySelectorAll('section.hero').forEach(function(h){
@@ -631,6 +697,8 @@
     if (document.querySelector(".eco-bar-injected")) {
       injectSubHero();
       dedupeHiveHero();
+      relocateOwnHeader();
+      injectOwnHeader();
       forceHeroBranding();
       injectLangBar();
       injectEssence();
@@ -641,6 +709,8 @@
     document.body.insertBefore(div.firstChild, document.body.firstChild);
     injectSubHero();
     dedupeHiveHero();
+    relocateOwnHeader();
+    injectOwnHeader();
     forceHeroBranding();
     injectLangBar();
     injectEssence();
