@@ -237,6 +237,26 @@
     /* The outer <header> itself spans full width — centering happens
      * on its inner wrapper. */
     "html header.site-header,html header.header,html .aim-subnav,html .eco-bar-injected{width:100% !important;display:block !important}",
+
+    /* ── Unified subdomain own-header look (light + dark) ─────────
+     * Same chrome on every subdomain's local nav strip — Phoenix
+     * (.header), Hive (.site-header), AIM (.aim-subnav).
+     * Light: white card + slate border + slate-soft links.
+     * Dark:  #15171f card + #2a2f40 border + slate-200 links.
+     */
+    "html header.site-header,html header.header,html .aim-subnav{background:#fff !important;border-bottom:1px solid #e2e8f0 !important;font-family:Inter,-apple-system,system-ui,sans-serif !important;padding:0 !important}",
+    "html header.site-header > div,html header.header > div,html .aim-subnav > div{padding-top:12px !important;padding-bottom:12px !important;display:flex !important;align-items:center !important;gap:1rem !important;flex-wrap:wrap !important}",
+    "html header.site-header .brand,html header.site-header .logo,html header.header .brand,html .aim-subnav .brand{font-weight:700 !important;font-size:1rem !important;color:#0f172a !important;letter-spacing:-0.015em !important;text-decoration:none !important}",
+    "html header.site-header nav,html header.header nav,html .aim-subnav nav{display:flex !important;gap:0.4rem !important;flex-wrap:wrap !important;flex:1 !important}",
+    "html header.site-header nav a,html header.header nav a,html .aim-subnav nav a,html header.site-header .topnav a{color:#475569 !important;font-size:0.875rem !important;font-weight:500 !important;padding:6px 12px !important;border-radius:6px !important;text-decoration:none !important;transition:background 0.15s,color 0.15s !important}",
+    "html header.site-header nav a:hover,html header.header nav a:hover,html .aim-subnav nav a:hover{background:#eef2ff !important;color:#4f46e5 !important;text-decoration:none !important}",
+    "html header.site-header nav a.active,html header.header nav a.active,html .aim-subnav nav a.active{background:#4f46e5 !important;color:#fff !important}",
+    /* Dark mode equivalents */
+    "html[data-theme=\"dark\"] header.site-header,html[data-theme=\"dark\"] header.header,html[data-theme=\"dark\"] .aim-subnav{background:#15171f !important;border-bottom-color:#2a2f40 !important}",
+    "html[data-theme=\"dark\"] header.site-header .brand,html[data-theme=\"dark\"] header.site-header .logo,html[data-theme=\"dark\"] header.header .brand,html[data-theme=\"dark\"] .aim-subnav .brand{color:#fff !important}",
+    "html[data-theme=\"dark\"] header.site-header nav a,html[data-theme=\"dark\"] header.header nav a,html[data-theme=\"dark\"] .aim-subnav nav a,html[data-theme=\"dark\"] header.site-header .topnav a{color:#cbd5e1 !important}",
+    "html[data-theme=\"dark\"] header.site-header nav a:hover,html[data-theme=\"dark\"] header.header nav a:hover,html[data-theme=\"dark\"] .aim-subnav nav a:hover{background:#1a2440 !important;color:#88a8ff !important}",
+    "html[data-theme=\"dark\"] header.site-header nav a.active,html[data-theme=\"dark\"] header.header nav a.active,html[data-theme=\"dark\"] .aim-subnav nav a.active{background:#4f46e5 !important;color:#fff !important}",
     "html .container{padding:4.5rem 2rem !important}",
     /* NOTE: hero gradient/background is owned by each subdomain — Hive
      * has its own light fade, AIM has its own native styles, home has
