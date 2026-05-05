@@ -10,11 +10,19 @@
     document.cookie = "lc_theme="+encodeURIComponent(v)+"; expires="+d.toUTCString()+"; path=/; domain=.longevity.ge; SameSite=Lax";
     try { localStorage.setItem("theme", v); } catch(e) {}
   }
-  var t = getTheme();
-  if (t === "dark") document.documentElement.setAttribute("data-theme","dark");
 
   var host = window.location.hostname;
   var path = window.location.pathname;
+
+  // Annals (OJS) and Longevity Horizon (OJS) embed this script via the
+  // theme plugin but must NOT inherit the home-style overrides — their
+  // PKP layout has its own brand. Bail out before touching the page.
+  if (path.indexOf("/rescience") === 0 || path.indexOf("/longhoriz") === 0) {
+    return;
+  }
+
+  var t = getTheme();
+  if (t === "dark") document.documentElement.setAttribute("data-theme","dark");
   var links = [
     ["https://longevity.ge","Home","longevity.ge","/"],
     ["https://mcoa.longevity.ge","MCOA","mcoa.longevity.ge",null],
@@ -193,8 +201,82 @@
     "html[data-theme=\"dark\"] .lc-essence-chev{color:#a5b4fc !important}",
     "html[data-theme=\"dark\"] .lc-essence-body{background:#15171f !important;border-color:#2a2f40 !important;border-left-color:#818cf8 !important;color:#d8dce4 !important}",
     "html[data-theme=\"dark\"] .lc-essence-body code{background:#2a2f40 !important;color:#e0e3eb !important}",
-    "html[data-theme=\"dark\"] .lc-essence-body a{color:#a5b4fc !important}"
+    "html[data-theme=\"dark\"] .lc-essence-body a{color:#a5b4fc !important}",
+
+    /* ── HOME-PALETTE BASE (matches longevity.ge root index.html) ──
+     * Applied to every *.longevity.ge page that loads eco-inject.js
+     * EXCEPT /rescience/ (Annals — OJS not allowed to inherit).
+     * Uses generous specificity (html prefix + !important) to win over
+     * subdomain-specific stylesheets while leaving page content alone.
+     */
+    "html:not([data-theme=\"dark\"]):root{--c-text:#0f172a !important;--c-text-soft:#475569 !important;--c-text-muted:#64748b !important;--c-bg:#f8fafc !important;--c-card:#ffffff !important;--c-border:#e2e8f0 !important;--c-border-strong:#cbd5e1 !important;--c-accent:#4f46e5 !important;--c-accent-soft:#eef2ff !important;--c-success:#10b981 !important;--c-warning:#f59e0b !important;--c-danger:#ef4444 !important;--radius:12px;--radius-lg:16px}",
+    "html:not([data-theme=\"dark\"]) body{font-family:Inter,-apple-system,BlinkMacSystemFont,system-ui,sans-serif !important;background:#f8fafc;color:#0f172a;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}",
+    "html:not([data-theme=\"dark\"]) code,html:not([data-theme=\"dark\"]) .formula,html:not([data-theme=\"dark\"]) pre{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace !important}",
+    "html:not([data-theme=\"dark\"]) h1,html:not([data-theme=\"dark\"]) h2,html:not([data-theme=\"dark\"]) h3,html:not([data-theme=\"dark\"]) h4{color:#0f172a;letter-spacing:-0.02em}",
+    "html:not([data-theme=\"dark\"]) a{color:#4f46e5;transition:color 0.15s}",
+    "html:not([data-theme=\"dark\"]) a:hover{color:#6366f1}",
+
+    /* ── Common component primitives (apply to BOTH light & dark) ──
+     * Using prefix `html` (not `:root`) so every subdomain — Phoenix,
+     * static landings, FastAPI templates — picks up the same look.
+     * !important wins over subdomain-specific styles, but we leave
+     * page-internal selectors (`.simulator`, `.results`, …) alone.
+     */
+    "html .container,html .hero-inner,html .footer-inner,html .page-inner{max-width:1100px !important;margin-left:auto !important;margin-right:auto !important;box-sizing:border-box !important}",
+    "html .container{padding:4.5rem 2rem !important}",
+    "html .hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important;padding:4rem 2.5rem !important;position:relative !important;overflow:hidden !important}",
+    "html .hero::before{content:'' !important;position:absolute !important;top:0 !important;right:0 !important;width:60% !important;height:100% !important;background:radial-gradient(circle at top right,rgba(167,139,250,0.25),transparent 60%) !important;pointer-events:none !important}",
+    "html .hero h1,html .hero .hero-title{font-size:clamp(2.5rem,5vw,3.75rem) !important;font-weight:800 !important;line-height:1.05 !important;margin:0 0 1rem 0 !important;letter-spacing:-0.025em !important;color:#fff !important}",
+    "html .hero p,html .hero .hero-subtitle{font-size:clamp(1rem,1.5vw,1.1875rem) !important;line-height:1.55 !important;opacity:0.92 !important;max-width:48rem !important;margin:0 0 1.75rem 0 !important;color:#fff !important}",
+    "html .hero-pill{display:inline-flex !important;align-items:center !important;gap:0.5rem !important;background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;padding:0.4375rem 1rem !important;border-radius:999px !important;font-size:0.75rem !important;font-weight:600 !important;letter-spacing:0.08em !important;text-transform:uppercase !important;margin-bottom:1.25rem !important;color:#fff !important}",
+    "html .hero-pill::before{content:'' !important;width:6px !important;height:6px !important;border-radius:50% !important;background:#34d399 !important;box-shadow:0 0 8px #34d399 !important}",
+    "html .btn{display:inline-flex !important;align-items:center !important;gap:0.5rem !important;padding:0.75rem 1.375rem !important;border-radius:999px !important;font-weight:600 !important;font-size:0.9375rem !important;text-decoration:none !important;transition:transform 0.15s,box-shadow 0.15s !important;cursor:pointer !important;font-family:inherit !important;border:none !important}",
+    "html .btn-primary{background:#fff !important;color:#312e81 !important;box-shadow:0 4px 12px rgba(0,0,0,0.12) !important}",
+    "html .btn-primary:hover{transform:translateY(-1px) !important;box-shadow:0 6px 20px rgba(0,0,0,0.18) !important;color:#312e81 !important}",
+    "html .btn-ghost{background:transparent !important;color:#fff !important;border:1.5px solid rgba(255,255,255,0.4) !important}",
+    "html .btn-ghost:hover{background:rgba(255,255,255,0.10) !important}",
+    "html .section-title{font-size:1.75rem !important;font-weight:700 !important;letter-spacing:-0.015em !important;margin:3rem 0 0.5rem 0 !important}",
+    "html .section-lead{color:#475569 !important;font-size:1rem !important;margin:0 0 1.5rem 0 !important;max-width:48rem !important}",
+    "html:not([data-theme=\"dark\"]) .grid{display:grid !important;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr)) !important;gap:1rem !important}",
+    "html:not([data-theme=\"dark\"]) .card{background:#fff !important;border:1px solid #e2e8f0 !important;border-radius:16px !important;padding:1.5rem !important;transition:transform 0.18s,box-shadow 0.18s,border-color 0.18s !important}",
+    "html:not([data-theme=\"dark\"]) .card.link{cursor:pointer !important}",
+    "html:not([data-theme=\"dark\"]) .card.link:hover{transform:translateY(-3px) !important;box-shadow:0 4px 12px rgba(15,23,42,0.06) !important;border-color:#4f46e5 !important;text-decoration:none !important}",
+    "html:not([data-theme=\"dark\"]) .card h3{margin:0 0 0.625rem 0 !important;font-size:1.1875rem !important;font-weight:700 !important;color:#0f172a !important}",
+    "html:not([data-theme=\"dark\"]) .card p{margin:0.625rem 0 !important;font-size:0.9375rem !important;color:#475569 !important;line-height:1.55 !important}",
+    "html:not([data-theme=\"dark\"]) .card .role{font-size:0.6875rem !important;color:#64748b !important;text-transform:uppercase !important;letter-spacing:0.08em !important;font-weight:600 !important;margin-bottom:0.5rem !important}",
+    "html:not([data-theme=\"dark\"]) .badge{display:inline-flex !important;font-size:0.6875rem !important;font-weight:600 !important;padding:0.1875rem 0.625rem !important;border-radius:999px !important;letter-spacing:0.02em !important}",
+    "html:not([data-theme=\"dark\"]) .badge.green{background:#d1fae5 !important;color:#065f46 !important}",
+    "html:not([data-theme=\"dark\"]) .badge.blue{background:#dbeafe !important;color:#1e40af !important}",
+    "html:not([data-theme=\"dark\"]) .badge.purple{background:#ede9fe !important;color:#5b21b6 !important}",
+    "html:not([data-theme=\"dark\"]) .badge.gray{background:#f1f5f9 !important;color:#475569 !important}",
+    "html:not([data-theme=\"dark\"]) .badge.warn{background:#fef3c7 !important;color:#92400e !important}",
+    "html:not([data-theme=\"dark\"]) .badge.red{background:#fee2e2 !important;color:#991b1b !important}",
+    /* ── Subdomain-internal headers normalised to home-style ─────── */
+    "html:not([data-theme=\"dark\"]) header:not(.eco-bar-injected),html:not([data-theme=\"dark\"]) .site-header,html:not([data-theme=\"dark\"]) .aim-subnav{background:#fff !important;border-bottom:1px solid #e2e8f0 !important;color:#0f172a !important;font-family:Inter,sans-serif !important}",
+    "html:not([data-theme=\"dark\"]) header:not(.eco-bar-injected) a,html:not([data-theme=\"dark\"]) .site-header a,html:not([data-theme=\"dark\"]) .aim-subnav a{color:#475569 !important}",
+    "html:not([data-theme=\"dark\"]) header:not(.eco-bar-injected) a:hover,html:not([data-theme=\"dark\"]) .site-header a:hover,html:not([data-theme=\"dark\"]) .aim-subnav a:hover{color:#4f46e5 !important;background:#eef2ff !important;text-decoration:none !important}",
+    "html:not([data-theme=\"dark\"]) header:not(.eco-bar-injected) a.active,html:not([data-theme=\"dark\"]) .aim-subnav a.active{background:#4f46e5 !important;color:#fff !important}",
+    /* ── Footer normalised ──────────────────────────────────────── */
+    "html:not([data-theme=\"dark\"]) footer{background:#fff !important;border-top:1px solid #e2e8f0 !important;color:#64748b !important;font-family:Inter,sans-serif !important}",
+    "html:not([data-theme=\"dark\"]) footer a{color:#4f46e5 !important}"
   ].join("\n");
+
+  // Inject Inter + JetBrains Mono fonts (idempotent — skip if already present)
+  if (!document.querySelector('link[href*="fonts.googleapis.com/css2?family=Inter"]')) {
+    var fp = document.createElement("link");
+    fp.rel = "preconnect";
+    fp.href = "https://fonts.googleapis.com";
+    document.head.appendChild(fp);
+    var fp2 = document.createElement("link");
+    fp2.rel = "preconnect";
+    fp2.href = "https://fonts.gstatic.com";
+    fp2.crossOrigin = "anonymous";
+    document.head.appendChild(fp2);
+    var ff = document.createElement("link");
+    ff.rel = "stylesheet";
+    ff.href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap";
+    document.head.appendChild(ff);
+  }
 
   // Favicon — one emoji per subdomain. Idempotent: skip if a non-default
   // <link rel="icon"> is already present in <head>.
@@ -298,6 +380,12 @@
   function init(){
     document.head.appendChild(style);
     ensureFavicon();
+    // Idempotent: a Phoenix template (e.g. AIM) may already have rendered
+    // <div class="eco-bar-injected"> server-side. Don't add a second one.
+    if (document.querySelector(".eco-bar-injected")) {
+      injectEssence();
+      return;
+    }
     var div = document.createElement("div");
     div.innerHTML = html;
     document.body.insertBefore(div.firstChild, document.body.firstChild);
