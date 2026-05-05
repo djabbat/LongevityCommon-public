@@ -169,6 +169,9 @@ members = [
     "crates/aim-analyze-claude-memory",
     "crates/aim-import-claude-memory",
     "crates/aim-user-admin",
+    "crates/aim-config",
+    "crates/aim-rate-limit",
+    "crates/aim-webhooks",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
