@@ -259,7 +259,7 @@
     "html[data-theme=\"dark\"] header.site-header nav a.active,html[data-theme=\"dark\"] header.header nav a.active,html[data-theme=\"dark\"] .aim-subnav nav a.active{background:#4f46e5 !important;color:#fff !important}",
 
     /* ── Lang switcher inside own-header (right side) ──────────── */
-    "html .header-inner .lang-switcher,html .container .lang-switcher,html .aim-subnav-inner .lang-switcher,html header .lang-switcher{margin-left:auto !important}",
+    "html .header-inner .lang-switcher,html .container .lang-switcher,html .aim-subnav-inner .lang-switcher,html header .lang-switcher,html header:not(.eco-bar-injected) .lang-switcher{margin-left:auto !important;display:inline-flex !important;align-items:center !important;gap:0.4rem !important}",
     "html .lang-switcher select{background:#fff !important;color:#0f172a !important;border:1px solid #cbd5e1 !important;border-radius:6px !important;padding:5px 9px !important;font-size:0.875rem !important;font-family:Inter,sans-serif !important;cursor:pointer !important}",
     "html[data-theme=\"dark\"] .lang-switcher select{background:#1a1d28 !important;color:#e0e3eb !important;border-color:#2a2f40 !important}",
     "html .container{padding:4.5rem 2rem !important}",
@@ -641,12 +641,27 @@
   // sitting under the hero), so every subdomain ends up with the
   // same place-of-controls: header → logo + nav + lang. Idempotent.
   function addLangToOwnHeader(){
-    var header = document.querySelector(
-      "header.site-header, header.header, .aim-subnav, .lc-own-header"
-    );
+    // Find the first <header> that is NOT the eco-bar. Falls back to
+    // .aim-subnav / .lc-own-header. Covers all subdomain header
+    // markup styles — Phoenix .header, Hive .site-header, FCLC's
+    // Tailwind <header class="border-b…">.
+    var headers = document.querySelectorAll("header");
+    var header = null;
+    for (var i = 0; i < headers.length; i++) {
+      if (!headers[i].classList.contains("eco-bar-injected")) {
+        header = headers[i];
+        break;
+      }
+    }
+    if (!header) header = document.querySelector(".aim-subnav, .lc-own-header");
     if (!header) return;
-    var hostInner = header.querySelector(".header-inner, .container, .aim-subnav-inner") || header;
+    // Pick the inner wrapper if present, otherwise the header itself.
+    var hostInner =
+      header.querySelector(".header-inner, .aim-subnav-inner, .container") ||
+      header.querySelector(":scope > div") ||
+      header;
     if (hostInner.querySelector(".lang-switcher, [data-lc-lang]")) return;
+    if (header.querySelector(".lang-switcher, [data-lc-lang]")) return;
     var sel = LANG_NAMES.map(function(p){
       var s = (currentLocale() === p[0]) ? " selected" : "";
       return '<option value="' + p[0] + '"' + s + '>' + p[1] + '</option>';
