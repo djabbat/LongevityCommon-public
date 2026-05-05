@@ -258,7 +258,28 @@
     "html:not([data-theme=\"dark\"]) header:not(.eco-bar-injected) a.active,html:not([data-theme=\"dark\"]) .aim-subnav a.active{background:#4f46e5 !important;color:#fff !important}",
     /* ── Footer normalised ──────────────────────────────────────── */
     "html:not([data-theme=\"dark\"]) footer{background:#fff !important;border-top:1px solid #e2e8f0 !important;color:#64748b !important;font-family:Inter,sans-serif !important}",
-    "html:not([data-theme=\"dark\"]) footer a{color:#4f46e5 !important}"
+    "html:not([data-theme=\"dark\"]) footer a{color:#4f46e5 !important}",
+
+    /* ── HERO stays BLUE in dark mode (same indigo gradient as light) ──
+     * The hero on longevity.ge home is the brand banner — indigo
+     * regardless of theme. Do NOT let dark-theme overrides repaint it.
+     * Re-assert all hero rules with the same indigo gradient + white
+     * text. .hero-stats tiles keep their semi-transparent white look.
+     */
+    "html[data-theme=\"dark\"] .hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero h1,html[data-theme=\"dark\"] .hero h2,html[data-theme=\"dark\"] .hero h3,html[data-theme=\"dark\"] .hero .hero-title{color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero p,html[data-theme=\"dark\"] .hero .hero-subtitle,html[data-theme=\"dark\"] .hero div,html[data-theme=\"dark\"] .hero span,html[data-theme=\"dark\"] .hero li{color:#fff !important;background:transparent !important;border-color:transparent !important}",
+    "html[data-theme=\"dark\"] .hero a{color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero-pill{background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero-stats .s{background:rgba(255,255,255,0.07) !important;border:1px solid rgba(255,255,255,0.10) !important;color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero-stats .s .k,html[data-theme=\"dark\"] .hero-stats .s .v{color:#fff !important;background:transparent !important}",
+    "html[data-theme=\"dark\"] .btn-primary{background:#fff !important;color:#312e81 !important}",
+    "html[data-theme=\"dark\"] .btn-ghost{background:transparent !important;color:#fff !important;border:1.5px solid rgba(255,255,255,0.4) !important}",
+
+    /* ── Donate banner (green hero on home) — same treatment ─────── */
+    "html[data-theme=\"dark\"] .donate{background:linear-gradient(135deg,#064e3b 0%,#047857 50%,#10b981 100%) !important;color:#fff !important}",
+    "html[data-theme=\"dark\"] .donate h2,html[data-theme=\"dark\"] .donate p,html[data-theme=\"dark\"] .donate div,html[data-theme=\"dark\"] .donate .donate-lead,html[data-theme=\"dark\"] .donate-options .opt,html[data-theme=\"dark\"] .donate-options .opt .k,html[data-theme=\"dark\"] .donate-options .opt .v{color:#fff !important;background:transparent !important;border-color:rgba(255,255,255,0.18) !important}",
+    "html[data-theme=\"dark\"] .donate-options .opt{background:rgba(255,255,255,0.10) !important;border:1px solid rgba(255,255,255,0.18) !important}"
   ].join("\n");
 
   // Inject Inter + JetBrains Mono fonts (idempotent — skip if already present)

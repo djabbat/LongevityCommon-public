@@ -383,9 +383,32 @@
       html[data-theme="dark"] .status-down, html[data-theme="dark"] .status-critical { background: rgba(239,68,68,0.18); color: #f87171; }
       html[data-theme="dark"] p.status-error { background: rgba(239,68,68,0.18); color: #f87171; }
       html[data-theme="dark"] p.status-ok { background: rgba(74,222,128,0.18); color: #4ade80; }
+
+      /* Hero stays BLUE in dark mode (matches longevity.ge home) */
+      html[data-theme="dark"] .hero {
+        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 35%, #4338ca 75%, #6366f1 100%) !important;
+        color: #fff !important;
+      }
+      html[data-theme="dark"] .hero h1,
+      html[data-theme="dark"] .hero .hero-title { color: #fff !important; }
+      html[data-theme="dark"] .hero p,
+      html[data-theme="dark"] .hero .hero-subtitle { color: #fff !important; opacity: 0.92; }
+      html[data-theme="dark"] .hero-pill {
+        background: rgba(255,255,255,0.08) !important;
+        border-color: rgba(255,255,255,0.18) !important;
+        color: #fff !important;
+      }
+      html[data-theme="dark"] .hero-stats .s {
+        background: rgba(255,255,255,0.07) !important;
+        border-color: rgba(255,255,255,0.10) !important;
+      }
+      html[data-theme="dark"] .hero-stats .s .k,
+      html[data-theme="dark"] .hero-stats .s .v { color: #fff !important; }
+      html[data-theme="dark"] .btn-primary { background: #fff !important; color: #312e81 !important; }
+      html[data-theme="dark"] .btn-ghost { color: #fff !important; border-color: rgba(255,255,255,0.4) !important; }
     </style>
 
-    <script src="https://longevity.ge/eco-inject.js?v=35" defer></script>
+    <script src="https://longevity.ge/eco-inject.js?v=36" defer></script>
     <script>
       // Read shared theme cookie (.longevity.ge), fall back to localStorage,
       // and apply data-theme="dark" pre-paint to avoid FOUC. Sync theme-toggle button
