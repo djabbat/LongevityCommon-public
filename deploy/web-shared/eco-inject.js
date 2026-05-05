@@ -279,8 +279,11 @@
     "html .hero::before,html body .hero::before{content:'' !important;position:absolute !important;top:0 !important;right:0 !important;width:60% !important;height:100% !important;background:radial-gradient(circle at top right,rgba(167,139,250,0.25),transparent 60%) !important;pointer-events:none !important}",
     "html .hero,html .hero *,html body .hero,html body .hero *{color:#fff !important}",
     "html .hero h1,html .hero h2,html .hero h3,html .hero h4,html .hero .hero-title,html .hero strong,html .hero em,html .hero a,html body .hero h1{color:#fff !important;background:transparent !important}",
-    "html .hero-pill{background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important}",
-    "html .hero-stats .s,html .hero-stats .s .k,html .hero-stats .s .v{color:#fff !important;background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.10) !important}",
+    "html .hero-pill,html body .hero-pill,html[data-theme=\"dark\"] .hero-pill,html[data-theme=\"dark\"] body .hero-pill{background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important;backdrop-filter:blur(4px) !important}",
+    "html .hero-stats .s,html body .hero-stats .s,html[data-theme=\"dark\"] .hero-stats .s,html[data-theme=\"dark\"] body .hero-stats .s{background:rgba(255,255,255,0.07) !important;border:1px solid rgba(255,255,255,0.10) !important;color:#fff !important}",
+    "html .hero-stats .s .k,html .hero-stats .s .v,html[data-theme=\"dark\"] .hero-stats .s .k,html[data-theme=\"dark\"] .hero-stats .s .v{color:#fff !important;background:transparent !important}",
+    /* Donate-options tiles (also inside a branded gradient banner) */
+    "html .donate-options .opt,html[data-theme=\"dark\"] .donate-options .opt{background:rgba(255,255,255,0.10) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important;backdrop-filter:blur(4px) !important}",
     "html[data-theme=\"dark\"] .hero-pill{background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important}",
     "html[data-theme=\"dark\"] .hero-stats .s{background:rgba(255,255,255,0.07) !important;border:1px solid rgba(255,255,255,0.10) !important;color:#fff !important}",
     "html[data-theme=\"dark\"] .hero-stats .s .k,html[data-theme=\"dark\"] .hero-stats .s .v{color:#fff !important;background:transparent !important}",
@@ -502,7 +505,21 @@
       h.style.setProperty('color', '#fff', 'important');
       var all = h.querySelectorAll('*');
       for (var i = 0; i < all.length; i++) {
-        all[i].style.setProperty('color', '#fff', 'important');
+        var el = all[i];
+        el.style.setProperty('color', '#fff', 'important');
+        // Reset backgrounds for children that may have inherited a dark
+        // panel bg from subdomain dark-mode rules. Keep tile-style bg
+        // for known semi-transparent panels (.s, .hero-pill, .opt).
+        if (el.classList.contains('s') ||
+            el.classList.contains('hero-pill') ||
+            el.classList.contains('opt')) {
+          el.style.setProperty('background', 'rgba(255,255,255,0.07)', 'important');
+          el.style.setProperty('border-color', 'rgba(255,255,255,0.18)', 'important');
+        } else if (el.tagName !== 'A') {
+          // Inner text wrappers should be transparent so the indigo
+          // gradient shows through.
+          el.style.setProperty('background', 'transparent', 'important');
+        }
       }
     });
   }
