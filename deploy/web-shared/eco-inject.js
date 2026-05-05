@@ -715,7 +715,11 @@
       if (h.classList.contains("eco-bar-injected")) return;
       h.querySelectorAll("details").forEach(function(d){
         var sum = d.querySelector("summary");
-        if (sum && /^[A-Z]{2}$/.test(sum.textContent.trim())) {
+        if (!sum) return;
+        var txt = sum.textContent.trim();
+        // Hide any 1-3 char locale code (EN / RU / KA / KZ / DA / FR / ES / AR / ZH)
+        // — accept whitespace, arrow icons, anything trailing.
+        if (/^[A-Z]{2,3}\b/.test(txt) || txt.length <= 5) {
           d.style.setProperty("display", "none", "important");
         }
       });
@@ -784,7 +788,7 @@
     relocateOwnHeader();
     injectOwnHeader();
     forceHeroBranding();
-    injectLangBar();
+    addLangToOwnHeader();
     injectEssence();
     wireThemeToggle();
   }
