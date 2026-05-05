@@ -258,14 +258,10 @@
     "html[data-theme=\"dark\"] header.site-header nav a:hover,html[data-theme=\"dark\"] header.header nav a:hover,html[data-theme=\"dark\"] .aim-subnav nav a:hover{background:#1a2440 !important;color:#88a8ff !important}",
     "html[data-theme=\"dark\"] header.site-header nav a.active,html[data-theme=\"dark\"] header.header nav a.active,html[data-theme=\"dark\"] .aim-subnav nav a.active{background:#4f46e5 !important;color:#fff !important}",
 
-    /* ── Bottom language switcher (auto-injected on all subdomains) */
-    ".lc-lang-bar{background:#fff !important;border-top:1px solid #e2e8f0 !important;padding:14px 1.5rem !important;font-family:Inter,sans-serif !important}",
-    ".lc-lang-bar-inner{max-width:1100px !important;margin:0 auto !important;display:flex !important;align-items:center !important;justify-content:center !important;gap:0.6rem !important;flex-wrap:wrap !important}",
-    ".lc-lang-bar label{color:#64748b !important;font-size:0.8125rem !important;font-weight:500 !important}",
-    ".lc-lang-bar select{background:#fff !important;color:#0f172a !important;border:1px solid #cbd5e1 !important;border-radius:6px !important;padding:5px 9px !important;font-size:0.875rem !important;font-family:inherit !important;cursor:pointer !important}",
-    "html[data-theme=\"dark\"] .lc-lang-bar{background:#15171f !important;border-top-color:#2a2f40 !important}",
-    "html[data-theme=\"dark\"] .lc-lang-bar label{color:#a0a8b5 !important}",
-    "html[data-theme=\"dark\"] .lc-lang-bar select{background:#1a1d28 !important;color:#e0e3eb !important;border-color:#2a2f40 !important}",
+    /* ── Lang switcher inside own-header (right side) ──────────── */
+    "html .header-inner .lang-switcher,html .container .lang-switcher,html .aim-subnav-inner .lang-switcher,html header .lang-switcher{margin-left:auto !important}",
+    "html .lang-switcher select{background:#fff !important;color:#0f172a !important;border:1px solid #cbd5e1 !important;border-radius:6px !important;padding:5px 9px !important;font-size:0.875rem !important;font-family:Inter,sans-serif !important;cursor:pointer !important}",
+    "html[data-theme=\"dark\"] .lang-switcher select{background:#1a1d28 !important;color:#e0e3eb !important;border-color:#2a2f40 !important}",
     "html .container{padding:4.5rem 2rem !important}",
     /* NOTE: hero gradient/background is owned by each subdomain — Hive
      * has its own light fade, AIM has its own native styles, home has
@@ -641,26 +637,28 @@
     if (html) return html.split("-")[0];
     return "en";
   }
-  function injectLangBar(){
-    if (document.querySelector(".lc-lang-bar")) return;
-    var bar = document.createElement("div");
-    bar.className = "lc-lang-bar";
+  // Add the language switcher INSIDE the page's own-header (the one
+  // sitting under the hero), so every subdomain ends up with the
+  // same place-of-controls: header → logo + nav + lang. Idempotent.
+  function addLangToOwnHeader(){
+    var header = document.querySelector(
+      "header.site-header, header.header, .aim-subnav, .lc-own-header"
+    );
+    if (!header) return;
+    var hostInner = header.querySelector(".header-inner, .container, .aim-subnav-inner") || header;
+    if (hostInner.querySelector(".lang-switcher, [data-lc-lang]")) return;
     var sel = LANG_NAMES.map(function(p){
-      var sel = (currentLocale() === p[0]) ? " selected" : "";
-      return '<option value="' + p[0] + '"' + sel + '>' + p[1] + '</option>';
+      var s = (currentLocale() === p[0]) ? " selected" : "";
+      return '<option value="' + p[0] + '"' + s + '>' + p[1] + '</option>';
     }).join("");
-    bar.innerHTML =
-      '<div class="lc-lang-bar-inner">' +
-        '<label for="lc-lang-select">🌐 Language</label>' +
-        '<select id="lc-lang-select" aria-label="Select language">' + sel + '</select>' +
-      '</div>';
-    var footer = document.querySelector("footer");
-    if (footer) {
-      footer.parentNode.insertBefore(bar, footer);
-    } else {
-      document.body.appendChild(bar);
-    }
-    bar.querySelector("select").addEventListener("change", function(e){
+    var form = document.createElement("form");
+    form.method = "get";
+    form.className = "lang-switcher";
+    form.setAttribute("data-lc-lang", "1");
+    form.innerHTML =
+      '<select name="locale" aria-label="Language">' + sel + '</select>';
+    hostInner.appendChild(form);
+    form.querySelector("select").addEventListener("change", function(e){
       var url = new URL(window.location.href);
       url.searchParams.set("locale", e.target.value);
       window.location.href = url.toString();
@@ -701,7 +699,7 @@
       relocateOwnHeader();
       injectOwnHeader();
       forceHeroBranding();
-      injectLangBar();
+      addLangToOwnHeader();
       injectEssence();
       return;
     }

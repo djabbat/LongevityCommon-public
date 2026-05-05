@@ -49,6 +49,13 @@ defmodule AimWeb.HomeLive do
           <a href="/drugs"><%= t("home.menu.drugs", @locale) %></a>
           <a href="/settings"><%= t("home.menu.settings", @locale) %></a>
         </nav>
+        <form method="get" class="lang-switcher">
+          <select name="locale" onchange="this.form.submit()" aria-label="Language">
+            <%= for loc <- AimWeb.I18n.locales() do %>
+              <option value={loc} selected={loc == @locale}><%= AimWeb.I18n.name(loc) %></option>
+            <% end %>
+          </select>
+        </form>
       </div>
     </header>
 
