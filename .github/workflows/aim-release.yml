@@ -36,7 +36,24 @@ jobs:
       run:
         shell: ${{ matrix.shell }}
     steps:
+      - name: Enable long paths (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          # NTFS long-path opt-in via registry
+          New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+            -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force | Out-Null
+
       - uses: actions/checkout@v4
+        with:
+          # Skip the giant Ze/Materials docs subtree to avoid hitting
+          # Windows MAX_PATH on the long Russian/English filenames.
+          # Sparse-checkout: include everything except that one path.
+          sparse-checkout: |
+            /*
+            !Ze/Materials
+          sparse-checkout-cone-mode: false
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
