@@ -53,19 +53,13 @@ if [[ ! -d "$PHOENIX_REL" ]]; then
   echo "ERROR: Phoenix release not found at $PHOENIX_REL" >&2
   exit 1
 fi
-# Empty target before copy. Git Bash on Windows fails with
-# "cp: cannot create regular file ... File exists" when cp -R targets
-# a non-empty directory (different semantics from coreutils on Linux).
+# Pipe via tar — single portable mechanism that works on Linux GNU,
+# macOS BSD, and Git Bash on Windows. cp -R fails on Git Bash when the
+# Phoenix release contains identical-name files reachable through
+# multiple paths (erts hard-links / case-insensitive duplicates).
 rm -rf "$STAGE/phoenix"
 mkdir -p "$STAGE/phoenix"
-# Use `cp -R src/* dst/` instead of `cp -R src/. dst/` for portability
-# across Git Bash, BSD cp (macOS) and GNU cp.
-cp -R "$PHOENIX_REL"/* "$STAGE/phoenix/"
-# Hidden files in release root (rare, but `.dockerignore`-style) — copy
-# them too if present.
-if compgen -G "$PHOENIX_REL/.[!.]*" > /dev/null; then
-  cp -R "$PHOENIX_REL"/.[!.]* "$STAGE/phoenix/" 2>/dev/null || true
-fi
+( cd "$PHOENIX_REL" && tar -cf - . ) | ( cd "$STAGE/phoenix" && tar -xf - )
 
 echo ">> writing setup scripts"
 if [[ "$PLATFORM" == "windows" ]]; then
