@@ -7,7 +7,23 @@ defmodule AimUmbrella.MixProject do
       version: "0.1.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      releases: releases()
+    ]
+  end
+
+  defp releases do
+    [
+      aim_web: [
+        applications: [
+          aim_gateway: :permanent,
+          aim_memory: :permanent,
+          aim_orchestrator: :permanent,
+          aim_web: :permanent
+        ],
+        include_executables_for: [:unix],
+        steps: [:assemble]
+      ]
     ]
   end
 
