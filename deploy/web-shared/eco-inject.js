@@ -668,15 +668,15 @@
   }
 
   // Move every page's own <header> to sit DIRECTLY below the hero.
-  // Without this AIM's layout-supplied <header class="header"> ends up
-  // at the very bottom of the page (after the cards), which the user
-  // sees as "no own header".
+  // Skips AIM — Phoenix LiveView morphdom would un-do the move on
+  // socket connect, causing a flicker. AIM's layout already places
+  // the header right above the inner_content (containing the hero).
   function relocateOwnHeader(){
+    if (host === "aim.longevity.ge") return;
     var hero = document.querySelector(".lc-sub-hero, .hero, .page-hero");
     if (!hero || !hero.parentNode) return;
     var ownHeader = document.querySelector("header.site-header, header.header, .aim-subnav");
     if (!ownHeader || ownHeader.classList.contains("lc-own-header")) return;
-    // Already directly under the hero? skip.
     if (hero.nextSibling === ownHeader) return;
     hero.parentNode.insertBefore(ownHeader, hero.nextSibling);
   }
