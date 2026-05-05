@@ -1,0 +1,121 @@
+name: AIM release (Linux / macOS / Windows)
+
+# Triggers:
+#  - Push tag aim-v* → build на 3 OS-runners + публикация в GitHub Release
+#  - Manual dispatch → артефакты доступны через Actions UI (без Release)
+
+on:
+  push:
+    tags: ['aim-v*']
+  workflow_dispatch:
+
+env:
+  RUST_BACKTRACE: 1
+  CARGO_TERM_COLOR: always
+  ELIXIR_VERSION: '1.16.x'
+  OTP_VERSION: '26.x'
+
+jobs:
+  build:
+    name: ${{ matrix.platform }} · ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            shell: bash
+          - os: macos-latest
+            platform: macos
+            shell: bash
+          - os: windows-latest
+            platform: windows
+            shell: bash
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: AIM/rust-core
+
+      - name: Install Erlang/Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
+
+      - name: Cache mix deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            AIM/phoenix-umbrella/deps
+            AIM/phoenix-umbrella/_build
+          key: mix-${{ matrix.os }}-${{ hashFiles('AIM/phoenix-umbrella/mix.lock') }}
+
+      - name: Build Rust workspace
+        working-directory: AIM/rust-core
+        run: cargo build --release --workspace
+
+      - name: Build Phoenix release
+        working-directory: AIM/phoenix-umbrella
+        env:
+          MIX_ENV: prod
+        run: |
+          mix local.hex --force
+          mix local.rebar --force
+          mix deps.get --only prod
+          mix compile
+          mix release --overwrite
+
+      - name: Bundle prebuilt archive
+        run: bash AIM/release/bundle_prebuilt.sh ${{ matrix.platform }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aim-${{ matrix.platform }}
+          path: AIM/release/dist-prebuilt/aim-*
+
+  publish:
+    name: Publish GitHub Release
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/aim-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Show artifacts
+        run: ls -lhR artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: AIM ${{ github.ref_name }}
+          body: |
+            **AIM portable installation bundles** — Rust binaries + Phoenix release with bundled ERTS.
+
+            ## Install
+            - **Linux**:   download `*-x86_64-linux.tar.gz`, extract, run `./install.sh`
+            - **macOS**:   download `*-x86_64-macos.tar.gz`, extract, run `./install.sh`
+            - **Windows**: download `*-x86_64-windows.zip`, extract, double-click `install.cmd`
+
+            After install, open http://127.0.0.1:4000/ and configure provider keys in `~/.aim_env`.
+
+            See `INSTALL.md` for details.
+          files: artifacts/*
+          draft: false
+          prerelease: false

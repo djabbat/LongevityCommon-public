@@ -1,5 +1,31 @@
 # release/ — AIM distribution packaging
 
+Two packaging tracks:
+
+1. **Source-tarball** (`build_packages.sh`) — sources only, recipient
+   rebuilds via cargo + mix. Used for sharing development snapshots.
+2. **Pre-built portable** (`bundle_prebuilt.sh` + GitHub Actions
+   `aim-release.yml`) — Rust binaries + Phoenix release with bundled
+   ERTS. Recipient downloads, extracts, runs `install.sh` /
+   `install.cmd`. **This is the "download-click-installed" path for
+   end users.**
+
+## Pre-built (recommended for distribution)
+
+Triggered by pushing a tag `aim-v*`. The workflow runs `cargo build
+--release` + `mix release` on three OS-runners (ubuntu / macos /
+windows), then `bundle_prebuilt.sh <platform>` packs the artefacts
+plus a per-OS setup script:
+
+- `aim-<VERSION>-x86_64-linux.tar.gz`   → `./install.sh` → systemd user units
+- `aim-<VERSION>-x86_64-macos.tar.gz`   → `./install.sh` → launchd LaunchAgents
+- `aim-<VERSION>-x86_64-windows.zip`    → double-click `install.cmd` → Scheduled Tasks
+
+Artefacts are uploaded to the GitHub Release for the tag. Users grab
+them from the Releases page — no toolchain needed at install time.
+
+## Source-tarball (legacy / dev share)
+
 Builds three platform-specific archives:
 - `aim-<VERSION>-linux.tar.gz`
 - `aim-<VERSION>-macos.tar.gz`

@@ -32,7 +32,6 @@
     ["https://fclc.longevity.ge","FCLC","fclc.longevity.ge",null],
     ["https://hive.longevity.ge","Hive","hive.longevity.ge",null],
     ["https://aim.longevity.ge","AIM","aim.longevity.ge",null],
-    ["https://longevity.ge/rescience/","Annals","longevity.ge","/rescience/"],
     ["https://longevity.ge/team/","Team","longevity.ge","/team/"],
     ["https://longevity.ge/#donate","Donate",null,null],
     ["https://github.com/djabbat/LongevityCommon","Source",null,null]
@@ -534,8 +533,7 @@
       ["/research/", "Research"],
       ["/grants/", "Grants"],
       ["/publications/", "Publications"],
-      ["/contact/", "Contact"],
-      ["/rescience/", "Annals"]
+      ["/contact/", "Contact"]
     ],
     "mcoa.longevity.ge": [
       ["/", "Overview"],
@@ -717,7 +715,11 @@
       if (h.classList.contains("eco-bar-injected")) return;
       h.querySelectorAll("details").forEach(function(d){
         var sum = d.querySelector("summary");
-        if (sum && /^[A-Z]{2}$/.test(sum.textContent.trim())) {
+        if (!sum) return;
+        var txt = sum.textContent.trim();
+        // Hide any 1-3 char locale code (EN / RU / KA / KZ / DA / FR / ES / AR / ZH)
+        // — accept whitespace, arrow icons, anything trailing.
+        if (/^[A-Z]{2,3}\b/.test(txt) || txt.length <= 5) {
           d.style.setProperty("display", "none", "important");
         }
       });
@@ -731,6 +733,33 @@
         h.style.setProperty('display', 'none', 'important');
       }
     });
+  }
+
+  // Idempotent theme-toggle wiring. Called from both init paths AND from
+  // reapply(), so morphdom re-renders / Phoenix server-rendered eco-bars
+  // both get a working click handler.
+  function wireThemeToggle(){
+    var btn = document.querySelector(".theme-toggle-i");
+    if (!btn) return;
+    function syncIcon(){
+      var dark = document.documentElement.getAttribute("data-theme") === "dark";
+      btn.textContent = dark ? "☀" : "☾";
+    }
+    if (btn.getAttribute("data-tt-bound") !== "1") {
+      btn.setAttribute("data-tt-bound", "1");
+      btn.addEventListener("click", function(){
+        var dark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (dark) {
+          document.documentElement.removeAttribute("data-theme");
+          setTheme("light");
+        } else {
+          document.documentElement.setAttribute("data-theme","dark");
+          setTheme("dark");
+        }
+        syncIcon();
+      });
+    }
+    syncIcon();
   }
 
   function init(){
@@ -747,6 +776,7 @@
       forceHeroBranding();
       addLangToOwnHeader();
       injectEssence();
+      wireThemeToggle();
       return;
     }
     var div = document.createElement("div");
@@ -758,25 +788,9 @@
     relocateOwnHeader();
     injectOwnHeader();
     forceHeroBranding();
-    injectLangBar();
+    addLangToOwnHeader();
     injectEssence();
-    var btn = document.querySelector(".theme-toggle-i");
-    function syncIcon(){
-      var dark = document.documentElement.getAttribute("data-theme") === "dark";
-      btn.textContent = dark ? "☀" : "☾";
-    }
-    btn.addEventListener("click", function(){
-      var dark = document.documentElement.getAttribute("data-theme") === "dark";
-      if (dark) {
-        document.documentElement.removeAttribute("data-theme");
-        setTheme("light");
-      } else {
-        document.documentElement.setAttribute("data-theme","dark");
-        setTheme("dark");
-      }
-      syncIcon();
-    });
-    syncIcon();
+    wireThemeToggle();
   }
 
   if (document.readyState === "loading") {
@@ -795,6 +809,7 @@
     if (typeof relocateOwnHeader === "function") relocateOwnHeader();
     if (typeof injectOwnHeader === "function") injectOwnHeader();
     if (typeof addLangToOwnHeader === "function") addLangToOwnHeader();
+    if (typeof wireThemeToggle === "function") wireThemeToggle();
   }
   setTimeout(reapply, 400);
   setTimeout(reapply, 1500);

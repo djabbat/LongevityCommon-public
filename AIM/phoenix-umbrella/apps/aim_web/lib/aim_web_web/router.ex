@@ -12,6 +12,15 @@ defmodule AimWeb.Router do
     plug AimWeb.Plugs.Locale
   end
 
+  pipeline :health do
+    plug :accepts, ["json"]
+  end
+
+  scope "/", AimWeb do
+    pipe_through :health
+    get "/health", HealthController, :index
+  end
+
   scope "/", AimWeb do
     pipe_through :browser
 
