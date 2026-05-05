@@ -83,7 +83,10 @@
 "html[data-theme=\"dark\"] .pkp_structure_head{border-bottom-color:#2a2f40 !important}",
 "html[data-theme=\"dark\"] input,html[data-theme=\"dark\"] textarea,html[data-theme=\"dark\"] select{background:#1a1d28 !important;color:#e0e3eb !important;border-color:#2a2f40 !important}",
 "html[data-theme=\"dark\"] .pkp_search input{background:#1a1d28 !important;color:#e0e3eb !important}",
-    "html[data-theme=\"dark\"] body,html[data-theme=\"dark\"] p,html[data-theme=\"dark\"] li,html[data-theme=\"dark\"] td,html[data-theme=\"dark\"] dt,html[data-theme=\"dark\"] dd,html[data-theme=\"dark\"] label,html[data-theme=\"dark\"] span,html[data-theme=\"dark\"] em,html[data-theme=\"dark\"] strong,html[data-theme=\"dark\"] small,html[data-theme=\"dark\"] article,html[data-theme=\"dark\"] section,html[data-theme=\"dark\"] div{color:#d8dce4}",
+    /* Broad dark-mode fallback for muted areas — but NOT section/div/article,
+     * which would override `.hero { color: white }` and `.donate { color:white }`
+     * branded panels. Element-level whitelist instead. */
+    "html[data-theme=\"dark\"] body,html[data-theme=\"dark\"] p,html[data-theme=\"dark\"] li,html[data-theme=\"dark\"] td,html[data-theme=\"dark\"] dt,html[data-theme=\"dark\"] dd,html[data-theme=\"dark\"] label,html[data-theme=\"dark\"] small{color:#d8dce4}",
     "html[data-theme=\"dark\"] .eco-bar-injected,html[data-theme=\"dark\"] .eco-bar-injected *{color:inherit}",
     "html[data-theme=\"dark\"] .eco-nav-i a{color:#cbd5e1}",
     "html[data-theme=\"dark\"] .eco-brand-i{color:#fff}",
@@ -224,12 +227,9 @@
      */
     "html .container,html .hero-inner,html .footer-inner,html .page-inner{max-width:1100px !important;margin-left:auto !important;margin-right:auto !important;box-sizing:border-box !important}",
     "html .container{padding:4.5rem 2rem !important}",
-    "html .hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important;padding:4rem 2.5rem !important;position:relative !important;overflow:hidden !important}",
-    "html .hero::before{content:'' !important;position:absolute !important;top:0 !important;right:0 !important;width:60% !important;height:100% !important;background:radial-gradient(circle at top right,rgba(167,139,250,0.25),transparent 60%) !important;pointer-events:none !important}",
-    "html .hero h1,html .hero .hero-title{font-size:clamp(2.5rem,5vw,3.75rem) !important;font-weight:800 !important;line-height:1.05 !important;margin:0 0 1rem 0 !important;letter-spacing:-0.025em !important;color:#fff !important}",
-    "html .hero p,html .hero .hero-subtitle{font-size:clamp(1rem,1.5vw,1.1875rem) !important;line-height:1.55 !important;opacity:0.92 !important;max-width:48rem !important;margin:0 0 1.75rem 0 !important;color:#fff !important}",
-    "html .hero-pill{display:inline-flex !important;align-items:center !important;gap:0.5rem !important;background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;padding:0.4375rem 1rem !important;border-radius:999px !important;font-size:0.75rem !important;font-weight:600 !important;letter-spacing:0.08em !important;text-transform:uppercase !important;margin-bottom:1.25rem !important;color:#fff !important}",
-    "html .hero-pill::before{content:'' !important;width:6px !important;height:6px !important;border-radius:50% !important;background:#34d399 !important;box-shadow:0 0 8px #34d399 !important}",
+    /* NOTE: hero gradient/background is owned by each subdomain — Hive
+     * has its own light fade, AIM has its own native styles, home has
+     * indigo. eco-inject.js only normalises typography of hero text. */
     "html .btn{display:inline-flex !important;align-items:center !important;gap:0.5rem !important;padding:0.75rem 1.375rem !important;border-radius:999px !important;font-weight:600 !important;font-size:0.9375rem !important;text-decoration:none !important;transition:transform 0.15s,box-shadow 0.15s !important;cursor:pointer !important;font-family:inherit !important;border:none !important}",
     "html .btn-primary{background:#fff !important;color:#312e81 !important;box-shadow:0 4px 12px rgba(0,0,0,0.12) !important}",
     "html .btn-primary:hover{transform:translateY(-1px) !important;box-shadow:0 6px 20px rgba(0,0,0,0.18) !important;color:#312e81 !important}",
@@ -267,9 +267,11 @@
      * text. .hero-stats tiles keep their semi-transparent white look.
      */
     "html[data-theme=\"dark\"] .hero{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 35%,#4338ca 75%,#6366f1 100%) !important;color:#fff !important}",
-    "html[data-theme=\"dark\"] .hero h1,html[data-theme=\"dark\"] .hero h2,html[data-theme=\"dark\"] .hero h3,html[data-theme=\"dark\"] .hero .hero-title{color:#fff !important}",
-    "html[data-theme=\"dark\"] .hero p,html[data-theme=\"dark\"] .hero .hero-subtitle,html[data-theme=\"dark\"] .hero div,html[data-theme=\"dark\"] .hero span,html[data-theme=\"dark\"] .hero li{color:#fff !important;background:transparent !important;border-color:transparent !important}",
-    "html[data-theme=\"dark\"] .hero a{color:#fff !important}",
+    /* Force every descendant of .hero to white in dark mode — this
+     * defeats the broad `html[data-theme=\"dark\"] section{color:#d8dce4}`
+     * cascade and any inline styles set by subdomain pages. */
+    "html[data-theme=\"dark\"] .hero,html[data-theme=\"dark\"] .hero *{color:#fff !important}",
+    "html[data-theme=\"dark\"] .hero h1,html[data-theme=\"dark\"] .hero h2,html[data-theme=\"dark\"] .hero h3,html[data-theme=\"dark\"] .hero h4,html[data-theme=\"dark\"] .hero .hero-title,html[data-theme=\"dark\"] .hero strong,html[data-theme=\"dark\"] .hero em,html[data-theme=\"dark\"] .hero a{color:#fff !important;background:transparent !important}",
     "html[data-theme=\"dark\"] .hero-pill{background:rgba(255,255,255,0.08) !important;border:1px solid rgba(255,255,255,0.18) !important;color:#fff !important}",
     "html[data-theme=\"dark\"] .hero-stats .s{background:rgba(255,255,255,0.07) !important;border:1px solid rgba(255,255,255,0.10) !important;color:#fff !important}",
     "html[data-theme=\"dark\"] .hero-stats .s .k,html[data-theme=\"dark\"] .hero-stats .s .v{color:#fff !important;background:transparent !important}",
