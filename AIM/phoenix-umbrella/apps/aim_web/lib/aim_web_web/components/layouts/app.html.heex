@@ -1,20 +1,24 @@
-<main>
-  <header>
-    <nav>
-      <a href="/"><%= t("nav.home", @locale) %></a>
-      <a href="/chat"><%= t("nav.chat", @locale) %></a>
-      <a href="/intake"><%= t("nav.intake", @locale) %></a>
-      <a href="/cases"><%= t("nav.cases", @locale) %></a>
-      <a href="/consult"><%= t("nav.consult", @locale) %></a>
-    </nav>
-    <form method="get" class="lang-switcher">
-      <label><%= t("lang.label", @locale) %>:</label>
-      <select name="locale" onchange="this.form.submit()">
-        <%= for loc <- AimWeb.I18n.locales() do %>
-          <option value={loc} selected={loc == @locale}><%= AimWeb.I18n.name(loc) %></option>
-        <% end %>
-      </select>
-    </form>
-  </header>
-  <%= @inner_content %>
-</main>
+<header class="aim-topbar">
+  <a href="/" class="aim-brand"><span class="logo">⌬</span>AIM</a>
+  <nav class="aim-nav">
+    <a href="/dashboard"><%= t("home.menu.dashboard", @locale) %></a>
+    <a href="/chat"><%= t("nav.chat", @locale) %></a>
+    <a href="/intake"><%= t("nav.intake", @locale) %></a>
+    <a href="/cases"><%= t("nav.cases", @locale) %></a>
+    <a href="/drugs"><%= t("home.menu.drugs", @locale) %></a>
+    <a href="/settings"><%= t("home.menu.settings", @locale) %></a>
+  </nav>
+  <form method="get" class="lang-switcher">
+    <select name="locale" onchange="this.form.submit()" aria-label={t("lang.label", @locale)}>
+      <%= for loc <- AimWeb.I18n.locales() do %>
+        <option value={loc} selected={loc == @locale}><%= AimWeb.I18n.name(loc) %></option>
+      <% end %>
+    </select>
+  </form>
+</header>
+<%= @inner_content %>
+<footer class="aim-footer">
+  AIM · 178 Rust crates · 2531 tests · 0 warnings ·
+  <a href="https://github.com/djabbat/LongevityCommon-public" target="_blank" rel="noopener">source</a> ·
+  <a href="https://longevity.ge/" target="_blank">longevity.ge</a>
+</footer>
