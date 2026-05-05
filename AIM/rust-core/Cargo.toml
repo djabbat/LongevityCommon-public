@@ -178,6 +178,7 @@ members = [
     "crates/aim-llm-router",
     "crates/aim-web-api",
     "crates/aim-telegram-bot",
+    "crates/aim-cli",
 ]
 # Note: DiffDiagnosis/backend and SSA/backend keep their own workspaces.
 # They are part of the same logical Rust core but compiled independently
