@@ -61,6 +61,9 @@ anyhow = "1"
 # Validation
 validator = { version = "0.18", features = ["derive"] }
 
+[build-dependencies]
+chrono = "0.4"
+
 [dev-dependencies]
 tokio-test = "0.4"
 axum-test = "19"
