@@ -1,31 +1,29 @@
 # BioSense — Носимый браслет: EEG · HRV · Запах
 
-## Backend port (decided 2026-05-07; production state corrected 2026-05-08)
+## Backend port — `:4502` (native systemd, production since 2026-05-08)
 
-**Production state:** `:4502` is **already** held by a Docker container
+**Production:** `biosense-backend.service` (native Rust, this crate
+`BioSense/backend/`) on `127.0.0.1:4502`. nginx `biosense.longevity.ge`
+proxies `/api/` → `:4502/api/*`, `/live/` and `/` → `:4501`
+(`biosense-web` Phoenix LiveView dashboard).
+
+**Wire format:** ChiZeRequest accepts BOTH conventions via `serde(alias)`:
+- `{"v_eeg": x, "v_hrv": y, "v_resp": z, "v_sleep": w}` — idiomatic Rust shape.
+- `{"eeg": x, "hrv": y, "resp": z, "sleep": w}` — legacy shape used by
+  Phoenix `biosense-web` client and the retired Docker container.
+
+**Routes** (all mounted at both `/<name>` and `/api/<name>`):
+- `GET  /healthz` — liveness
+- `POST /chi_ze` — composed χ_Ze biomarker computation
+- `POST /bridge` — CDATA D → χ_Ze stub
+- `POST /exacerbation` — risk score
+- `GET  /v_star` — canonical v* (Article + Python forms)
+
+**History:** Until 2026-05-08, `:4502` was held by the Docker container
 `deploy-biosense-backend-1` (image `deploy-biosense-backend`, running
-since Apr 30 2026) which serves the existing chi_ze API consumed by
-`biosense-web` Phoenix on `:4501`. Field shape: input expects `eeg/hrv/...`
-NOT `v_eeg/v_hrv/...`.
-
-The native Rust crate at `BioSense/backend/` (Phase 4.4 work) cannot
-co-exist on `:4502` without breaking biosense-web. Resolution:
-
-- **`BioSense/backend/`** (native Rust, Phase 4.4 idiomatic shape with
-  `v_eeg` field naming) is **not** the production backend until field-
-  name reconciliation is done. Builds, tests pass, but no systemd unit
-  enabled on production.
-- **Docker `deploy-biosense-backend-1`** remains canonical. nginx
-  `biosense.longevity.ge.conf` /api/ → :4502 → that container.
-- Per memory `feedback_no_docker` rule (no-Docker), the container is
-  tech-debt to retire. Migration plan:
-  1. Reconcile field names (`v_eeg` ↔ `eeg`) — pick one, update both
-     biosense-web client + native Rust backend.
-  2. Stop & remove `deploy-biosense-backend-1` container.
-  3. Enable `biosense-backend.service` systemd unit on :4502.
-
-Until then BioSense/backend/ is **dev-only**. Run with custom port
-(e.g. `PORT=14502 ./target/release/biosense-backend`) for local tests.
+since Apr 30). After Phase 4.4 field-name reconciliation
+(`#[serde(alias)]`), the container was stopped and native systemd
+took over. Per memory `feedback_no_docker` rule.
 
 ---
 
