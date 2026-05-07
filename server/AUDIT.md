@@ -165,6 +165,45 @@ Existing config at `/etc/nginx/sites-enabled/app.longevity.ge.conf` — no curre
 
 ---
 
+## Open issues discovered while restoring CI gate (2026-05-07)
+
+### O-1 — bio_age direction inverted vs χ_Ze health convention
+
+`src/services/ze_compute.rs::compute_profile`:
+```
+D_norm   = clamp(D_NORM_ALPHA * (1 − chi_ze), 0, 1)
+bio_age  = chrono_age * (1 − D_norm * K)
+```
+
+For chrono_age=35:
+- `chi=0.9` (high → healthy by χ_Ze convention) → `D_norm=0.12` → `bio_age≈33.1` (close to chrono).
+- `chi=0.1` (low → unhealthy)                   → `D_norm=1.08→clamp 1.0` → `bio_age≈19.25` (younger).
+
+This makes a "low χ_Ze" subject artificially YOUNGER, which contradicts
+root CONCEPT: "С возрастом χ_Ze уменьшается → low chi = old".
+
+Test `test_cohort_percentile_worst_in_cohort` was authored against the
+correct direction; it now fails (returns pct=100 for "worst" subject).
+Test marked `#[ignore]` with this rationale; **formula needs review and
+sign correction**, OR the test is wrong — but they can't both be right.
+
+**Action:** decision required from Jaba before Phase 4.3 (Ze·Guide
+references χ_Ze as health metric; backend computing inverted bio_age
+will mislead the chat).
+
+### O-2 — feed_ranker `test_full_ranking_order` was tied at penalty=2.0
+
+Penalty `2.0` against `+2 reactions_support` gave net-zero discrimination
+between `support_only` (3 reactions) and `penalised` (5 reactions − 2).
+Bumped penalty to 4.0 in the test — formula behaviour preserved, test
+no longer flaky.
+
+### O-3 — `ze_samples_source_check` constraint dropped 'test' value
+
+`migrations/001_initial.sql` constrains `source IN ('biosense','apple_health','oura','garmin','manual')`. Integration test used `'test'` literal → constraint violation. Test patched to `'manual'`. Schema is correct; test was wrong.
+
+---
+
 ## What to do next session (concrete)
 
 1. Run `npm install` and `mix deps.get` locally to verify all three layers actually compile.

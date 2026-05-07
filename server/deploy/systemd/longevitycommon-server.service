@@ -1,0 +1,34 @@
+[Unit]
+Description=LongevityCommon social server (Rust Axum, port 8080)
+Documentation=file:///home/oem/Desktop/LongevityCommon/docs/DEPLOY_CONVENTION.md
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jaba
+Group=jaba
+WorkingDirectory=/home/jaba/web/longevitycommon/server
+EnvironmentFile=-/etc/aim/lc_social.env
+# Required env in /etc/aim/lc_social.env:
+#   DATABASE_URL=postgres://lc_social:<pw>@127.0.0.1:5432/longevitycommon_social
+#   PORT=8080
+#   HOST=127.0.0.1
+#   JWT_SECRET=<64+ char base64>      # MUST match realtime/JWT_SECRET
+#   AIM_LLM_HTTP_URL=http://127.0.0.1:8770   # for /api/ze-guide/ask
+#   RUST_LOG=info,longevitycommon_server=debug
+ExecStartPre=/bin/bash -lc 'cd /home/jaba/web/longevitycommon && git pull --ff-only || true'
+ExecStartPre=/home/jaba/web/longevitycommon/server/deploy/scripts/migrate.sh
+ExecStart=/home/jaba/web/longevitycommon/server/target/release/server
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

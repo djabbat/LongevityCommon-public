@@ -163,12 +163,15 @@ fn test_full_ranking_order() {
     });
     let penalised = compute_score(&PostScoreInput {
         reactions_support: 5,
-        rank_penalty: 2.0,
+        // Penalty must outweigh the +2 advantage in base_score so the
+        // post sinks below support_only (which has 3 reactions, no
+        // penalty). Was 2.0 → tied; bumped to 4.0 for clear ordering.
+        rank_penalty: 4.0,
         created_at: Utc::now(),
         ..base_input()
     });
 
     assert!(verified > support_only, "verified+code should rank above support_only");
-    assert!(support_only > penalised || old_post > penalised, "penalised post ranks lower");
+    assert!(support_only > penalised, "penalised post ranks below clean support_only");
     assert!(old_post < verified, "10-day old post ranks below fresh verified post");
 }

@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO users (id, username, email) VALUES (gen_random_uuid(), $1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "df3522858234db7a7b740f64aec65bee651a23e5b8f498b6ea9d57c10bc3273b"
+}

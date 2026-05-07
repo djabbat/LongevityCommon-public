@@ -181,7 +181,7 @@ async fn test_ze_sample_insert_and_retrieve() {
     sqlx::query!(
         r#"INSERT INTO ze_samples
            (id, user_id, recorded_at, source, chi_ze_eeg, chi_ze_hrv, chi_ze_combined, is_verified)
-           VALUES (gen_random_uuid(), $1, NOW(), 'test', 0.75, 0.70, 0.725, true)"#,
+           VALUES (gen_random_uuid(), $1, NOW(), 'manual', 0.75, 0.70, 0.725, true)"#,
         user_id
     )
     .execute(&mut *tx)

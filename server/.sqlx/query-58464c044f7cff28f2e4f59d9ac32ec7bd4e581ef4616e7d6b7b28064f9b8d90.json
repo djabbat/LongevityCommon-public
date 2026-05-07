@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO ze_samples\n           (id, user_id, recorded_at, source, chi_ze_eeg, chi_ze_hrv, chi_ze_combined, is_verified)\n           VALUES (gen_random_uuid(), $1, NOW(), 'manual', 0.75, 0.70, 0.725, true)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "58464c044f7cff28f2e4f59d9ac32ec7bd4e581ef4616e7d6b7b28064f9b8d90"
+}

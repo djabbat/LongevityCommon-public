@@ -64,3 +64,6 @@ validator = { version = "0.18", features = ["derive"] }
 [dev-dependencies]
 tokio-test = "0.4"
 axum-test = "19"
+# `util` enables tower::ServiceExt::oneshot used by integration tests.
+tower = { version = "0.4", features = ["util"] }
+http-body-util = "0.1"
