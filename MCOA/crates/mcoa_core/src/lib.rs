@@ -14,19 +14,25 @@ use thiserror::Error;
 
 pub const N_COUNTERS: usize = 5;
 
+/// MCOA counter numbering aligned with user decision 2026-05-07:
+///   #1 = Centriolar (CDATA), #2 = Telomere, #3 = Mitochondrial,
+///   #4 = Epigenetic, #5 = Proteostasis.
+///
+/// The discriminant is 0-indexed for zero-cost array indexing
+/// (`c as usize`); the user-facing number is `as u8 + 1`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Counter {
-    Telomere = 0,
-    Centriolar = 1,
-    Mitochondrial = 2,
-    Epigenetic = 3,
-    Proteostasis = 4,
+    Centriolar = 0,    // MCOA #1 — CDATA
+    Telomere = 1,      // MCOA #2
+    Mitochondrial = 2, // MCOA #3 — MitoROS
+    Epigenetic = 3,    // MCOA #4 — EpigeneticDrift
+    Proteostasis = 4,  // MCOA #5
 }
 
 impl Counter {
     pub const ALL: [Counter; N_COUNTERS] = [
-        Counter::Telomere,
         Counter::Centriolar,
+        Counter::Telomere,
         Counter::Mitochondrial,
         Counter::Epigenetic,
         Counter::Proteostasis,
@@ -34,12 +40,19 @@ impl Counter {
 
     pub fn as_str(self) -> &'static str {
         match self {
-            Counter::Telomere => "telomere",
             Counter::Centriolar => "centriolar",
+            Counter::Telomere => "telomere",
             Counter::Mitochondrial => "mito",
             Counter::Epigenetic => "epigenetic",
             Counter::Proteostasis => "proteostasis",
         }
+    }
+
+    /// User-facing 1-indexed number (Counter #1 … #5). Matches
+    /// CONCEPT.md numbering and subproject CLAUDE.md / Cargo.toml
+    /// descriptions. Decided 2026-05-07.
+    pub fn mcoa_number(self) -> u8 {
+        self as u8 + 1
     }
 }
 

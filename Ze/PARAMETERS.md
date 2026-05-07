@@ -6,14 +6,24 @@ Key numerical constants and formulas of the Ze framework.
 
 ## Core Constants
 
-| Symbol | Value | Derivation | Meaning |
-|--------|-------|------------|---------|
-| **v*** | `1 − ln 2 ≈ 0.3069` | Entropy maximization of binary stream | Optimal Ze velocity (universal equilibrium) |
-| **Z*** | `1/(1+e⁻¹) ≈ 0.7311` | Logistic fixed point | Optimal Ze index |
-| **v*_health** | `≈ 0.35–0.45` | Clinical HRV data | Healthy heart Ze velocity range |
-| **v*_approx** | `≈ 0.456` | Approximate used in literature | Often cited as health threshold |
+> **Convention note (2026-05-07):** root `~/Desktop/LongevityCommon/PARAMETERS.md § 1`
+> defines **Article form** as canonical for cross-subproject API and
+> manuscripts (`v*_active = −0.08738`). Values below are stated in
+> **Python (internal) form** `[0, 1]` because Ze theorem proofs and
+> theorem-related code use the Python normalization. Conversion:
+> `Article = 2 · Python − 1`.
 
-Note: v* exact = 1 − ln 2 ≈ 0.3069. The value 0.456 appears in some papers as approximation from a different normalization — cross-check against `20260202_Mathematical formalism of Ze`.
+| Symbol | Value (Python, internal) | Article equivalent | Derivation | Meaning |
+|--------|--------------------------|-------------------:|------------|---------|
+| **v*_passive** | `1 − ln 2 ≈ 0.3069` | `−0.3862` | Entropy maximization of binary stream | Theorem-derived passive optimum |
+| **Z*** | `1/(1+e⁻¹) ≈ 0.7311` | n/a (different scale) | Logistic fixed point | Optimal Ze index |
+| **v*_health** | `≈ 0.35–0.45` | `[−0.30, −0.10]` | Clinical HRV data | Healthy heart Ze velocity range |
+| **v*_active (approx)** | `≈ 0.456` | `≈ −0.087` | Cuban pilot, see `CONCEPT § 8` | Empirical health threshold (active agent) |
+
+Note: `v*_passive = 1 − ln 2 ≈ 0.3069` (theorem) is **distinct** from
+`v*_active ≈ 0.456` (empirical Cuban pilot, Python form). The latter
+appears in BioSense χ_Ze biomarker; root PARAMETERS § 1 names it as
+`v*_active = −0.08738` in Article form.
 
 ---
 

@@ -3,12 +3,12 @@
 
 ## Ecosystem Context
 
-**Ze является подпроектом CommonHealth Ecosystem.**
-**Parent:** `~/Desktop/CommonHealth/` — центральная платформа экосистемы долголетия
-**Location:** `~/Desktop/CommonHealth/Ze/`
-**Git:** `djabbat/CommonHealth` (монорепозиторий)
+**Ze является подпроектом LongevityCommon Ecosystem.** (Project renamed from "CommonHealth" 2026-04; entry updated 2026-05-07.)
+**Parent:** `~/Desktop/LongevityCommon/` — центральная платформа экосистемы долголетия
+**Location:** `~/Desktop/LongevityCommon/Ze/`
+**Git:** `djabbat/LongevityCommon` (private monorepo) / `djabbat/LongevityCommon-public`
 
-**Role:** Ze — теоретическая основа измерений. Определяет ЧТО измерять (χ_Ze). BioSense реализует физическое измерение. CommonHealth использует результат в Ze·Profile (компонент "организм" в 4-факторной модели здоровья).
+**Role:** Ze — теоретическая основа измерений. Определяет ЧТО измерять (χ_Ze). BioSense реализует физическое измерение. LongevityCommon (social layer, planned) использует результат в Ze·Profile (компонент "организм" в 4-факторной модели здоровья).
 
 **Ключевые публикации:**
 - Ze Theory as Interpretive Framework. DOI: 10.65649/a874t352

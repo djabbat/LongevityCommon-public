@@ -1,5 +1,16 @@
 # BioSense — Носимый браслет: EEG · HRV · Запах
 
+## Backend port (decided 2026-05-07)
+
+**`:4502`** (loopback). Front-end Phoenix LiveView (`biosense-web.service`) живёт на `:4501`. nginx `biosense.longevity.ge` уже маршрутизирует:
+- `/api/` → `127.0.0.1:4502` (Rust backend, считает χ_Ze из counter feeds)
+- `/live/` и `/` → `127.0.0.1:4501` (biosense-web Phoenix dashboard)
+
+Это переопределяет более ранний CONCEPT.md (упоминал `:4101`) — выбор `:4502` cohort root `PARAMETERS.md § 8` и устраняет необходимость править nginx.
+
+---
+
+
 ## 📌 Правило: DeepSeek для нетехнических задач
 
 **Код (Python/Rust) — Claude. Всё остальное — DeepSeek API.**

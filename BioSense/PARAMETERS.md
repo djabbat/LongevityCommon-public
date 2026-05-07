@@ -2,14 +2,21 @@
 
 ## Ze Theory Constants
 
-| Parameter | Value | Description |
-|-----------|-------|-------------|
-| v* | 0.45631 | Ze fixed point (maximum materialization, theoretical) |
-| f_opt @ 128 Hz | 29.2 Hz | Ze-optimal frequency at standard resample rate |
-| f_opt @ 100 Hz | 22.8 Hz | Ze-optimal frequency (Cuban dataset native rate) |
-| f_opt @ 250 Hz | 57.0 Hz | Ze-optimal frequency (MPI-LEMON native rate) |
+> **Canonical convention (2026-05-07):** root `~/Desktop/LongevityCommon/PARAMETERS.md § 1`
+> requires Article form (`v*_active = −0.08738`) for cross-subproject
+> APIs. BioSense computes χ_Ze internally in Python form `0.45631`
+> (matches Ze code); converts to Article at API boundary
+> (`Article = 2 · Python − 1`).
 
-Formula: **f_opt = v* × fs / 2**
+| Parameter | Value (Python, internal) | Article equivalent | Description |
+|-----------|--------------------------|-------------------:|-------------|
+| v*_active | `0.45631` | `−0.08738` | Ze active-agent fixed point (canonical, root §1) |
+| f_opt @ 128 Hz | `29.2 Hz` | n/a | Ze-optimal frequency at standard resample rate |
+| f_opt @ 100 Hz | `22.8 Hz` | n/a | Ze-optimal frequency (Cuban dataset native rate) |
+| f_opt @ 250 Hz | `57.0 Hz` | n/a | Ze-optimal frequency (MPI-LEMON native rate) |
+
+Formula: **f_opt = v*_active × fs / 2** (using Python form, then convert
+emit to Article when crossing API boundary).
 
 ---
 
