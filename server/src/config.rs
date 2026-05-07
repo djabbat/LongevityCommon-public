@@ -9,6 +9,10 @@ pub struct AppConfig {
     pub deepseek_base_url: String,
     pub ollama_base_url: String,
     pub ollama_model: String,
+    /// AIM-LLM HTTP shim URL (Phase 4.3 user decision 2026-05-07:
+    /// route Ze·Guide through AIM cross-project rather than directly
+    /// to DeepSeek). Empty disables → falls back to DeepSeek/Ollama.
+    pub aim_llm_url: String,
     pub crossref_base_url: String,
     pub app_host: String,
     pub app_port: u16,
@@ -47,6 +51,7 @@ impl AppConfig {
             ollama_base_url: env("OLLAMA_BASE_URL")
                 .unwrap_or("http://localhost:11434".into()),
             ollama_model: env("OLLAMA_MODEL").unwrap_or("llama3:8b".into()),
+            aim_llm_url: env("AIM_LLM_HTTP_URL").unwrap_or_default(),
             crossref_base_url: env("CROSSREF_BASE_URL")
                 .unwrap_or("https://api.crossref.org".into()),
             app_host: env("APP_HOST").unwrap_or("0.0.0.0".into()),

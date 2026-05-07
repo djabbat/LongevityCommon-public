@@ -39,6 +39,7 @@ pub async fn ask_ze_guide(
     let result = ai_guide::ask(
         &req.prompt,
         &history,
+        &state.config.aim_llm_url,
         &state.config.deepseek_api_key,
         &state.config.deepseek_base_url,
         &state.config.ollama_base_url,

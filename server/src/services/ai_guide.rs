@@ -109,6 +109,7 @@ pub struct ConversationTurn {
 pub async fn ask(
     prompt: &str,
     history: &[ConversationTurn],
+    aim_llm_url: &str,
     deepseek_api_key: &str,
     deepseek_base_url: &str,
     ollama_base_url: &str,
@@ -117,7 +118,26 @@ pub async fn ask(
     let start = Instant::now();
     let client = Client::new();
 
-    // Try DeepSeek first
+    // Phase 4.3 (2026-05-07): primary path is AIM-LLM HTTP shim.
+    // It encapsulates all provider routing (Claude / DeepSeek / Gemini /
+    // Groq / Ollama) per AIM CLAUDE.md tier chain. Use tier=deep for
+    // scientific reasoning.
+    if !aim_llm_url.is_empty() {
+        if let Ok((reply, model)) = ask_aim_llm(prompt, history, aim_llm_url, &client).await {
+            let latency_ms = start.elapsed().as_millis() as i32;
+            let cited_dois = extract_dois(&reply);
+            let cited_files = extract_files(&reply);
+            return AiGuideResult {
+                response: reply,
+                model_used: format!("aim-llm:{model}"),
+                cited_dois,
+                cited_files,
+                latency_ms,
+            };
+        }
+    }
+
+    // Fallback 1: direct DeepSeek (when aim-llm unreachable + key present).
     if !deepseek_api_key.is_empty() {
         if let Ok(result) = ask_deepseek(
             prompt, history, deepseek_api_key, deepseek_base_url, &client,
@@ -137,7 +157,7 @@ pub async fn ask(
         }
     }
 
-    // Fallback: Ollama (history prepended as plain text context)
+    // Fallback 2: Ollama (history prepended as plain text context)
     let response = ask_ollama(prompt, history, ollama_base_url, ollama_model, &client)
         .await
         .unwrap_or_else(|_| {
@@ -154,6 +174,58 @@ pub async fn ask(
         cited_files,
         latency_ms,
     }
+}
+
+/// Call aim-llm `/v1/chat` HTTP shim. Returns `(reply, model_id)` on
+/// success. The shim handles all provider fallbacks internally.
+async fn ask_aim_llm(
+    prompt: &str,
+    history: &[ConversationTurn],
+    base_url: &str,
+    client: &Client,
+) -> anyhow::Result<(String, String)> {
+    #[derive(Serialize)]
+    struct AimMessage<'a> { role: &'a str, content: &'a str }
+
+    #[derive(Serialize)]
+    struct AimChatRequest<'a> {
+        messages: Vec<AimMessage<'a>>,
+        tier: &'a str,
+    }
+
+    #[derive(Deserialize)]
+    struct AimChatResponse {
+        reply: String,
+        #[serde(default)]
+        model: String,
+    }
+
+    let mut msgs: Vec<AimMessage> = Vec::with_capacity(2 + history.len() * 2);
+    msgs.push(AimMessage { role: "system", content: ZE_SYSTEM_PROMPT });
+    for turn in history.iter().rev().take(6).collect::<Vec<_>>().into_iter().rev() {
+        msgs.push(AimMessage { role: "user",      content: &turn.prompt });
+        msgs.push(AimMessage { role: "assistant", content: &turn.response });
+    }
+    msgs.push(AimMessage { role: "user", content: prompt });
+
+    let req = AimChatRequest {
+        messages: msgs,
+        // `deep` = reasoning tier (DeepSeek-V4-pro / Claude Opus / Ollama r1)
+        tier: "deep",
+    };
+
+    let url = format!("{}/v1/chat", base_url.trim_end_matches('/'));
+    let resp: AimChatResponse = client
+        .post(&url)
+        .json(&req)
+        .timeout(std::time::Duration::from_secs(60))
+        .send()
+        .await?
+        .error_for_status()?
+        .json()
+        .await?;
+
+    Ok((resp.reply, resp.model))
 }
 
 async fn ask_deepseek(

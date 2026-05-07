@@ -1,4 +1,3 @@
-import React from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { PostCard } from '../components/feed/PostCard'
 import { CreatePost } from '../components/feed/CreatePost'

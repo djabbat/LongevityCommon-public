@@ -8,6 +8,7 @@ import { Studies } from './pages/Studies'
 import { Login } from './pages/Login'
 import { Settings } from './pages/Settings'
 import { Profile } from './pages/Profile'
+import { ZeGuide } from './components/lab/ZeGuide'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, staleTime: 30_000 } },
@@ -61,6 +62,11 @@ function Layout({ children }: { children: React.ReactNode }) {
         <NavLink to="/lab" style={({ isActive }) => ({ ...navLink, ...(isActive ? activeStyle : {}) })}>
           Lab
         </NavLink>
+        {user && (
+          <NavLink to="/ze-guide" style={({ isActive }) => ({ ...navLink, ...(isActive ? activeStyle : {}) })}>
+            Ze·Guide
+          </NavLink>
+        )}
 
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 16 }}>
           {user ? (
@@ -107,6 +113,11 @@ export default function App() {
             </Layout>
           } />
           <Route path="/lab" element={<Layout><Studies /></Layout>} />
+          <Route path="/ze-guide" element={
+            <Layout>
+              <ProtectedRoute><ZeGuide /></ProtectedRoute>
+            </Layout>
+          } />
           <Route path="/u/:username" element={<Layout><Profile /></Layout>} />
           <Route path="/settings" element={
             <Layout>

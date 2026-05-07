@@ -1,4 +1,3 @@
-import React from 'react'
 import type { Post, PostType } from '../../types'
 import { formatDistanceToNow, parseISO } from 'date-fns'
 import api from '../../hooks/useApi'

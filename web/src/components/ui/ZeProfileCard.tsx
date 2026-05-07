@@ -1,4 +1,3 @@
-import React from 'react'
 import type { ZeProfile, HealthFactorSummary } from '../../types'
 
 interface Props {
