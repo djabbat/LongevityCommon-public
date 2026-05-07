@@ -1,0 +1,52 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT session_id, prompt, response, model_used, cited_dois, created_at\n           FROM ze_guide_logs WHERE user_id = $1 ORDER BY created_at ASC",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "session_id",
+        "type_info": "Uuid"
+      },
+      {
+        "ordinal": 1,
+        "name": "prompt",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "response",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "model_used",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "cited_dois",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "a3b1bee4bfe9a6741c2674b92e90a60236961a4f9d791b56157c2723899537c6"
+}

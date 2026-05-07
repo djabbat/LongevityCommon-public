@@ -137,6 +137,46 @@ pub async fn export_data(
     .await
     .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
 
+    // GDPR Art. 20 — Phase 4.7 (2026-05-07): also export Ze·Guide chat
+    // history (sensitive; user has the right to receive their own queries),
+    // study enrollments (research participation), post reactions,
+    // debate participation.
+    let ze_guide_logs = sqlx::query!(
+        r#"SELECT session_id, prompt, response, model_used, cited_dois, created_at
+           FROM ze_guide_logs WHERE user_id = $1 ORDER BY created_at ASC"#,
+        auth_user.id
+    )
+    .fetch_all(&state.db)
+    .await
+    .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    let study_enrollments = sqlx::query!(
+        r#"SELECT study_id, consented_at, status, shapley_weight
+           FROM study_enrollments WHERE user_id = $1 ORDER BY consented_at ASC"#,
+        auth_user.id
+    )
+    .fetch_all(&state.db)
+    .await
+    .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    let post_reactions = sqlx::query!(
+        r#"SELECT post_id, type, created_at
+           FROM post_reactions WHERE user_id = $1 ORDER BY created_at ASC"#,
+        auth_user.id
+    )
+    .fetch_all(&state.db)
+    .await
+    .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
+    let debate_votes = sqlx::query!(
+        r#"SELECT debate_id, criterion, value, created_at
+           FROM debate_votes WHERE voter_id = $1 ORDER BY created_at ASC"#,
+        auth_user.id
+    )
+    .fetch_all(&state.db)
+    .await
+    .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?;
+
     let health_factors = sqlx::query!(
         r#"SELECT recorded_at, psyche_score, psyche_mood, psyche_stress, psyche_notes,
                   consciousness_score, consciousness_mindful, consciousness_purpose, consciousness_notes,
@@ -199,6 +239,31 @@ pub async fn export_data(
             "content": p.content,
             "doi": p.doi,
             "created_at": p.created_at,
+        })).collect::<Vec<_>>(),
+        "ze_guide_logs": ze_guide_logs.iter().map(|l| serde_json::json!({
+            "session_id": l.session_id,
+            "prompt": l.prompt,
+            "response": l.response,
+            "model_used": l.model_used,
+            "cited_dois": l.cited_dois,
+            "created_at": l.created_at,
+        })).collect::<Vec<_>>(),
+        "study_enrollments": study_enrollments.iter().map(|e| serde_json::json!({
+            "study_id": e.study_id,
+            "consented_at": e.consented_at,
+            "status": e.status,
+            "shapley_weight": e.shapley_weight,
+        })).collect::<Vec<_>>(),
+        "post_reactions": post_reactions.iter().map(|r| serde_json::json!({
+            "post_id": r.post_id,
+            "type": r.r#type,
+            "created_at": r.created_at,
+        })).collect::<Vec<_>>(),
+        "debate_votes": debate_votes.iter().map(|v| serde_json::json!({
+            "debate_id": v.debate_id,
+            "criterion": v.criterion,
+            "value": v.value,
+            "created_at": v.created_at,
         })).collect::<Vec<_>>(),
     })))
 }

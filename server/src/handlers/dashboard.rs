@@ -21,6 +21,19 @@ pub struct TrendQuery {
     pub period: Option<i32>,
 }
 
+/// Returns the full 4-factor Ze·Profile (organism / psyche / consciousness
+/// / social).
+///
+/// Architecture (Phase 4.4 audit 2026-05-07):
+/// - **organism factor** = `chi_ze_combined` from `ze_samples`.
+///   Source-of-truth for χ_Ze computation is **BioSense backend on
+///   `:4502`** (`BioSense/backend/`), which serves
+///   `POST /chi_ze` taking raw v_eeg/hrv/resp/sleep values.
+///   BioSense client (wearable + Phoenix dashboard) computes χ_Ze there
+///   and pushes results to social-server via `POST /api/data/import`,
+///   so this dashboard reads stored values rather than re-computing.
+/// - **psyche / consciousness / social** = aggregated from
+///   `health_factors` rows (user self-reported, last 30 days mean).
 pub async fn get_dashboard(
     State(state): State<AppState>,
     Extension(auth_user): Extension<AuthUser>,

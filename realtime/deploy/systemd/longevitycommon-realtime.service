@@ -1,0 +1,29 @@
+[Unit]
+Description=LongevityCommon realtime (Phoenix Channels, port 4500)
+Documentation=file:///home/oem/Desktop/LongevityCommon/docs/DEPLOY_CONVENTION.md
+After=network-online.target postgresql.service longevitycommon-server.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jaba
+Group=jaba
+WorkingDirectory=/home/jaba/web/longevitycommon/realtime
+EnvironmentFile=-/etc/aim/lc_social.env
+# Required env in /etc/aim/lc_social.env:
+#   DATABASE_URL=postgres://lc_social:<pw>@127.0.0.1:5432/longevitycommon_social
+#   JWT_SECRET=<same as longevitycommon-server>   # auth parity with social-server
+#   SECRET_KEY_BASE=<64+ char>                    # `mix phx.gen.secret`
+#   PORT=4500
+#   PHX_HOST=app.longevity.ge
+ExecStartPre=/bin/bash -lc 'cd /home/jaba/web/longevitycommon && git pull --ff-only || true'
+# `mix release` produces _build/prod/rel/longevitycommon_realtime/bin/longevitycommon_realtime
+ExecStart=/home/jaba/web/longevitycommon/realtime/_build/prod/rel/longevitycommon_realtime/bin/longevitycommon_realtime start
+ExecStop=/home/jaba/web/longevitycommon/realtime/_build/prod/rel/longevitycommon_realtime/bin/longevitycommon_realtime stop
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
