@@ -24,20 +24,39 @@ ExecStart=/bin/bash -lc '\
       echo "[autopull] server rebuild FAILED — see /tmp/server-rebuild.log"; \
     cd "/home/jaba/web/longevitycommon"; \
   fi; \
-  echo "$diff_files" | grep -qE "^realtime/" && \
-    cd realtime && \
-    . ~/.asdf/asdf.sh && \
-    . /etc/aim/lc_social.env && \
+  if echo "$diff_files" | grep -qE "^realtime/"; then \
+    cd "/home/jaba/web/longevitycommon/realtime"; \
+    . ~/.asdf/asdf.sh; \
+    . /etc/aim/lc_social.env; \
+    echo "[autopull] mix release"; \
     MIX_ENV=prod mix release --overwrite > /tmp/realtime-rebuild.log 2>&1 && \
-    sudo -n systemctl restart longevitycommon-realtime.service || true; \
-  cd "/home/jaba/web/longevitycommon"; \
-  echo "$diff_files" | grep -qE "^web/" && \
-    cd web && npm install --no-audit --no-fund > /tmp/web-rebuild.log 2>&1 && \
-    npm run build >> /tmp/web-rebuild.log 2>&1 && \
-    sudo -n rsync -a --delete dist/ /var/www/longevitycommon-web/ || true; \
-  echo "$diff_files" | grep -qE "^deploy/nginx/" && \
+      sudo -n systemctl restart longevitycommon-realtime.service || \
+      echo "[autopull] realtime rebuild FAILED — see /tmp/realtime-rebuild.log"; \
+    cd "/home/jaba/web/longevitycommon"; \
+  fi; \
+  if echo "$diff_files" | grep -qE "^BioSense/backend/"; then \
+    cd "/home/jaba/web/longevitycommon/BioSense/backend"; \
+    echo "[autopull] biosense backend cargo build --release"; \
+    cargo build --release > /tmp/biosense-rebuild.log 2>&1 && \
+      sudo -n systemctl restart biosense-backend.service || \
+      echo "[autopull] biosense rebuild FAILED — see /tmp/biosense-rebuild.log"; \
+    cd "/home/jaba/web/longevitycommon"; \
+  fi; \
+  if echo "$diff_files" | grep -qE "^web/"; then \
+    cd "/home/jaba/web/longevitycommon/web"; \
+    echo "[autopull] npm install + build"; \
+    (npm install --no-audit --no-fund > /tmp/web-rebuild.log 2>&1 && \
+     npm run build >> /tmp/web-rebuild.log 2>&1 && \
+     sudo -n rsync -a --delete dist/ /var/www/longevitycommon-web/) || \
+      echo "[autopull] web rebuild FAILED — see /tmp/web-rebuild.log"; \
+    cd "/home/jaba/web/longevitycommon"; \
+  fi; \
+  if echo "$diff_files" | grep -qE "^deploy/nginx/"; then \
+    echo "[autopull] nginx site refresh"; \
     sudo -n install -m 0644 deploy/nginx/app.longevity.ge.conf /etc/nginx/sites-available/app.longevity.ge.conf && \
-    sudo -n nginx -t && sudo -n systemctl reload nginx || true; \
+      sudo -n nginx -t && sudo -n systemctl reload nginx || \
+      echo "[autopull] nginx reload FAILED"; \
+  fi; \
   exit 0'
 StandardOutput=journal
 StandardError=journal
