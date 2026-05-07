@@ -16,8 +16,14 @@ ExecStart=/bin/bash -lc '\
   echo "auto-pull: $prev → $curr"; \
   diff_files=$(git diff --name-only "$prev" "$curr"); \
   echo "$diff_files" | head; \
-  echo "$diff_files" | grep -qE "^server/src/|^server/Cargo|^server/migrations/|^server/.sqlx/" && \
-    sudo -n systemctl restart longevitycommon-server.service || true; \
+  if echo "$diff_files" | grep -qE "^server/src/|^server/Cargo|^server/migrations/|^server/\\.sqlx/"; then \
+    cd "$WorkingDirectory/server"; \
+    echo "[autopull] cargo build --release"; \
+    cargo build --release > /tmp/server-rebuild.log 2>&1 && \
+      sudo -n systemctl restart longevitycommon-server.service || \
+      echo "[autopull] server rebuild FAILED — see /tmp/server-rebuild.log"; \
+    cd "$WorkingDirectory"; \
+  fi; \
   echo "$diff_files" | grep -qE "^realtime/" && \
     cd realtime && \
     . ~/.asdf/asdf.sh && \
