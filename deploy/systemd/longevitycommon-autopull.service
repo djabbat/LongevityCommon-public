@@ -16,7 +16,7 @@ ExecStart=/bin/bash -lc '\
   echo "auto-pull: $prev → $curr"; \
   diff_files=$(git diff --name-only "$prev" "$curr"); \
   echo "$diff_files" | head; \
-  if echo "$diff_files" | grep -qE "^server/src/|^server/Cargo|^server/migrations/|^server/\\.sqlx/"; then \
+  if echo "$diff_files" | grep -qE "^server/src/|^server/Cargo|^server/build\\.rs|^server/migrations/|^server/\\.sqlx/"; then \
     cd "/home/jaba/web/longevitycommon/server"; \
     echo "[autopull] cargo build --release"; \
     cargo build --release > /tmp/server-rebuild.log 2>&1 && \
