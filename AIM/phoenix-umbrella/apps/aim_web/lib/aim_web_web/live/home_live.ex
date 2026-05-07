@@ -50,6 +50,7 @@ defmodule AimWeb.HomeLive do
           <a href="/settings"><%= t("home.menu.settings", @locale) %></a>
           <a href="/about">About</a>
           <a href="/status">Status</a>
+          <a href="/admin" title="Operator control panel">Admin</a>
         </nav>
         <form method="get" class="lang-switcher">
           <select name="locale" onchange="this.form.submit()" aria-label="Language">
