@@ -1,0 +1,37 @@
+[Unit]
+Description=LongevityCommon — git pull --ff-only on /home/jaba/web/longevitycommon and trigger restarts on new commits
+Documentation=file:///home/oem/Desktop/LongevityCommon/docs/DEPLOY_CONVENTION.md
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=jaba
+Group=jaba
+WorkingDirectory=/home/jaba/web/longevitycommon
+ExecStart=/bin/bash -lc '\
+  prev=$(git rev-parse HEAD); \
+  git pull --ff-only 2>&1 | head -5; \
+  curr=$(git rev-parse HEAD); \
+  if [ "$prev" = "$curr" ]; then exit 0; fi; \
+  echo "auto-pull: $prev → $curr"; \
+  diff_files=$(git diff --name-only "$prev" "$curr"); \
+  echo "$diff_files" | head; \
+  echo "$diff_files" | grep -qE "^server/src/|^server/Cargo|^server/migrations/|^server/.sqlx/" && \
+    sudo -n systemctl restart longevitycommon-server.service || true; \
+  echo "$diff_files" | grep -qE "^realtime/" && \
+    cd realtime && \
+    . ~/.asdf/asdf.sh && \
+    . /etc/aim/lc_social.env && \
+    MIX_ENV=prod mix release --overwrite > /tmp/realtime-rebuild.log 2>&1 && \
+    sudo -n systemctl restart longevitycommon-realtime.service || true; \
+  cd "$WorkingDirectory"; \
+  echo "$diff_files" | grep -qE "^web/" && \
+    cd web && npm install --no-audit --no-fund > /tmp/web-rebuild.log 2>&1 && \
+    npm run build >> /tmp/web-rebuild.log 2>&1 && \
+    sudo -n rsync -a --delete dist/ /var/www/longevitycommon-web/ || true; \
+  echo "$diff_files" | grep -qE "^deploy/nginx/" && \
+    sudo -n install -m 0644 deploy/nginx/app.longevity.ge.conf /etc/nginx/sites-available/app.longevity.ge.conf && \
+    sudo -n nginx -t && sudo -n systemctl reload nginx || true; \
+  exit 0'
+StandardOutput=journal
+StandardError=journal
