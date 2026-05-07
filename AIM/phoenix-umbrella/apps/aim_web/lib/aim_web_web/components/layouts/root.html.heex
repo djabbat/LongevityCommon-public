@@ -406,6 +406,254 @@
       html[data-theme="dark"] .hero-stats .s .v { color: #fff !important; }
       html[data-theme="dark"] .btn-primary { background: #fff !important; color: #312e81 !important; }
       html[data-theme="dark"] .btn-ghost { color: #fff !important; border-color: rgba(255,255,255,0.4) !important; }
+
+      /* ─── Cornerstone routes (Phase 4 + Fix #3, 2026-05-07) ───────────── */
+      .aim-pam, .aim-codesign, .aim-disagreement, .aim-activation,
+      .aim-coaching, .about-page {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 24px 48px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        color: #1f2937;
+      }
+      html[data-theme="dark"] .aim-pam,
+      html[data-theme="dark"] .aim-codesign,
+      html[data-theme="dark"] .aim-disagreement,
+      html[data-theme="dark"] .aim-activation,
+      html[data-theme="dark"] .aim-coaching,
+      html[data-theme="dark"] .about-page { color: #e5e7eb; }
+
+      .aim-pam h1, .aim-codesign h1, .aim-disagreement h1,
+      .aim-activation h1, .aim-coaching h1, .about-page h1 {
+        font-size: 1.7rem;
+        margin: 24px 0 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .about-page p.lead {
+        font-size: 1.1rem; line-height: 1.6;
+        color: #374151; margin-bottom: 24px;
+      }
+      html[data-theme="dark"] .about-page p.lead { color: #d1d5db; }
+
+      .aim-pam .empty, .aim-codesign .empty, .aim-coaching .hint,
+      .about-page .muted {
+        color: #6b7280; font-style: italic;
+      }
+      html[data-theme="dark"] .aim-pam .empty,
+      html[data-theme="dark"] .aim-codesign .empty,
+      html[data-theme="dark"] .aim-coaching .hint,
+      html[data-theme="dark"] .about-page .muted { color: #9ca3af; }
+
+      /* PAM cohort + history tables */
+      .pam-cohort, .pam-history, .activation-funnel, .about-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      html[data-theme="dark"] .pam-cohort,
+      html[data-theme="dark"] .pam-history,
+      html[data-theme="dark"] .activation-funnel,
+      html[data-theme="dark"] .about-table {
+        background: #1f2937; border-color: #374151;
+      }
+      .pam-cohort th, .pam-history th, .activation-funnel th, .about-table th {
+        background: #f3f4f6;
+        text-align: left;
+        padding: 10px 14px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #374151;
+      }
+      html[data-theme="dark"] .pam-cohort th,
+      html[data-theme="dark"] .pam-history th,
+      html[data-theme="dark"] .activation-funnel th,
+      html[data-theme="dark"] .about-table th {
+        background: #111827; color: #f3f4f6;
+      }
+      .pam-cohort td, .pam-history td, .activation-funnel td, .about-table td {
+        padding: 10px 14px;
+        border-top: 1px solid #e5e7eb;
+        font-size: 0.95rem;
+      }
+      html[data-theme="dark"] .pam-cohort td,
+      html[data-theme="dark"] .pam-history td,
+      html[data-theme="dark"] .activation-funnel td,
+      html[data-theme="dark"] .about-table td { border-color: #374151; }
+
+      /* PAM-13 level color coding */
+      .level-1 { background: rgba(239,68,68,0.06); }    /* red — disengaged */
+      .level-2 { background: rgba(245,158,11,0.06); }   /* amber — becoming aware */
+      .level-3 { background: rgba(59,130,246,0.06); }   /* blue — taking action */
+      .level-4 { background: rgba(16,185,129,0.06); }   /* green — maintaining */
+      html[data-theme="dark"] .level-1 { background: rgba(239,68,68,0.18); }
+      html[data-theme="dark"] .level-2 { background: rgba(245,158,11,0.18); }
+      html[data-theme="dark"] .level-3 { background: rgba(59,130,246,0.18); }
+      html[data-theme="dark"] .level-4 { background: rgba(16,185,129,0.18); }
+
+      /* Co-design event log */
+      .codesign-events { list-style: none; padding: 0; }
+      .codesign-events li {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 12px;
+      }
+      html[data-theme="dark"] .codesign-events li {
+        background: #1f2937; border-color: #374151;
+      }
+      .codesign-events li.kind-agreed { border-left: 4px solid #10b981; }
+      .codesign-events li.kind-modified { border-left: 4px solid #3b82f6; }
+      .codesign-events li.kind-refused { border-left: 4px solid #ef4444; }
+      .codesign-events li.kind-consulted { border-left: 4px solid #6b7280; }
+      .codesign-events li.kind-alternative { border-left: 4px solid #f59e0b; }
+      .codesign-events header {
+        display: flex; gap: 12px; flex-wrap: wrap;
+        font-size: 0.9rem; color: #6b7280; margin-bottom: 6px;
+      }
+      .codesign-events .kind { font-weight: 600; }
+      .codesign-events .topic { margin: 4px 0; }
+
+      /* Disagreement classifier form */
+      .disagreement-form {
+        background: #fff; border: 1px solid #e5e7eb;
+        border-radius: 8px; padding: 20px; margin-bottom: 16px;
+      }
+      html[data-theme="dark"] .disagreement-form {
+        background: #1f2937; border-color: #374151;
+      }
+      .disagreement-form label {
+        display: block; margin-bottom: 16px;
+        font-size: 0.95rem;
+      }
+      .disagreement-form input[type="range"] { width: 100%; margin-top: 6px; }
+      .outcome {
+        padding: 16px; border-radius: 8px; margin: 16px 0;
+        background: #f3f4f6;
+      }
+      html[data-theme="dark"] .outcome { background: #111827; }
+      .outcome.zone-aligned { border-left: 4px solid #10b981; }
+      .outcome.zone-ai_leads { border-left: 4px solid #3b82f6; }
+      .outcome.zone-clinician_leads { border-left: 4px solid #8b5cf6; }
+      .outcome.zone-escalate { border-left: 4px solid #f59e0b; }
+      .outcome.zone-conflict_high_stakes { border-left: 4px solid #ef4444; }
+      .outcome h2 { margin: 0 0 8px; font-size: 1.1rem; }
+
+      /* Coaching form */
+      .coach-form {
+        display: flex; gap: 8px; flex-wrap: wrap;
+        background: #fff; border: 1px solid #e5e7eb;
+        border-radius: 8px; padding: 16px; margin: 16px 0;
+      }
+      html[data-theme="dark"] .coach-form {
+        background: #1f2937; border-color: #374151;
+      }
+      .coach-form label { flex: 1; min-width: 240px; }
+      .coach-form input[type="text"] {
+        width: 100%; padding: 8px 12px;
+        border: 1px solid #d1d5db; border-radius: 6px;
+        font-size: 0.95rem;
+      }
+      html[data-theme="dark"] .coach-form input[type="text"] {
+        background: #111827; border-color: #374151; color: #e5e7eb;
+      }
+      .coach-form button {
+        padding: 8px 16px; border-radius: 6px;
+        background: #4f46e5; color: #fff; border: none; cursor: pointer;
+        font-size: 0.95rem;
+      }
+      .coach-form button[type="button"] { background: #6b7280; }
+      .coach-result {
+        background: #eef2ff; padding: 16px;
+        border-radius: 8px; border-left: 4px solid #4f46e5;
+      }
+      html[data-theme="dark"] .coach-result {
+        background: #1e1b4b; color: #e0e7ff;
+      }
+      .coach-result .hint { color: #4b5563; font-size: 0.9rem; }
+
+      /* Legend / reference blocks shared across cornerstone */
+      .legend {
+        background: #f9fafb; padding: 16px;
+        border-radius: 8px; margin-top: 24px;
+        border: 1px solid #e5e7eb;
+      }
+      html[data-theme="dark"] .legend {
+        background: #111827; border-color: #374151;
+      }
+      .legend h3 { margin: 0 0 8px; font-size: 1rem; }
+      .legend ul { margin: 0; padding-left: 20px; }
+      .legend li { margin-bottom: 4px; font-size: 0.9rem; }
+
+      /* About page sections */
+      .about-section {
+        margin: 32px 0;
+        padding: 24px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      }
+      html[data-theme="dark"] .about-section {
+        background: #1f2937; border-color: #374151;
+      }
+      .about-section h2 {
+        margin: 0 0 14px;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #111827;
+      }
+      html[data-theme="dark"] .about-section h2 { color: #f9fafb; }
+      .about-section h3 {
+        margin: 16px 0 8px;
+        font-size: 1.05rem;
+        color: #374151;
+      }
+      html[data-theme="dark"] .about-section h3 { color: #e5e7eb; }
+      .about-section p { margin: 0 0 12px; line-height: 1.6; }
+      .about-section ul, .about-section ol { margin: 0 0 12px 20px; line-height: 1.6; }
+      .about-section li { margin-bottom: 4px; }
+      .about-section pre {
+        background: #f3f4f6; padding: 12px;
+        border-radius: 6px; overflow-x: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+      }
+      html[data-theme="dark"] .about-section pre { background: #0f172a; color: #e2e8f0; }
+      .about-section code {
+        background: #f3f4f6; padding: 2px 6px;
+        border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+        font-size: 0.88em;
+      }
+      html[data-theme="dark"] .about-section code {
+        background: #0f172a; color: #e2e8f0;
+      }
+      .about-section pre code { background: transparent; padding: 0; }
+      .about-page .back { margin-top: 32px; }
+      .about-page .back a {
+        display: inline-block; padding: 8px 16px;
+        background: #4f46e5; color: #fff;
+        border-radius: 6px; text-decoration: none;
+      }
+
+      /* Footer block on cornerstone pages */
+      .aim-pam footer, .aim-codesign footer, .aim-coaching footer,
+      .aim-disagreement footer, .aim-activation footer {
+        margin-top: 32px; padding-top: 16px;
+        border-top: 1px solid #e5e7eb;
+        color: #6b7280; font-size: 0.85rem;
+      }
+      html[data-theme="dark"] .aim-pam footer,
+      html[data-theme="dark"] .aim-codesign footer,
+      html[data-theme="dark"] .aim-coaching footer,
+      html[data-theme="dark"] .aim-disagreement footer,
+      html[data-theme="dark"] .aim-activation footer {
+        border-color: #374151; color: #9ca3af;
+      }
     </style>
 
     <script src="https://longevity.ge/eco-inject.js?v=61" defer></script>

@@ -1,165 +1,89 @@
-"""AI/ai/skill_standard.py — HV4 (2026-05-04).
+"""AI/ai/skill_standard.py — thin Python shim over the
+`aim-ai-skill-standard` Rust binary (Phase 9 Tier 3 #19, 2026-05-07).
 
-Bidirectional adapter between AIM internal skill format and the
-agentskills.io open standard. Lets AIM skills be consumable by
-external agents (Hermes, OpenClaw, SwarmClaw) and vice versa.
+Bidirectional adapter between AIM's internal skill format and the
+agentskills.io open standard. The Rust crate owns conversion + batch
+I/O; Python keeps the same public dict-in-dict-out API.
 
-agentskills.io schema (subset we support):
-{
-  "name": "<id>",
-  "description": "<one-line>",
-  "version": "1.0.0",
-  "trigger_phrases": ["..."],
-  "instructions": "<markdown body>",
-  "examples": [{"input": "...", "output": "..."}],
-  "metadata": {"author": "...", "tags": [...]}
-}
-
-AIM internal format (already used by S7 skill_synthesis):
-{
-  "skill_id": "<id>",
-  "theme": ["..."],
-  "rationale": "...",
-  "version": int,
-  "body": "..."        // optional skill text
-}
-
-Public API:
+Public API (preserved):
     to_agentskills(aim_skill) -> dict
     from_agentskills(external) -> dict
-    export_dir(src_dir, dst_dir) -> int
-    import_dir(src_dir, dst_dir) -> int
+    round_trip_aim(aim_skill) -> dict
+    export_dir(src_dir, dst_dir, *, overwrite=False) -> int
+    import_dir(src_dir, dst_dir, *, overwrite=False) -> int
+    summary() -> str
 """
 from __future__ import annotations
 
-import dataclasses
 import json
 import logging
+import subprocess
 from pathlib import Path
-from typing import Iterable
+from typing import Optional
 
 log = logging.getLogger("ai.skill_standard")
 
 
-# ── conversion ──────────────────────────────────────────────────
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-skill-standard"
+    )
+
+
+def _run(args: list[str], *, stdin: Optional[str] = None) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-skill-standard binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args],
+        input=stdin, capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-skill-standard {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
 def to_agentskills(aim_skill: dict) -> dict:
-    """Map an AIM skill dict to agentskills.io schema."""
-    skill_id = aim_skill.get("skill_id")
-    if not skill_id:
+    if not aim_skill.get("skill_id"):
         raise ValueError("aim skill missing skill_id")
-    description = (aim_skill.get("rationale")
-                    or " ".join(aim_skill.get("theme", []))
-                    or "(auto-distilled skill)")
-    instructions = aim_skill.get("body", "")
-    if not instructions:
-        # Synthesize a stub instruction body from theme / rationale.
-        theme = aim_skill.get("theme", [])
-        instructions = (
-            "## Trigger\n\n"
-            f"Theme keywords: {', '.join(theme) if theme else '(none)'}\n\n"
-            "## Approach\n\n"
-            f"{description}\n"
-        )
-    return {
-        "name": skill_id,
-        "description": description,
-        "version": str(aim_skill.get("version", "1.0.0")),
-        "trigger_phrases": list(aim_skill.get("theme", [])),
-        "instructions": instructions,
-        "examples": aim_skill.get("examples", []),
-        "metadata": {
-            "author": "AIM Hive Queen (auto-distilled)",
-            "tags": ["aim-hive", "auto-distilled"]
-                     + list(aim_skill.get("tags", [])),
-            "source_n": aim_skill.get("source_n"),
-            "eval_delta": aim_skill.get("eval_delta"),
-        },
-    }
+    out = _run(["to-agentskills"], stdin=json.dumps(aim_skill))
+    return json.loads(out)
 
 
 def from_agentskills(external: dict) -> dict:
-    """Map an agentskills.io skill dict to AIM internal format."""
-    name = external.get("name")
-    if not name:
+    if not external.get("name"):
         raise ValueError("external skill missing 'name'")
-    return {
-        "skill_id": name,
-        "theme": list(external.get("trigger_phrases", [])),
-        "rationale": external.get("description", ""),
-        "version": external.get("version", "1.0.0"),
-        "body": external.get("instructions", ""),
-        "examples": external.get("examples", []),
-        "tags": (list(external.get("metadata", {}).get("tags", []))
-                  + ["external-import"]),
-    }
-
-
-# ── round-trip ─────────────────────────────────────────────────
+    out = _run(["from-agentskills"], stdin=json.dumps(external))
+    return json.loads(out)
 
 
 def round_trip_aim(aim_skill: dict) -> dict:
-    """aim → agentskills → aim. Verifies idempotency on key fields."""
+    """aim → agentskills → aim."""
     return from_agentskills(to_agentskills(aim_skill))
-
-
-# ── batch dir IO ───────────────────────────────────────────────
 
 
 def export_dir(src_dir: Path, dst_dir: Path,
                 *, overwrite: bool = False) -> int:
-    """Convert every .json AIM skill in src_dir to agentskills format
-    in dst_dir. Returns count written."""
-    src_dir = Path(src_dir)
-    dst_dir = Path(dst_dir)
-    if not src_dir.exists():
-        return 0
-    dst_dir.mkdir(parents=True, exist_ok=True)
-    n = 0
-    for src in src_dir.glob("*.json"):
-        try:
-            aim = json.loads(src.read_text(encoding="utf-8"))
-            ext = to_agentskills(aim)
-        except Exception as e:
-            log.warning("skip %s: %s", src.name, e)
-            continue
-        dst = dst_dir / src.name
-        if dst.exists() and not overwrite:
-            continue
-        dst.write_text(json.dumps(ext, indent=2, ensure_ascii=False),
-                        encoding="utf-8")
-        n += 1
-    return n
+    args = ["export-dir", str(Path(src_dir)), str(Path(dst_dir))]
+    if overwrite:
+        args.append("--overwrite")
+    j = json.loads(_run(args).strip())
+    return int(j.get("written", 0))
 
 
 def import_dir(src_dir: Path, dst_dir: Path,
                 *, overwrite: bool = False) -> int:
-    """Convert every .json agentskills file in src_dir to AIM format
-    in dst_dir. Returns count written."""
-    src_dir = Path(src_dir)
-    dst_dir = Path(dst_dir)
-    if not src_dir.exists():
-        return 0
-    dst_dir.mkdir(parents=True, exist_ok=True)
-    n = 0
-    for src in src_dir.glob("*.json"):
-        try:
-            ext = json.loads(src.read_text(encoding="utf-8"))
-            aim = from_agentskills(ext)
-        except Exception as e:
-            log.warning("skip %s: %s", src.name, e)
-            continue
-        dst = dst_dir / src.name
-        if dst.exists() and not overwrite:
-            continue
-        dst.write_text(json.dumps(aim, indent=2, ensure_ascii=False),
-                        encoding="utf-8")
-        n += 1
-    return n
+    args = ["import-dir", str(Path(src_dir)), str(Path(dst_dir))]
+    if overwrite:
+        args.append("--overwrite")
+    j = json.loads(_run(args).strip())
+    return int(j.get("written", 0))
 
 
 def summary() -> str:
-    return ("🔌 Skill standard adapter — ready.\n"
-            "  to_agentskills() / from_agentskills() — single-skill conversion\n"
-            "  export_dir(src, dst) / import_dir(src, dst) — batch")
+    return _run(["summary"]).rstrip("\n")

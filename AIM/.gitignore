@@ -80,3 +80,27 @@ USER/
 
 # Phase 3 journal — preview artifact (orchestrator scratch)
 _journal/STAGES.md.preview
+
+# ── Rust (cargo) ──────────────────
+target/
+**/target/
+Cargo.lock.bak
+
+# ── Phoenix / Elixir ──────────────
+_build/
+**/_build/
+deps/
+**/deps/
+*.beam
+erl_crash.dump
+
+# ── Node / asset bundlers ─────────
+node_modules/
+**/node_modules/
+
+# ── Archived / superseded snapshots (per audit 2026-05-07) ────
+_archive/
+
+# ── Diagnostic outputs (operational reports timestamped) ────
+docs/operational/diagnostic_*.md
+!docs/operational/diagnostic_latest.md

@@ -10,6 +10,43 @@ from pathlib import Path
 
 from config import VERSION, APP_NAME, DEFAULT_LANG, SUPPORTED_LANGS, PATIENTS_DIR
 from llm import ask, ask_deep, ask_long, providers_status
+
+# P2.6 (2026-05-07): if AIM_LLM_HTTP_URL is set and the aim-llm Rust
+# service is reachable on /health, override the legacy Python ask /
+# ask_deep / ask_long with the HTTP shim. Fall back silently to the
+# Python implementation if the service is unreachable. Unblocks Phase
+# 5b without forcing a hard cut-over.
+def _maybe_activate_aim_llm_shim():
+    import os
+    if not os.environ.get("AIM_LLM_HTTP_URL"):
+        return
+    try:
+        from agents import llm_client
+        if not llm_client.is_enabled():
+            return
+        llm_client.health()  # probe; raises if unreachable
+    except Exception as e:  # pragma: no cover  — service unreachable
+        logging.getLogger("aim.startup").warning(
+            "AIM_LLM_HTTP_URL set but aim-llm unreachable: %s — using Python fallback", e
+        )
+        return
+    import llm as _llm_mod
+    from agents import llm_client as _shim
+    global ask, ask_deep, ask_long
+    ask = _shim.ask
+    ask_deep = _shim.ask_deep
+    ask_long = _shim.ask_long
+    _llm_mod.ask = _shim.ask
+    _llm_mod.ask_deep = _shim.ask_deep
+    _llm_mod.ask_long = _shim.ask_long
+    _llm_mod.ask_fast = _shim.ask_fast
+    _llm_mod.ask_critical = _shim.ask_critical
+    logging.getLogger("aim.startup").info(
+        "aim-llm HTTP shim active at %s", os.environ["AIM_LLM_HTTP_URL"]
+    )
+
+_maybe_activate_aim_llm_shim()
+
 from i18n import t, lang_name, lang_menu
 from db import list_patients, get_patient, upsert_patient, new_session, save_message, get_history
 from agents import DoctorAgent, IntakeAgent, LangAgent

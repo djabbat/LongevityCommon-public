@@ -10,5 +10,9 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 
+[[bin]]
+name = "aim-ai-skill-standard"
+path = "src/main.rs"
+
 [dev-dependencies]
 tempfile = "3"

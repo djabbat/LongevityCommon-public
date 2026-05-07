@@ -52,7 +52,21 @@ class PatientMemory:
     has_confirmed_dx: bool = False
 
     def to_kernel_dict(self) -> dict:
-        """Flat dict для передачи в kernel.impedance / decide."""
+        """Flat dict для передачи в kernel.impedance / decide.
+
+        Includes `activation_level` (PAM-13, 1-4; 0 = unknown) read lazily
+        from `agents.pam_tracker`. L_AGENCY (kernel cornerstone, 2026-05-07)
+        uses this to decide whether a treatment / lifestyle action requires
+        an explicit co-design event before kernel approval.
+        """
+        # Lazy import to avoid circular import — pam_tracker doesn't depend on
+        # patient_memory, but importing at module top would force every kernel
+        # caller to pay the cost.
+        try:
+            from agents import pam_tracker  # noqa: WPS433
+            activation_level = pam_tracker.current_activation_level(self.id)
+        except Exception:  # pragma: no cover  — pam_tracker should not crash agents
+            activation_level = 0
         return {
             "id": self.id,
             "age": self.demographics.get("age"),
@@ -67,6 +81,7 @@ class PatientMemory:
             "dx_without_evidence": self.dx_without_evidence,
             "primary_complaint_undiagnosed": self.primary_complaint_undiagnosed,
             "has_confirmed_dx": self.has_confirmed_dx,
+            "activation_level": activation_level,
         }
 
 

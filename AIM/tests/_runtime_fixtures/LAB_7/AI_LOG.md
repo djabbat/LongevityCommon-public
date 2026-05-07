@@ -190,3 +190,15 @@
 - 𝓘: 0.34 → 0.13 (expected)
 
 ---
+
+## 2026-05-06 21:44:23 — lab_interpretation by lab_agent
+
+**Alternatives considered:** 2
+
+- ⭐ `expanded_workup` (test): U=0.782 (𝒞=0.11, Φ_Ze=0.99, Ethics=0.91) — Лабы нормальны, но жалобы остаются → расширенный workup
+-    `specialist_ref` (referral): U=0.710 (𝒞=0.00, Φ_Ze=0.88, Ethics=0.89) — Консультация профильного специалиста
+
+**Decision:** `expanded_workup` — Лабы нормальны, но жалобы остаются → расширенный workup
+- 𝓘: 0.27 → 0.13 (expected)
+
+---

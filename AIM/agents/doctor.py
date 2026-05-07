@@ -368,6 +368,17 @@ class DoctorAgent:
         p = dict(patient)
         p["has_confirmed_dx"] = True
         p["primary_complaint_undiagnosed"] = False
+        # P1.1 (audit fix 2026-05-07): populate PAM-13 activation level so
+        # L_AGENCY fires on treatment for activated patients without
+        # explicit co-design. Same pattern as chat.py:359 / labs.py:329.
+        if "activation_level" not in p:
+            try:
+                from agents import pam_tracker
+                p["activation_level"] = pam_tracker.current_activation_level(
+                    p.get("id", "")
+                )
+            except Exception:
+                p["activation_level"] = 0
 
         # 1. LLM generates treatment alternatives как JSON
         system = _get_system("treatment", lang)

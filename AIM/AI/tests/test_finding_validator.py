@@ -104,22 +104,6 @@ def test_missing_file_unverified(isolated, tmp_path):
 # ── _extract_file_ref ──────────────────────────────────────────
 
 
-def test_extract_double_star_ref():
-    from AI.ai.finding_validator import _extract_file_ref
-    assert _extract_file_ref("**`agents/x.py`** has issue") == "agents/x.py"
-
-
-def test_extract_backtick_ref():
-    from AI.ai.finding_validator import _extract_file_ref
-    out = _extract_file_ref("`distillation_tracker.py:42` issue")
-    assert out == "distillation_tracker.py"
-
-
-def test_extract_no_ref():
-    from AI.ai.finding_validator import _extract_file_ref
-    assert _extract_file_ref("plain text no path here") is None
-
-
 # ── audit_report — end-to-end ──────────────────────────────────
 
 

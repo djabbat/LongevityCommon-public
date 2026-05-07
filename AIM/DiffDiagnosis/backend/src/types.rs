@@ -83,6 +83,18 @@ pub struct CaseInput {
     pub free_text: String,
     #[serde(default)]
     pub structured: HashMap<String, serde_json::Value>,
+    /// PAM-13 activation level (1-4; 0 = unknown). Cornerstone field
+    /// added 2026-05-07 — feeds L_AGENCY in upstream `aim-kernel`.
+    /// Currently informational; the actual L_AGENCY enforcement
+    /// happens in the calling agent (e.g., `agents/doctor.py`) before
+    /// surfacing any treatment recommendation to the clinician.
+    #[serde(default)]
+    pub patient_activation_level: u8,
+    /// Whether the recommended action has been co-designed with the
+    /// patient (per "Patient as a Project" cornerstone). Forwarded
+    /// upstream for L_AGENCY pass-through.
+    #[serde(default)]
+    pub patient_codesigned: bool,
 }
 
 impl CaseInput {

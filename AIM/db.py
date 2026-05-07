@@ -204,6 +204,15 @@ def close_session(session_id: int, summary: str = ""):
             "UPDATE sessions SET ended_at=?, summary=? WHERE id=?",
             (datetime.now().isoformat(), summary, session_id)
         )
+    # Fire HOOK_SESSION_END (HW1, 2026-05-06). Handler in
+    # agents/hook_handlers.py runs db.archive_old_events() to migrate
+    # WARM (>7d) ai_events into ai_events_archive (idempotent).
+    try:
+        from agents.hooks import fire, HOOK_SESSION_END
+        fire(HOOK_SESSION_END, {"session_id": session_id, "summary": summary})
+    except Exception:
+        # db.py must not raise on hooks unavailability (test isolation).
+        pass
 
 # ── Сообщения ─────────────────────────────────────────────────────────────────
 

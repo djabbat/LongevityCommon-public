@@ -1,38 +1,30 @@
-"""AI/ai/gap_detector.py — capability-gap detector (S11, 2026-05-03).
+"""AI/ai/gap_detector.py — thin Python shim over the
+`aim-ai-gap-detector` Rust binary (Phase 9 Tier 3 #20, 2026-05-07).
 
-Walks session JSONL logs (`~/.cache/aim/sessions/*.jsonl`) and finds
-*tasks where AIM gave up* — the final answer matches one of these
-surrender patterns:
+Walks session JSONL logs and finds tasks where AIM gave up — the
+final answer matches a surrender pattern. Clusters surrenders into
+capability gaps. The Rust crate owns regex set + tokeniser + Jaccard
+clustering; Python keeps the same public dataclass-shaped API and
+the `window_days` filter (binary doesn't natively filter, so we
+post-process by ts).
 
-    "I cannot help"      "I don't have access to"     "(interrupted)"
-    "не могу помочь"     "у меня нет доступа"          "I'm sorry, I"
-    "I'm not able"       "outside my capabilities"
-    ERROR: prefix when emitted as the FINAL answer (vs intermediate)
-
-For each gap we cluster the originating tasks (Jaccard on key terms),
-producing a "missing capability" report:
-
-    - cluster theme (top key terms)
-    - n sessions where this gap appeared
-    - representative task
-    - suggested next step (new tool? prompt patch? domain expansion?)
-
-Public API:
+Public API (preserved):
+    sessions_dir() -> Path
+    Surrender / Gap dataclasses (Gap.n property)
     surrenders(window_days=14) -> list[Surrender]
-    gaps(window_days=14, threshold=0.20) -> list[Gap]
+    gaps(window_days=14, threshold=0.20, *, surrender_list=None) -> list[Gap]
     summary(window_days=14) -> str
 """
 from __future__ import annotations
 
-import collections
 import dataclasses
 import datetime as dt
 import json
 import logging
 import os
-import re
+import subprocess
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Optional
 
 log = logging.getLogger("ai.gap_detector")
 
@@ -42,55 +34,6 @@ def sessions_dir() -> Path:
     if env:
         return Path(env).expanduser()
     return Path.home() / ".cache" / "aim" / "sessions"
-
-
-# ── surrender detection ─────────────────────────────────────────
-
-
-_SURRENDER_PATTERNS = [
-    # Broad "I cannot X" / "I can't X" — AI surrender almost always uses these.
-    re.compile(r"\bI\s+(?:cannot|can'?t)\b", re.I),
-    re.compile(r"\bI\s+(?:don'?t|do\s+not)\s+have\s+access\b", re.I),
-    re.compile(r"\bI'?m\s+(?:not\s+able|unable)\b", re.I),
-    re.compile(r"\boutside\s+my\s+capabilities\b", re.I),
-    re.compile(r"\bI'?m\s+sorry\s+I\b", re.I),
-    re.compile(r"\(interrupted\)", re.I),
-    # Russian — also broad.
-    re.compile(r"\bне\s+могу\b", re.I),
-    re.compile(r"\bу\s+меня\s+нет\s+доступа\b", re.I),
-    re.compile(r"\bне\s+умею\b", re.I),
-]
-
-
-def _is_surrender(answer: str) -> bool:
-    if not isinstance(answer, str):
-        return False
-    if answer.strip().startswith("ERROR:"):
-        return True
-    return any(pat.search(answer) for pat in _SURRENDER_PATTERNS)
-
-
-# ── token helpers (shared with reflexion_cluster) ───────────────
-
-
-_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё][\w-]{3,}")
-_FILLERS = {"the", "and", "for", "with", "that", "this", "from", "they",
-            "your", "have", "should", "would", "must", "make", "more",
-            "когда", "если", "также", "может", "очень", "уже", "будет"}
-
-
-def _tokens(s: str) -> set[str]:
-    return {w.lower() for w in _TOKEN_RE.findall(s)
-            if w.lower() not in _FILLERS}
-
-
-def _jaccard(a: set[str], b: set[str]) -> float:
-    if not a or not b:
-        return 0.0
-    return len(a & b) / max(1, len(a | b))
-
-
-# ── data ─────────────────────────────────────────────────────────
 
 
 @dataclasses.dataclass
@@ -103,149 +46,108 @@ class Surrender:
 
 @dataclasses.dataclass
 class Gap:
-    theme: list[str]              # top key terms across surrenders
+    theme: list[str]
     surrenders: list[Surrender]
-    representative: str           # the most representative task
-    suggestion: str               # heuristic next-step recommendation
+    representative: str
+    suggestion: str
 
     @property
     def n(self) -> int:
         return len(self.surrenders)
 
 
-# ── walk session logs ───────────────────────────────────────────
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-gap-detector"
+    )
 
 
-def _events(path: Path,
-            cutoff: Optional[dt.datetime] = None) -> Iterable[dict]:
-    try:
-        with path.open(encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    ev = json.loads(line)
-                except json.JSONDecodeError:
-                    continue
-                if cutoff is not None:
-                    ts = ev.get("ts") or ev.get("timestamp")
-                    if isinstance(ts, str):
-                        try:
-                            evt = dt.datetime.fromisoformat(ts)
-                        except ValueError:
-                            continue
-                        if evt < cutoff:
-                            continue
-                    elif isinstance(ts, (int, float)):
-                        if dt.datetime.fromtimestamp(ts) < cutoff:
-                            continue
-                yield ev
-    except OSError:
-        return
+def _run(args: list[str], *, stdin: Optional[str] = None) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-gap-detector binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args],
+        input=stdin, capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-gap-detector {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
-def surrenders(window_days: int = 14) -> list[Surrender]:
-    """Walk every session JSONL and return cases that ended in surrender."""
-    sd = sessions_dir()
-    if not sd.exists():
-        return []
+def _surrender_from_json(j: dict) -> Surrender:
+    return Surrender(
+        session=str(j.get("session", "")),
+        task=str(j.get("task", "")),
+        answer=str(j.get("answer", "")),
+        ts=j.get("ts"),
+    )
+
+
+def _filter_by_window(rows: list[Surrender], window_days: int) -> list[Surrender]:
     cutoff = dt.datetime.now() - dt.timedelta(days=window_days)
     out: list[Surrender] = []
-    for p in sorted(sd.glob("*.jsonl")):
-        # Track the latest "start" task per file, then check final.
-        current_task: Optional[str] = None
-        current_ts: Optional[str] = None
-        for ev in _events(p, cutoff=cutoff):
-            kind = ev.get("type")
-            if kind == "start":
-                current_task = ev.get("task") or current_task
-                current_ts = ev.get("ts") or current_ts
-            elif kind in ("final", "error"):
-                ans = ev.get("answer") or ev.get("error") or ""
-                if _is_surrender(ans):
-                    out.append(Surrender(
-                        session=p.stem,
-                        task=str(current_task or "")[:300],
-                        answer=str(ans)[:300],
-                        ts=current_ts,
-                    ))
+    for s in rows:
+        if not s.ts:
+            out.append(s)
+            continue
+        try:
+            evt = dt.datetime.fromisoformat(s.ts.replace("Z", "+00:00"))
+        except ValueError:
+            out.append(s)
+            continue
+        if evt.tzinfo is not None:
+            evt = evt.astimezone().replace(tzinfo=None)
+        if evt >= cutoff:
+            out.append(s)
     return out
 
 
-# ── cluster surrenders into gaps ────────────────────────────────
-
-
-def _suggestion_for(theme: list[str], rep: str) -> str:
-    if not theme:
-        return f"Investigate failures on: {rep[:120]}"
-    head = ", ".join(theme[:4])
-    # Heuristic next-step: if 'access' / 'permission' in theme → tool gap;
-    # 'fact' / 'pubmed' → citation/grounding gap; else prompt patch.
-    low = " ".join(theme).lower()
-    if any(t in low for t in ("access", "permission", "auth", "право",
-                                "доступ")):
-        return f"Likely missing tool / scope: {head}. Add MCP server or "\
-               "expand bash whitelist."
-    if any(t in low for t in ("pubmed", "citation", "doi", "pmid")):
-        return f"Citation / grounding gap: {head}. Add literature lookup "\
-               "before emit."
-    if any(t in low for t in ("language", "translate", "georgian",
-                                "грузин")):
-        return f"Translation gap: {head}. Wire i18n delegate or DeepSeek."
-    return f"Prompt patch candidate: '{head}' — see clusters in S10."
+def surrenders(window_days: int = 14) -> list[Surrender]:
+    out = _run(["surrenders"])
+    raw = [_surrender_from_json(json.loads(line))
+           for line in out.splitlines() if line.strip()]
+    return _filter_by_window(raw, window_days)
 
 
 def gaps(window_days: int = 14,
           threshold: float = 0.20,
           *,
-          surrender_list: Optional[list["Surrender"]] = None,
-          ) -> list[Gap]:
-    """Cluster surrenders into capability gaps.
-
-    `surrender_list` lets callers pre-compute / mock surrenders. When
-    None we fetch via `surrenders()`. CRIT-3 fix (2026-05-03): we
-    explicitly materialise the input as a list before iterating twice
-    (once for tokenisation, once for cluster representative selection),
-    so callers passing a generator don't trigger StopIteration.
-    """
+          surrender_list: Optional[list[Surrender]] = None) -> list[Gap]:
     surr = (list(surrender_list)
             if surrender_list is not None
             else surrenders(window_days=window_days))
     if not surr:
         return []
-    items = [(s, _tokens(s.task + " " + s.answer)) for s in surr]
-    clusters: list[list[tuple[Surrender, set[str]]]] = []
-    for s, toks in items:
-        attached = False
-        for cl in clusters:
-            for _, ct in cl:
-                if _jaccard(toks, ct) >= threshold:
-                    cl.append((s, toks))
-                    attached = True
-                    break
-            if attached:
-                break
-        if not attached:
-            clusters.append([(s, toks)])
-
-    out: list[Gap] = []
-    for cl in clusters:
-        from collections import Counter
-        ctr: Counter = Counter()
-        for _, ts in cl:
-            ctr.update(ts)
-        keep = max(1, len(cl) // 2)
-        theme = [t for t, c in ctr.most_common(20) if c >= keep][:6]
-        rep = max((s for s, _ in cl), key=lambda s: len(s.task)).task
-        out.append(Gap(
-            theme=theme,
-            surrenders=[s for s, _ in cl],
-            representative=rep,
-            suggestion=_suggestion_for(theme, rep),
+    payload = "\n".join(
+        json.dumps({
+            "session": s.session,
+            "task": s.task,
+            "answer": s.answer,
+            "ts": s.ts,
+        })
+        for s in surr
+    )
+    out = _run(["gaps", "--threshold", str(threshold)], stdin=payload)
+    res: list[Gap] = []
+    for line in out.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        j = json.loads(line)
+        res.append(Gap(
+            theme=list(j.get("theme", [])),
+            surrenders=[_surrender_from_json(s)
+                        for s in j.get("surrenders", [])],
+            representative=str(j.get("representative", "")),
+            suggestion=str(j.get("suggestion", "")),
         ))
-    out.sort(key=lambda g: -g.n)
-    return out
+    return res
 
 
 def summary(window_days: int = 14) -> str:

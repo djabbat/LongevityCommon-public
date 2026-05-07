@@ -21,6 +21,7 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 
 # Make AIM importable when invoked via systemd (cwd is /).
 HERE = Path(__file__).resolve().parent.parent
@@ -29,6 +30,88 @@ if str(HERE) not in sys.path:
 
 logging.basicConfig(level=os.environ.get("AIM_LOGLEVEL", "INFO"))
 log = logging.getLogger("aim.daily_brief")
+
+
+def _rust_bin(name: str) -> Optional[Path]:
+    """Locate a built Rust binary in rust-core/target/{release,debug}.
+    Returns None when not built — bridge gracefully skips."""
+    here = Path(__file__).resolve().parent.parent
+    for sub in ("release", "debug"):
+        p = here / "rust-core" / "target" / sub / name
+        if p.exists():
+            return p
+    return None
+
+
+def _run_rust(name: str, args: list, env_extra: dict | None = None,
+              timeout: float = 10.0) -> str:
+    """Run a Rust subprocess and return stdout, or '' on error."""
+    bin_path = _rust_bin(name)
+    if bin_path is None:
+        log.debug("%s binary not built; skipping", name)
+        return ""
+    import subprocess
+    env = dict(os.environ)
+    env.update(env_extra or {})
+    try:
+        out = subprocess.run(
+            [str(bin_path)] + args,
+            capture_output=True, text=True, timeout=timeout, env=env, check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        log.warning("%s subprocess failed: %s", name, e)
+        return ""
+    if out.returncode != 0:
+        log.warning("%s exit %d: %s", name, out.returncode,
+                    (out.stderr or "")[:200])
+        return ""
+    return (out.stdout or "").strip()
+
+
+def _patient_brief_block(today: dt.date) -> str:
+    """Phase A bridge — call Rust `aim-patient-owner` binary."""
+    from config import PATIENTS_DIR
+    body = _run_rust(
+        "aim-patient-owner",
+        ["all", today.isoformat()],
+        env_extra={"AIM_PATIENTS_DIR": str(PATIENTS_DIR)},
+    )
+    if not body or "no patients" in body.lower():
+        return ""
+    return body
+
+
+def _experiment_brief_block(today: dt.date) -> str:
+    """Phase B bridge (HW1, 2026-05-06) — call Rust `aim-experiment-owner`."""
+    here = Path(__file__).resolve().parent.parent
+    exp_dir = here / "USER" / "experiments"
+    if not exp_dir.exists():
+        return ""
+    body = _run_rust(
+        "aim-experiment-owner",
+        ["all", today.isoformat()],
+        env_extra={"AIM_EXPERIMENTS_DIR": str(exp_dir)},
+    )
+    if not body or "no experiments" in body.lower():
+        return ""
+    return body
+
+
+def _patient_overdue_followups_block(today: dt.date) -> str:
+    """Phase D bridge (HW1, 2026-05-06) — surface overdue patient
+    follow-ups from the comms tracker SQLite.
+
+    Each line: `<pid> | <topic> | <N>d past expected`.
+    """
+    body = _run_rust(
+        "aim-patient-comms",
+        ["overdue", today.isoformat()],
+    )
+    if not body:
+        return ""
+    return "📮 overdue patient follow-ups:\n" + "\n".join(
+        f"  • {ln}" for ln in body.splitlines() if ln.strip()
+    )
 
 
 def render_brief(today: dt.date | None = None) -> str:
@@ -53,6 +136,30 @@ def render_brief(today: dt.date | None = None) -> str:
     parts.append("")
     parts.append(po.all_briefs(today=today))
 
+    # Phase A (HW1, 2026-05-06): patient briefs via Rust aim-patient-owner.
+    patients_block = _patient_brief_block(today)
+    if patients_block:
+        parts.append("")
+        parts.append("———")
+        parts.append("")
+        parts.append(patients_block)
+
+    # Phase B (HW1, 2026-05-06): experiment briefs via aim-experiment-owner.
+    experiments_block = _experiment_brief_block(today)
+    if experiments_block:
+        parts.append("")
+        parts.append("———")
+        parts.append("")
+        parts.append(experiments_block)
+
+    # Phase D (HW1, 2026-05-06): overdue patient comms via aim-patient-comms.
+    comms_block = _patient_overdue_followups_block(today)
+    if comms_block:
+        parts.append("")
+        parts.append("———")
+        parts.append("")
+        parts.append(comms_block)
+
     parts.append("")
     parts.append("———")
     parts.append("")
@@ -61,31 +168,14 @@ def render_brief(today: dt.date | None = None) -> str:
 
 
 def send_telegram(text: str) -> bool:
-    """POST text to Telegram. Returns True on 200, False on failure / missing config."""
-    token = os.environ.get("TELEGRAM_BOT_TOKEN") or os.environ.get("AIM_TG_BOT_TOKEN")
-    chat = os.environ.get("AIM_TELEGRAM_CHAT_ID")
-    if not token or not chat:
-        log.warning("Telegram not configured (need TELEGRAM_BOT_TOKEN + AIM_TELEGRAM_CHAT_ID)")
-        return False
-    try:
-        import httpx
-    except ImportError:
-        log.error("httpx not installed; cannot send to Telegram")
-        return False
-    # Telegram has a 4096-char message limit. Chunk longer briefs.
-    LIMIT = 3800
-    chunks = [text[i:i + LIMIT] for i in range(0, len(text), LIMIT)] or [text]
-    ok = True
-    with httpx.Client(timeout=10) as cl:
-        for i, body in enumerate(chunks):
-            r = cl.post(f"https://api.telegram.org/bot{token}/sendMessage",
-                        json={"chat_id": chat, "text": body,
-                              "disable_web_page_preview": True})
-            if r.status_code != 200:
-                log.error("Telegram %d: %s", r.status_code, r.text[:200])
-                ok = False
-                break
-    return ok
+    """Backwards-compat re-export. Canonical impl: agents/telegram_sender.py.
+
+    Existing `from scripts.daily_brief import send_telegram` callers
+    keep working during gradual deprecation (HW1, 2026-05-06).
+    New code should `from agents.telegram_sender import send_telegram`.
+    """
+    from agents.telegram_sender import send_telegram as _send
+    return _send(text)
 
 
 def main() -> int:

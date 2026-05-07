@@ -72,6 +72,16 @@ pub struct CbcInput {
     pub sex: String,
     #[serde(default = "default_age")]
     pub age: String,
+    /// PAM-13 activation level (1-4; 0 = unknown). Cornerstone field
+    /// added 2026-05-07 — informational; the recommended action's
+    /// L_AGENCY enforcement happens upstream in the calling agent
+    /// (e.g., labs.py / doctor.py) before any treatment surfaces.
+    #[serde(default)]
+    pub patient_activation_level: u8,
+    /// Whether the recommended action has been co-designed with the
+    /// patient. Forwarded upstream for L_AGENCY pass-through.
+    #[serde(default)]
+    pub patient_codesigned: bool,
 }
 
 fn default_sex() -> String { "any".into() }

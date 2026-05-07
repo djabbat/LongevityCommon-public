@@ -31,7 +31,9 @@ defmodule AimWeb.MixProject do
       {:bandit, "~> 1.5"},
       {:jason, "~> 1.4"},
       {:aim_orchestrator, in_umbrella: true},
-      {:aim_memory, in_umbrella: true}
+      {:aim_memory, in_umbrella: true},
+      # Phoenix LiveViewTest needs an HTML parser at test-time (P2.7, 2026-05-07).
+      {:lazy_html, ">= 0.1.0", only: :test}
     ]
   end
 end

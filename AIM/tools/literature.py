@@ -67,10 +67,58 @@ def _http_get(url: str, *, timeout: float = 8.0) -> Optional[bytes]:
 # ── PMID verification ──────────────────────────────────────────────────────
 
 
+# ── Phase 10 hybrid (2026-05-07): opt-in Rust shim ─────────────────────
+# Set AIM_VERIFY_USE_RUST=1 to delegate verify_pmid / verify_doi to the
+# Rust `aim-verify` binary (10x faster, no httpx pool overhead). Default
+# behaviour = legacy Python httpx — preserved bit-for-bit for callers
+# that depend on subtle field formatting.
+
+import os as _os
+import subprocess as _subprocess
+import json as _json
+from pathlib import Path as _Path
+
+_VERIFY_BIN = (_Path(__file__).resolve().parent.parent
+               / "rust-core" / "target" / "release" / "aim-verify")
+
+
+def _rust_verify(subcmd: str, ident: str) -> Optional[dict]:
+    if _os.environ.get("AIM_VERIFY_USE_RUST") != "1":
+        return _SENTINEL_PYTHON_PATH  # type: ignore[return-value]
+    if not _VERIFY_BIN.exists():
+        return _SENTINEL_PYTHON_PATH  # type: ignore[return-value]
+    proc = _subprocess.run(
+        [str(_VERIFY_BIN), subcmd, ident],
+        capture_output=True, text=True, check=False,
+    )
+    out = proc.stdout.strip()
+    # Exit 0 = JSON record; exit 1 = "null"; exit 2 = error → fall back.
+    if proc.returncode == 0 and out and out != "null":
+        try:
+            return _json.loads(out)
+        except _json.JSONDecodeError:
+            return _SENTINEL_PYTHON_PATH  # type: ignore[return-value]
+    if proc.returncode == 1:
+        return None
+    return _SENTINEL_PYTHON_PATH  # type: ignore[return-value]
+
+
+# Sentinel signals "Rust path skipped — use Python fallback".
+_SENTINEL_PYTHON_PATH = object()
+
+
 def verify_pmid(pmid: str | int) -> Optional[dict]:
     """Return {'pmid', 'title', 'authors', 'journal', 'year', 'doi'} if PMID
     exists at PubMed; None otherwise.  Idempotent + cached implicitly via
-    upstream HTTP cache when one is configured."""
+    upstream HTTP cache when one is configured.
+
+    Phase 10: if `AIM_VERIFY_USE_RUST=1`, delegates to Rust binary
+    `rust-core/target/release/aim-verify`. Falls back to Python on any
+    Rust-side error or when the binary is absent.
+    """
+    rust_result = _rust_verify("verify-pmid", str(pmid))
+    if rust_result is not _SENTINEL_PYTHON_PATH:
+        return rust_result  # type: ignore[return-value]
     pmid = str(pmid).strip().lstrip("PMID:").strip()
     if not pmid.isdigit():
         return None
@@ -103,7 +151,14 @@ def verify_pmid(pmid: str | int) -> Optional[dict]:
 
 
 def verify_doi(doi: str) -> Optional[dict]:
-    """Return Crossref metadata dict if DOI resolves, None otherwise."""
+    """Return Crossref metadata dict if DOI resolves, None otherwise.
+
+    Phase 10: if `AIM_VERIFY_USE_RUST=1`, delegates to Rust binary
+    `aim-verify`. Falls back to Python on any Rust error or absent binary.
+    """
+    rust_result = _rust_verify("verify-doi", doi)
+    if rust_result is not _SENTINEL_PYTHON_PATH:
+        return rust_result  # type: ignore[return-value]
     doi = doi.strip().lstrip("doi:").strip()
     doi = re.sub(r"^https?://(dx\.)?doi\.org/", "", doi).rstrip(".)")
     if not doi or "/" not in doi:

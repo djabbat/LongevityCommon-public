@@ -190,3 +190,27 @@
 - 𝓘: 0.28 → 0.11 (expected)
 
 ---
+
+## 2026-05-06 21:42:26 — lab_interpretation by lab_agent
+
+**Alternatives considered:** 2
+
+- ⭐ `hepa_workup` (test): U=0.776 (𝒞=0.07, Φ_Ze=0.99, Ethics=0.91) — Hepatitis panel + INR + albumin + abdominal US
+-    `gp_followup` (referral): U=0.721 (𝒞=0.00, Φ_Ze=0.91, Ethics=0.89) — Follow-up у GP через 2-4 недели
+
+**Decision:** `hepa_workup` — Hepatitis panel + INR + albumin + abdominal US
+- 𝓘: 0.23 → 0.11 (expected)
+
+---
+
+## 2026-05-06 21:57:23 — lab_interpretation by lab_agent
+
+**Alternatives considered:** 2
+
+- ⭐ `hepa_workup` (test): U=0.764 (𝒞=0.01, Φ_Ze=0.99, Ethics=0.91) — Hepatitis panel + INR + albumin + abdominal US
+-    `gp_followup` (referral): U=0.727 (𝒞=0.00, Φ_Ze=0.92, Ethics=0.89) — Follow-up у GP через 2-4 недели
+
+**Decision:** `hepa_workup` — Hepatitis panel + INR + albumin + abdominal US
+- 𝓘: 0.23 → 0.11 (expected)
+
+---

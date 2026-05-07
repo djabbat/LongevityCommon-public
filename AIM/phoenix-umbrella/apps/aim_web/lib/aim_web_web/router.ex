@@ -33,5 +33,22 @@ defmodule AimWeb.Router do
     live "/dashboard", DashboardLive, :index
     live "/drugs",    DrugInteractionsLive, :index
     live "/settings", SettingsLive,  :index
+    # Phase A/B (HW1, 2026-05-06):
+    live "/patients",    PatientLive,    :index
+    live "/experiments", ExperimentLive, :index
+    # Patient as a Project cornerstone (Fix #3, 2026-05-07):
+    live "/pam",                   PamLive,           :cohort
+    live "/pam/:patient_id",       PamLive,           :patient
+    live "/codesign/:patient_id",  CodesignLive,      :index
+    live "/disagreement",          DisagreementLive,  :index
+    live "/activation",            ActivationLive,    :index
+    # Phase 4 cornerstone (2026-05-07):
+    live "/coaching/:patient_id",  CoachingLive,      :index
+    # System description (English) — single source of truth (2026-05-07):
+    live "/about",                 AboutLive,         :index
+    # Public observability dashboard (2026-05-07):
+    live "/status",                HealthLive,        :index
+    # Operator control panel (2026-05-07):
+    live "/admin",                 AdminLive,         :index
   end
 end

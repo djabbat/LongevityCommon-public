@@ -223,6 +223,37 @@ def distill_candidates() -> list[Candidate]:
                 rationale=f"theme {theme} clustered across {len(ws)} workers",
             ))
 
+    # 3. Phase E (HW1, 2026-05-06) — patient_followup_drift signal.
+    # Workers report `patient_comms.overdue_count` per contribution
+    # (anonymized — total count only, no patient_id). When average
+    # overdue count ≥ 3 across N workers → drift candidate.
+    drift_by_worker: dict[str, int] = {}
+    for c in contribs:
+        cnt = c.payload.get("patient_comms", {}).get("overdue_count")
+        if isinstance(cnt, int) and cnt > 0:
+            drift_by_worker[c.worker_id] = cnt
+    if len(drift_by_worker) >= _MIN_WORKERS_FOR_PATTERN:
+        avg = sum(drift_by_worker.values()) / len(drift_by_worker)
+        if avg >= 3.0:
+            cands.append(Candidate(
+                kind="patient_followup_drift",
+                body={
+                    "current_avg_overdue": round(avg, 2),
+                    "rationale": (
+                        "Cross-worker patient follow-up backlog: "
+                        f"avg {avg:.1f} overdue per node. "
+                        "Suggests workflow gap (no scheduled review of "
+                        "patient_comms.overdue) or insufficient capacity."
+                    ),
+                },
+                source_workers=set(drift_by_worker.keys()),
+                rationale=(
+                    f"avg {avg:.1f} overdue patient follow-ups across "
+                    f"{len(drift_by_worker)} workers — process improvement "
+                    "candidate"
+                ),
+            ))
+
     return cands
 
 

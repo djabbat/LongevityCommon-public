@@ -173,7 +173,7 @@ mod tests {
         v.insert("WBC".to_string(), 1.5);
         v.insert("HGB".to_string(), 70.0);
         v.insert("PLT".to_string(), 30.0);
-        let input = CbcInput { values: v, sex: "male".into(), age: ">=18".into() };
+        let input = CbcInput { values: v, sex: "male".into(), age: ">=18".into(), patient_activation_level: 0, patient_codesigned: false };
         let d = digitize(&input, &r);
         assert_eq!(d.digitized.len(), 3);
         assert!(d.digitized.iter().all(|x| matches!(x.zone, Zone::L1 | Zone::L2)));
@@ -187,7 +187,7 @@ mod tests {
         v.insert("WBC".to_string(), 1.5);
         v.insert("HGB".to_string(), 70.0);
         v.insert("PLT".to_string(), 30.0);
-        let input = CbcInput { values: v, sex:"male".into(), age:">=18".into() };
+        let input = CbcInput { values: v, sex:"male".into(), age:">=18".into(), patient_activation_level: 0, patient_codesigned: false };
         let d = digitize(&input, &r);
         let m = match_patterns(&d.digitized, &pf.patterns);
         assert_eq!(m.len(), 1);
@@ -203,7 +203,7 @@ mod tests {
         v.insert("WBC".to_string(), 7.0);
         v.insert("HGB".to_string(), 150.0);
         v.insert("PLT".to_string(), 250.0);
-        let input = CbcInput { values: v, sex:"male".into(), age:">=18".into() };
+        let input = CbcInput { values: v, sex:"male".into(), age:">=18".into(), patient_activation_level: 0, patient_codesigned: false };
         let d = digitize(&input, &r);
         let m = match_patterns(&d.digitized, &pf.patterns);
         assert!(m.is_empty());

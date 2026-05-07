@@ -1,21 +1,24 @@
-"""AI/ai/regression_detector.py — RD1 (2026-05-04).
+"""AI/ai/regression_detector.py — thin Python shim over the
+`aim-ai-regression` Rust binary (Phase 9 Tier 2 #5, 2026-05-07).
 
-Compare the two most recent self-diagnostic runs in the ledger and
-flag NEW critical findings: file:line refs that appear in the latest
-report but did NOT appear in the previous one.
+Compare the two most recent self-diagnostic runs and flag NEW
+critical findings. All logic + finding-set diff in Rust crate
+`rust-core/crates/aim-ai-regression`.
 
-Use case: each morning the cron fires `run_self_diagnostic`, the report
-is logged to the ledger, and `aim diag --regress` shows whether the
-last 24h introduced new high-severity issues.
-
-Public API:
+Public API (preserved):
+    Regression dataclass + grade_improved / grade_worsened /
+                          regressed / improved properties
     detect() -> Regression
     summary() -> str
+
+Env: AI_DIAGNOSTIC_DB.
 """
 from __future__ import annotations
 
 import dataclasses
+import json
 import logging
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -38,7 +41,6 @@ class Regression:
 
     @property
     def grade_improved(self) -> bool:
-        """A→F: lower letter is better. None values → no signal."""
         if self.prev_grade is None or self.curr_grade is None:
             return False
         return self.curr_grade < self.prev_grade
@@ -51,12 +53,6 @@ class Regression:
 
     @property
     def regressed(self) -> bool:
-        """True if NEW critical issues appeared OR crit count went up.
-
-        BUT — if the overall grade IMPROVED (e.g. D → C), don't flag
-        regression even when new refs appear: a more thorough model
-        finds more issues, that's quality going up, not down.
-        """
         if self.grade_improved:
             return False
         if self.new_findings:
@@ -77,58 +73,59 @@ class Regression:
         )
 
 
-def _findings_for(report_path: Optional[str]) -> set[str]:
-    if not report_path:
-        return set()
-    p = Path(report_path)
-    if not p.exists():
-        return set()
-    try:
-        text = p.read_text(encoding="utf-8", errors="replace")
-    except OSError:
-        return set()
-    from AI.ai.meta_evaluator import parse_report
-    return parse_report(text).findings
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-regression"
+    )
+
+
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-regression binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-regression {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
 def detect() -> Regression:
-    """Pull the last two ledger rows; diff their finding sets."""
-    from AI.ai.diagnostic_ledger import recent
-    rows = recent(n=2)
-    if len(rows) < 2:
-        return Regression(
-            have_baseline=False,
-            prev_ts=rows[0].ts if rows else None,
-            curr_ts=None,
-            prev_grade=None, curr_grade=None,
-            prev_crit=None, curr_crit=None,
-            prev_findings=set(), curr_findings=set(),
-            new_findings=set(), fixed_findings=set(),
-        )
-    prev, curr = rows[0], rows[1]
-    pf = _findings_for(prev.report_path)
-    cf = _findings_for(curr.report_path)
-    new_set = cf - pf
-    fixed_set = pf - cf
-    # Filter out any findings the user has explicitly suppressed.
+    """Pull the last two ledger rows; diff their finding sets via Rust."""
+    out = _run(["detect"]).strip()
+    j = json.loads(out)
+    new_set = set(j.get("new_findings") or [])
+    # Apply Python-side suppression filter (kept here because the
+    # suppressions module is still pure Python until its own port).
     try:
         from AI.ai.finding_suppressions import filter_findings
         new_set = set(filter_findings(new_set))
-        # Note: fixed_findings stay — they're informational, not alerting.
     except Exception as e:
         log.debug("suppression filter skipped: %s", e)
     return Regression(
-        have_baseline=True,
-        prev_ts=prev.ts, curr_ts=curr.ts,
-        prev_grade=prev.grade, curr_grade=curr.grade,
-        prev_crit=prev.crit, curr_crit=curr.crit,
-        prev_findings=pf, curr_findings=cf,
+        have_baseline=bool(j["have_baseline"]),
+        prev_ts=j.get("prev_ts"),
+        curr_ts=j.get("curr_ts"),
+        prev_grade=j.get("prev_grade"),
+        curr_grade=j.get("curr_grade"),
+        prev_crit=j.get("prev_crit"),
+        curr_crit=j.get("curr_crit"),
+        prev_findings=set(j.get("prev_findings") or []),
+        curr_findings=set(j.get("curr_findings") or []),
         new_findings=new_set,
-        fixed_findings=fixed_set,
+        fixed_findings=set(j.get("fixed_findings") or []),
     )
 
 
 def summary() -> str:
+    """Original Python format preserved (more verbose than Rust binary's
+    plain `summary` subcommand) — supports suppression-filtered findings."""
     r = detect()
     if not r.have_baseline:
         return ("(no baseline — need at least 2 diagnostic runs in the "

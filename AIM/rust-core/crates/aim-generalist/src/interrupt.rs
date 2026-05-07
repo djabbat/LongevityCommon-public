@@ -31,3 +31,35 @@ impl InterruptRegistry {
         self.flags.remove(run_id);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::Ordering;
+
+    #[test]
+    fn registry_register_and_signal() {
+        let reg = InterruptRegistry::new();
+        let flag = reg.register("run-1".to_string());
+        assert!(!flag.load(Ordering::SeqCst));
+        reg.signal("run-1");
+        assert!(flag.load(Ordering::SeqCst));
+    }
+
+    #[test]
+    fn registry_signal_unknown_run_returns_false() {
+        let reg = InterruptRegistry::new();
+        assert!(!reg.signal("does-not-exist"));
+    }
+
+    #[test]
+    fn registry_release_drops_flag() {
+        let reg = InterruptRegistry::new();
+        let _f = reg.register("run-x".to_string());
+        reg.release("run-x");
+        assert!(!reg.signal("run-x"));
+        // Re-register should give fresh, un-set flag
+        let f2 = reg.register("run-x".to_string());
+        assert!(!f2.load(Ordering::SeqCst));
+    }
+}

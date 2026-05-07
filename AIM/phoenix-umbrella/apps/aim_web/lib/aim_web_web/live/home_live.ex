@@ -48,6 +48,8 @@ defmodule AimWeb.HomeLive do
           <a href="/cases"><%= t("nav.cases", @locale) %></a>
           <a href="/drugs"><%= t("home.menu.drugs", @locale) %></a>
           <a href="/settings"><%= t("home.menu.settings", @locale) %></a>
+          <a href="/about">About</a>
+          <a href="/status">Status</a>
         </nav>
         <form method="get" class="lang-switcher">
           <select name="locale" onchange="this.form.submit()" aria-label="Language">
@@ -126,6 +128,47 @@ defmodule AimWeb.HomeLive do
           <div class="role">⚙️ Account</div>
           <h3><%= t("home.menu.settings", @locale) %><span class="arrow">→</span></h3>
           <p><%= t("settings.keys", @locale) %></p>
+        </a>
+      </div>
+
+      <h2 class="section-title">Patient as a Project (cornerstone)</h2>
+      <p class="section-lead">
+        Level-3 developmental engagement: PAM-13 trajectory, co-design log,
+        4-zone disagreement classifier, motivational-interviewing coach.
+      </p>
+
+      <div class="grid">
+        <a href="/pam" class="card link">
+          <div class="role">📊 Activation</div>
+          <h3>PAM-13 cohort<span class="arrow">→</span></h3>
+          <p>Patient Activation Measure trajectory across the cohort
+          (MCID 5.4, MDC 7.2). Per-patient drill-down at /pam/:id.</p>
+          <div class="badges">
+            <span class="badge purple">aim-pam</span>
+          </div>
+        </a>
+        <a href="/activation" class="card link">
+          <div class="role">🎯 Funnel</div>
+          <h3>Activation funnel<span class="arrow">→</span></h3>
+          <p>L1→L4 distribution across all patients with PAM-13 history.</p>
+        </a>
+        <a href="/disagreement" class="card link">
+          <div class="role">⚖️ HCI</div>
+          <h3>Disagreement zones<span class="arrow">→</span></h3>
+          <p>Blumenthal-Lee 4-zone classifier — interactive explorer for
+          AI/clinician confidence pairs.</p>
+          <div class="badges">
+            <span class="badge purple">aim-disagreement</span>
+          </div>
+        </a>
+        <a href="/coaching/example" class="card link">
+          <div class="role">🌱 Coaching</div>
+          <h3>Motivational interviewing<span class="arrow">→</span></h3>
+          <p>OARS classifier + next-move picker for clinician-facing
+          patient coaching turns. /coaching/&lt;patient_id&gt;.</p>
+          <div class="badges">
+            <span class="badge purple">aim-coach</span>
+          </div>
         </a>
       </div>
     </main>

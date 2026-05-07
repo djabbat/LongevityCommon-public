@@ -168,7 +168,26 @@ class IntakeAgent:
         if raw_text.startswith("["):
             return raw_text  # ошибка извлечения
 
-        return self.analyze_labs(raw_text, lang=lang, session_id=session_id)
+        result = self.analyze_labs(raw_text, lang=lang, session_id=session_id)
+
+        # Fire HOOK_INTAKE_PDF (HW1, 2026-05-06). No handler in Day 1
+        # (Q8.A — plumbing only); Phase D patient_comms / Phoenix
+        # patient_live.ex will subscribe for real-time inbox view.
+        try:
+            from agents.hooks import fire, HOOK_INTAKE_PDF
+            fire(HOOK_INTAKE_PDF, {
+                "stage": "processed",
+                "path": str(path),
+                "filename": path.name,
+                "ext": path.suffix.lower(),
+                "lang": lang,
+                "text_chars": len(raw_text),
+                "session_id": session_id,
+            })
+        except Exception as e:
+            log.debug("HOOK_INTAKE_PDF fire failed: %s", e)
+
+        return result
 
     def analyze_labs(
         self,

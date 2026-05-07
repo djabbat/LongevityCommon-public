@@ -25,3 +25,28 @@ pub fn extract_json(s: &str) -> Option<Value> {
     let (st, en) = best?;
     serde_json::from_str(&s[st..en]).ok()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn extract_json_finds_inline_object() {
+        let s = "blah blah {\"diagnosis\":\"flu\",\"confidence\":0.8} trailing";
+        let v = extract_json(s).expect("must parse");
+        assert_eq!(v["diagnosis"], "flu");
+    }
+
+    #[test]
+    fn extract_json_returns_none_on_no_object() {
+        assert!(extract_json("nothing here").is_none());
+    }
+
+    #[test]
+    fn extract_json_picks_longest_balanced() {
+        let s = "{\"a\":1} then {\"b\":{\"nested\":42}, \"c\":[1,2,3]}";
+        let v = extract_json(s).expect("must parse");
+        // Longer span wins.
+        assert!(v.get("b").is_some());
+    }
+}

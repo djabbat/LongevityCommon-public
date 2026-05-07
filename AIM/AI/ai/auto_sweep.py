@@ -1,27 +1,25 @@
-"""AI/ai/auto_sweep.py — AS1 (2026-05-04).
+"""AI/ai/auto_sweep.py — thin Python shim over the
+`aim-ai-sweep` Rust binary (Phase 9 Tier 4 #23, 2026-05-07).
 
-A maintenance routine that runs the side-effect-light parts of the
-closed loop on a schedule (cron / systemd):
+Periodic maintenance sweep: fingerprint prompt → validate cases →
+archive stale cases → prompt impact → prune phantom ledger rows →
+prune expired suppressions → snapshot health score.
 
-  1. Fingerprint the current SELF_DIAGNOSTIC_PROMPT.md (PV1).
-  2. Validate every yaml case in AIM_EVAL_CASES_DIR (CV1).
-  3. Archive stale FE1-generated regression cases (CA1).
-  4. Compute prompt-impact deltas (PI1).
-  5. Render a compact maintenance report.
+The Rust crate `aim-ai-auto-sweep` owns the orchestration; Python
+keeps the same `SweepResult` dataclass shape.
 
-Doctor wiring (DR2) and morning brief (MB1) are NOT called here —
-those are read-only and meant for human ad-hoc inspection. Sweep is
-the *write-back* maintenance complement.
-
-Public API:
+Public API (preserved):
+    SweepResult dataclass (with `all_clean` property)
     sweep(*, dry_run=False) -> SweepResult
     summary(*, dry_run=False) -> str
 """
 from __future__ import annotations
 
 import dataclasses
-import datetime as dt
+import json
 import logging
+import subprocess
+from pathlib import Path
 from typing import Optional
 
 log = logging.getLogger("ai.auto_sweep")
@@ -32,7 +30,7 @@ class SweepResult:
     started_at: str
     finished_at: str
     prompt_recorded: bool
-    prompt_changed: Optional[bool]      # None if first-time
+    prompt_changed: Optional[bool]
     n_cases_validated: int
     n_cases_invalid: int
     n_archived_candidates: int
@@ -43,146 +41,54 @@ class SweepResult:
 
     @property
     def all_clean(self) -> bool:
-        return (self.n_cases_invalid == 0)
+        return self.n_cases_invalid == 0
 
 
-def _now() -> str:
-    return dt.datetime.now().isoformat(timespec="seconds")
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-sweep"
+    )
+
+
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-sweep binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-sweep failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
 def sweep(*, dry_run: bool = False) -> SweepResult:
-    started = _now()
-    notes: list[str] = []
-
-    # Step 1: fingerprint prompt
-    prompt_recorded = False
-    prompt_changed: Optional[bool] = None
-    try:
-        from AI.ai.prompt_versions import (
-            fingerprint, history, record_current,
-        )
-        existing = history()
-        cur_fp = fingerprint()
-        if not existing:
-            prompt_changed = None
-        else:
-            prompt_changed = (cur_fp.sha256 != existing[-1].sha256)
-        if not dry_run:
-            record_current()
-            prompt_recorded = True
-    except FileNotFoundError:
-        notes.append("prompt file missing")
-    except Exception as e:
-        notes.append(f"prompt step failed: {e}")
-
-    # Step 2: validate cases
-    n_val = 0
-    n_inv = 0
-    try:
-        from AI.ai.case_validator import validate_dir
-        rep = validate_dir()
-        n_val = rep.n_cases
-        n_inv = rep.n_failed
-        if n_inv:
-            for s in rep.statuses:
-                if not s.ok:
-                    notes.append(f"invalid case: {s.path.name} "
-                                  f"({len(s.issues)} issue(s))")
-    except Exception as e:
-        notes.append(f"case validator failed: {e}")
-
-    # Step 3: archive stale cases
-    n_cands = 0
-    n_moved = 0
-    try:
-        from AI.ai.case_archiver import archive
-        res = archive(dry_run=dry_run)
-        n_cands = res.n_candidates
-        n_moved = res.n_moved
-    except Exception as e:
-        notes.append(f"archive step failed: {e}")
-
-    # Step 4: prompt impact (read-only)
-    n_revs = 0
-    try:
-        from AI.ai.prompt_impact import impact_per_revision
-        n_revs = len(impact_per_revision())
-    except Exception as e:
-        notes.append(f"impact step failed: {e}")
-
-    # Step 5: prune phantom ledger rows (test-fixture leftovers).
-    # Done BEFORE score snapshot so the score reflects post-cleanup state.
-    n_phantom = 0
-    try:
-        from AI.ai.diagnostic_ledger import prune_phantom
-        res = prune_phantom(dry_run=dry_run)
-        n_phantom = res["would_remove"] if dry_run else res["removed"]
-    except Exception as e:
-        notes.append(f"prune step failed: {e}")
-
-    # Step 6: prune expired finding-suppressions
-    if not dry_run:
-        try:
-            from AI.ai.finding_suppressions import prune_expired
-            n_exp = prune_expired()
-            if n_exp:
-                notes.append(f"removed {n_exp} expired suppression(s)")
-        except Exception as e:
-            notes.append(f"suppression prune failed: {e}")
-
-    # Step 7: snapshot the health score (post-cleanup) so the daily
-    # trend reflects production state, not test pollution.
-    if not dry_run:
-        try:
-            from AI.ai.health_score import record as record_score
-            record_score()
-        except Exception as e:
-            notes.append(f"score snapshot failed: {e}")
-
+    args = ["--json"]
+    if dry_run:
+        args.append("--dry-run")
+    j = json.loads(_run(args).strip())
     return SweepResult(
-        started_at=started,
-        finished_at=_now(),
-        prompt_recorded=prompt_recorded,
-        prompt_changed=prompt_changed,
-        n_cases_validated=n_val,
-        n_cases_invalid=n_inv,
-        n_archived_candidates=n_cands,
-        n_archived_moved=n_moved,
-        n_prompt_revisions=n_revs,
-        n_phantom_removed=n_phantom,
-        notes=notes,
+        started_at=str(j.get("started_at", "")),
+        finished_at=str(j.get("finished_at", "")),
+        prompt_recorded=bool(j.get("prompt_recorded", False)),
+        prompt_changed=j.get("prompt_changed"),
+        n_cases_validated=int(j.get("n_cases_validated", 0)),
+        n_cases_invalid=int(j.get("n_cases_invalid", 0)),
+        n_archived_candidates=int(j.get("n_archived_candidates", 0)),
+        n_archived_moved=int(j.get("n_archived_moved", 0)),
+        n_prompt_revisions=int(j.get("n_prompt_revisions", 0)),
+        n_phantom_removed=int(j.get("n_phantom_removed", 0)),
+        notes=list(j.get("notes", [])),
     )
 
 
 def summary(*, dry_run: bool = False) -> str:
-    r = sweep(dry_run=dry_run)
-    parts = [f"🧹 Auto-sweep ({'dry-run' if dry_run else 'live'}) — "
-             f"{r.started_at}"]
-    if r.prompt_changed is None and r.prompt_recorded:
-        parts.append("  • prompt fingerprint recorded for the first time")
-    elif r.prompt_changed is True and r.prompt_recorded:
-        parts.append("  • prompt CHANGED — new revision logged")
-    elif r.prompt_changed is False:
-        parts.append("  • prompt unchanged")
-    parts.append(f"  • cases validated: {r.n_cases_validated} "
-                  f"({r.n_cases_invalid} invalid)")
-    if r.n_archived_candidates:
-        if dry_run:
-            parts.append(f"  • would archive: {r.n_archived_candidates} "
-                          "stale regression case(s)")
-        else:
-            parts.append(f"  • archived: {r.n_archived_moved} stale "
-                          "regression case(s)")
-    else:
-        parts.append("  • no cases ready for archive")
-    if r.n_phantom_removed:
-        verb = "would remove" if dry_run else "removed"
-        parts.append(f"  • {verb} {r.n_phantom_removed} phantom "
-                      "ledger row(s)")
-    parts.append(f"  • prompt revisions tracked: {r.n_prompt_revisions}")
-    if r.notes:
-        parts.append("  notes:")
-        for n in r.notes:
-            parts.append(f"    - {n}")
-    parts.append(f"  finished {r.finished_at}")
-    return "\n".join(parts)
+    args: list[str] = []
+    if dry_run:
+        args.append("--dry-run")
+    return _run(args).rstrip("\n")

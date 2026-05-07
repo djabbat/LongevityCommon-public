@@ -1,20 +1,24 @@
-"""AI/ai/case_validator.py — CV1 (2026-05-04).
+"""AI/ai/case_validator.py — thin Python shim over the
+`aim-ai-cases` Rust binary (Phase 9 Tier 3 #15, 2026-05-07).
 
-Validate every yaml case in AIM_EVAL_CASES_DIR — load with PyYAML,
-verify required keys, sanity-check rubric shapes. Catches a malformed
-auto-generated case (e.g. from FE1) before the eval harness trips on
-it during a run.
+Validate every yaml case in AIM_EVAL_CASES_DIR. The Rust crate owns
+schema rules + YAML parsing; Python keeps the same dataclass-shaped
+public API.
 
-Public API:
-    validate_dir(path=None) -> Report
+Public API (preserved):
+    CaseStatus / Report dataclasses (Report.all_ok property)
     validate_one(path) -> CaseStatus
-    summary() -> str
+    validate_dir(path=None) -> Report
+    summary(path=None) -> str
+
+Env: AIM_EVAL_CASES_DIR.
 """
 from __future__ import annotations
 
 import dataclasses
+import json
 import logging
-import os
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -41,120 +45,58 @@ class Report:
         return self.n_failed == 0
 
 
-def _cases_dir(dest: Optional[Path] = None) -> Path:
-    if dest is not None:
-        return Path(dest)
-    env = os.environ.get("AIM_EVAL_CASES_DIR")
-    if env:
-        return Path(env)
-    return Path.home() / ".cache" / "aim" / "eval_cases"
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-cases"
+    )
 
 
-_REQUIRED_KEYS = ("id", "task", "rubrics")
-_KNOWN_RUBRICS = {
-    "min_length", "max_length", "contains_all", "contains_any",
-    "forbid_any", "regex_must_match", "regex_must_not_match",
-    "json_keys",
-}
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-cases binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-cases {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
-def _validate_doc(doc: object) -> list[str]:
-    issues: list[str] = []
-    if not isinstance(doc, dict):
-        return [f"top-level must be a mapping, got {type(doc).__name__}"]
-    for k in _REQUIRED_KEYS:
-        if k not in doc:
-            issues.append(f"missing required key: {k!r}")
-    cid = doc.get("id")
-    if cid is not None and not isinstance(cid, str):
-        issues.append("`id` must be a string")
-    elif isinstance(cid, str) and not cid.strip():
-        issues.append("`id` is empty")
-    task = doc.get("task")
-    if task is not None and not isinstance(task, str):
-        issues.append("`task` must be a string")
-    elif isinstance(task, str) and not task.strip():
-        issues.append("`task` is empty")
-    rubrics = doc.get("rubrics")
-    if rubrics is not None and not isinstance(rubrics, dict):
-        issues.append("`rubrics` must be a mapping")
-    elif isinstance(rubrics, dict):
-        if not rubrics:
-            issues.append("`rubrics` is empty — every case needs at least one")
-        unknown = set(rubrics.keys()) - _KNOWN_RUBRICS
-        if unknown:
-            issues.append(f"unknown rubric keys: {sorted(unknown)}")
-        for k in ("contains_all", "contains_any", "forbid_any"):
-            if k in rubrics and not isinstance(rubrics[k], list):
-                issues.append(f"rubric {k!r} must be a list")
-        for k in ("min_length", "max_length"):
-            if k in rubrics and not isinstance(rubrics[k], int):
-                issues.append(f"rubric {k!r} must be an int")
-        if ("min_length" in rubrics and "max_length" in rubrics
-                and isinstance(rubrics["min_length"], int)
-                and isinstance(rubrics["max_length"], int)
-                and rubrics["min_length"] > rubrics["max_length"]):
-            issues.append("min_length > max_length")
-    tags = doc.get("tags")
-    if tags is not None and not isinstance(tags, list):
-        issues.append("`tags` must be a list")
-    return issues
+def _status_from_json(j: dict) -> CaseStatus:
+    return CaseStatus(
+        path=Path(j["path"]),
+        ok=bool(j.get("ok")),
+        case_id=j.get("case_id"),
+        issues=list(j.get("issues", [])),
+    )
 
 
 def validate_one(path: Path) -> CaseStatus:
-    p = Path(path)
-    try:
-        import yaml
-    except ImportError:
-        return CaseStatus(path=p, ok=False, case_id=None,
-                           issues=["PyYAML not installed"])
-    if not p.exists():
-        return CaseStatus(path=p, ok=False, case_id=None,
-                           issues=["file does not exist"])
-    try:
-        text = p.read_text(encoding="utf-8")
-    except OSError as e:
-        return CaseStatus(path=p, ok=False, case_id=None,
-                           issues=[f"read failed: {e}"])
-    try:
-        doc = yaml.safe_load(text)
-    except yaml.YAMLError as e:
-        return CaseStatus(path=p, ok=False, case_id=None,
-                           issues=[f"yaml parse: {e}"])
-    issues = _validate_doc(doc)
-    cid = doc.get("id") if isinstance(doc, dict) else None
-    return CaseStatus(path=p, ok=not issues, case_id=cid, issues=issues)
+    out = _run(["validate-one", str(Path(path))])
+    return _status_from_json(json.loads(out.strip()))
 
 
 def validate_dir(path: Optional[Path] = None) -> Report:
-    target = _cases_dir(path)
-    statuses: list[CaseStatus] = []
-    if not target.exists():
-        return Report(n_cases=0, n_ok=0, n_failed=0, statuses=[])
-    for p in sorted(target.glob("*.yaml")):
-        statuses.append(validate_one(p))
-    n_ok = sum(1 for s in statuses if s.ok)
+    args = ["validate-dir"]
+    if path is not None:
+        args += ["--dir", str(Path(path))]
+    j = json.loads(_run(args).strip())
     return Report(
-        n_cases=len(statuses),
-        n_ok=n_ok,
-        n_failed=len(statuses) - n_ok,
-        statuses=statuses,
+        n_cases=int(j.get("n_cases", 0)),
+        n_ok=int(j.get("n_ok", 0)),
+        n_failed=int(j.get("n_failed", 0)),
+        statuses=[_status_from_json(s) for s in j.get("statuses", [])],
     )
 
 
 def summary(path: Optional[Path] = None) -> str:
-    r = validate_dir(path)
-    if r.n_cases == 0:
-        return "(no eval cases found)"
-    head = (f"📋 Case validator — {r.n_cases} cases "
-            f"({r.n_ok} ok / {r.n_failed} failed)")
-    if r.all_ok:
-        return head + "\n  ✅ all cases pass schema check"
-    parts = [head]
-    for s in r.statuses:
-        if s.ok:
-            continue
-        parts.append(f"  ❌ {s.path.name}  ({s.case_id or '?'})")
-        for i in s.issues:
-            parts.append(f"      • {i}")
-    return "\n".join(parts)
+    args = ["summary"]
+    if path is not None:
+        args += ["--dir", str(Path(path))]
+    return _run(args).rstrip("\n")

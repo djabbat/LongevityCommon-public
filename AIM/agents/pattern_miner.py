@@ -253,6 +253,83 @@ def _mine_error_type_frequency(events: list[dict],
 # ── orchestration ─────────────────────────────────────────────────
 
 
+def _mine_stakeholder_silence(min_days: int = 14,
+                                threshold: int = 3) -> list[Finding]:
+    """Phase E (HW1, 2026-05-06) — project-side signal, not session-derived.
+
+    Reads the existing stakeholder_tracker SQLite (Co-PI + external
+    contacts) and emits a finding when ≥`threshold` stakeholders are
+    silent for ≥`min_days`. Bridge to project-level signals — the
+    miner is reused, not re-implemented.
+    """
+    try:
+        from agents import stakeholder_tracker as st
+    except Exception:
+        return []
+    try:
+        silent = st.silent_for(days=min_days)
+    except Exception as e:
+        log.debug("stakeholder_silence miner failed: %s", e)
+        return []
+    if len(silent) < threshold:
+        return []
+    sample = {
+        "first_silent": silent[0].name,
+        "n_silent": len(silent),
+        "min_days": min_days,
+    }
+    return [Finding(
+        kind="stakeholder_silence_pattern",
+        summary=(f"{len(silent)} stakeholders silent ≥{min_days}d "
+                 f"(top: {', '.join(s.name for s in silent[:3])})"),
+        support=len(silent),
+        sample=sample,
+    )]
+
+
+def _mine_patient_followup_drift(today=None,
+                                   threshold: int = 2) -> list[Finding]:
+    """Phase E (HW1, 2026-05-06) — patient-side signal via aim-patient-comms.
+
+    Calls the Rust binary `aim-patient-comms overdue` (if present) to
+    count overdue follow-ups; emits a finding when ≥`threshold` are
+    overdue. Bridge — Python doesn't re-parse SQLite.
+    """
+    import datetime as _dt
+    import subprocess
+    today = today or _dt.date.today()
+    here = Path(__file__).resolve().parent.parent
+    candidates = [
+        here / "rust-core" / "target" / "release" / "aim-patient-comms",
+        here / "rust-core" / "target" / "debug" / "aim-patient-comms",
+    ]
+    bin_path = next((p for p in candidates if p.exists()), None)
+    if bin_path is None:
+        return []
+    try:
+        out = subprocess.run(
+            [str(bin_path), "overdue", today.isoformat()],
+            capture_output=True, text=True, timeout=5, check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return []
+    if out.returncode != 0:
+        return []
+    body = (out.stdout or "").strip()
+    if not body:
+        return []
+    lines = [ln for ln in body.splitlines() if ln.strip()]
+    if len(lines) < threshold:
+        return []
+    return [Finding(
+        kind="patient_followup_drift",
+        summary=(f"{len(lines)} overdue patient follow-ups "
+                 f"(top: {lines[0][:80]})"),
+        support=len(lines),
+        sample={"lines": lines[:5]},
+    )]
+
+
 def mine(window_days: int = 7,
          events: Optional[list[dict]] = None) -> list[Finding]:
     """Run every miner and return findings sorted by support desc."""
@@ -264,6 +341,9 @@ def mine(window_days: int = 7,
     findings += _mine_redundant_memory_queries(events)
     findings += _mine_sequential_pairs(events)
     findings += _mine_error_type_frequency(events)
+    # Phase E (HW1, 2026-05-06) — project-side signals, not session-derived.
+    findings += _mine_stakeholder_silence()
+    findings += _mine_patient_followup_drift()
     findings.sort(key=lambda f: f.support, reverse=True)
     return findings
 

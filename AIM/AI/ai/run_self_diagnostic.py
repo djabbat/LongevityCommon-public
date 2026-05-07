@@ -1,28 +1,29 @@
-"""AI/ai/run_self_diagnostic.py — actually RUN the diagnostic (DESK1+, 2026-05-03).
+"""AI/ai/run_self_diagnostic.py — thin Python shim over the
+`aim-ai-diag` Rust binary (Phase 9 Tier 3 #13, 2026-05-07).
 
-Where `self_diagnostic.py` only emits the prompt for a human to paste,
-this module actually:
+The Rust crate `aim-ai-runner` owns the full pipeline: safety gate,
+prompt build, DeepSeek POST (with deepseek-chat fallback), compliance
+retry, save, ledger record, prompt fingerprint. Python keeps the
+public `run()` API plus `project_root()`, `ai_root()`, `_api_key()`
+helpers (consumed by `AI.ai.doctor` and `AI.ai.finding_validator`).
 
-  1. Builds the 9-phase prompt + ground-truth inventory.
-  2. POSTs it to DeepSeek-reasoner (or DeepSeek-V4-pro fallback).
-  3. Saves the model's full audit report to
-     `AI/artifacts/self_diag_<date>.md`.
-  4. Returns the path to the saved report.
+Public API (preserved):
+    project_root() -> Path
+    ai_root() -> Path
+    _api_key() -> str | None
+    run(model="deepseek-reasoner", *, save=True, verbose=True,
+        compliance_retry=True, min_compliance=0.5,
+        skip_safety_gate=False) -> Path
 
-The icon launcher should call this so that a double-click *runs* the
-audit, not just opens the prompt for human pasting.
-
-Public API:
-    run(model="deepseek-reasoner", *, save=True) -> Path
+Env: DEEPSEEK_API_KEY (or ~/.aim_env), AI_DIAGNOSTIC_DB.
 """
 from __future__ import annotations
 
 import datetime as dt
-import json
 import logging
 import os
+import subprocess
 import sys
-import time
 from pathlib import Path
 from typing import Optional
 
@@ -54,83 +55,13 @@ def _api_key() -> Optional[str]:
     return None
 
 
-def _post_deepseek(prompt: str, model: str,
-                   *, timeout: int = 600) -> str:
-    """Single-shot DeepSeek call. Raises RuntimeError on failure."""
-    key = _api_key()
-    if not key:
-        raise RuntimeError("DEEPSEEK_API_KEY not found in env or ~/.aim_env")
-    try:
-        import httpx
-    except ImportError as e:
-        raise RuntimeError(f"httpx missing: {e}")
-    body = {
-        "model": model,
-        "messages": [
-            {"role": "system",
-             "content": ("You are an adversarial code auditor. Find defects, "
-                         "do not confirm health. Every finding must reference "
-                         "path:line. Fabrications fail L_VERIFIABILITY. "
-                         "Return one markdown report with all 9 phases.")},
-            {"role": "user", "content": prompt},
-        ],
-        "temperature": 0.2,
-        "max_tokens": 16000,
-    }
-    headers = {"Authorization": f"Bearer {key}",
-               "Content-Type": "application/json"}
-    url = "https://api.deepseek.com/v1/chat/completions"
-    with httpx.Client(timeout=timeout) as cli:
-        r = cli.post(url, json=body, headers=headers)
-        r.raise_for_status()
-        data = r.json()
-
-    # Record the call to cost_monitor (if available) so daily/monthly
-    # budget alerts catch self-diagnostic spending.
-    try:
-        usage = data.get("usage", {})
-        in_tok = int(usage.get("prompt_tokens", 0))
-        out_tok = int(usage.get("completion_tokens", 0))
-        if in_tok or out_tok:
-            from agents import cost_monitor
-            cost_monitor.record(
-                model=model,
-                input_tokens=in_tok,
-                output_tokens=out_tok,
-                provider="deepseek",
-                task_id="ai.self_diagnostic",
-            )
-    except Exception as e:
-        log.debug("cost_monitor.record skipped: %s", e)
-
-    return data["choices"][0]["message"]["content"]
+def _binary_path() -> Path:
+    return project_root() / "rust-core" / "target" / "release" / "aim-ai-diag"
 
 
 def _output_path(today: Optional[dt.date] = None) -> Path:
     today = today or dt.date.today()
-    out = ai_root() / "artifacts" / f"self_diag_{today.isoformat()}.md"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    return out
-
-
-_COMPLIANCE_RETRY_SUFFIX = (
-    "\n\n---\n\n"
-    "**CRITICAL — REPEATED INSTRUCTION:** Your previous response had "
-    "{prev:.0%} line-compliance ({n_with}/{n_total} findings carried a "
-    "`:line` ref). The diagnostic spec REQUIRES `path:line` (e.g. "
-    "`AI/ai/distillation_tracker.py:42`) on every finding. Re-emit the "
-    "ENTIRE 9-phase report with at least 80% line compliance. Findings "
-    "without `:line` will be discarded post-hoc."
-)
-
-
-def _compliance_of(report: str) -> tuple[float, int, int]:
-    from AI.ai.meta_evaluator import parse_report
-    p = parse_report(report)
-    n_total = len(p.findings)
-    n_with = sum(1 for r in p.findings
-                  if ":" in r and r.rsplit(":", 1)[-1].isdigit())
-    return (p.line_compliance, n_with, n_total)
+    return ai_root() / "artifacts" / f"self_diag_{today.isoformat()}.md"
 
 
 def run(model: str = "deepseek-reasoner",
@@ -140,113 +71,42 @@ def run(model: str = "deepseek-reasoner",
         compliance_retry: bool = True,
         min_compliance: float = 0.5,
         skip_safety_gate: bool = False) -> Path:
-    """Build prompt, send to DeepSeek, save the report.
+    """Build prompt, send to DeepSeek, save the report. Delegates to
+    the Rust `aim-ai-diag` binary."""
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-diag binary not built at {bin_path}"
+        )
+    args = [str(bin_path), "--model", model]
+    if not save:
+        args.append("--no-save")
+    if skip_safety_gate:
+        args.append("--force")
+    if not compliance_retry:
+        args.append("--no-retry")
+    if not verbose:
+        args.append("--quiet")
+    # The binary uses its own min_compliance default (0.5). If the
+    # caller wants a different threshold, propagate via env (the Rust
+    # runner reads RunOpts.min_compliance from defaults; for now we
+    # only support the default — matches existing call sites).
+    if abs(min_compliance - 0.5) > 1e-6:
+        log.debug("min_compliance override (%s) ignored — Rust runner uses default 0.5",
+                  min_compliance)
 
-    If `compliance_retry` is true and the first response has <
-    `min_compliance` line-refs with `:line`, append a corrective tail
-    and retry ONCE before saving. Set `compliance_retry=False` to
-    disable (e.g. in tests).
-
-    By default the call is gated by `safety_gate.can_run()` which
-    blocks on cooldown / daily-budget breach. Pass
-    `skip_safety_gate=True` to override (e.g. manual force-run).
-    Raises `RuntimeError` if the gate refuses.
-    """
-    if not skip_safety_gate:
-        try:
-            from AI.ai.safety_gate import can_run
-            v = can_run()
-            if not v.allowed:
-                raise RuntimeError(
-                    "safety gate blocked diagnostic run: "
-                    + "; ".join(v.reasons)
-                )
-        except RuntimeError:
-            raise
-        except Exception as e:
-            log.debug("safety_gate skipped: %s", e)
-    from AI.ai.self_diagnostic import build_prompt
-    prompt = build_prompt()
+    proc = subprocess.run(args, capture_output=True, text=True, check=False)
+    if proc.returncode != 0:
+        msg = proc.stderr.strip() or proc.stdout.strip() or "unknown error"
+        if "safety gate blocked" in msg.lower() or "SafetyBlocked" in msg:
+            raise RuntimeError(f"safety gate blocked diagnostic run: {msg}")
+        raise RuntimeError(f"aim-ai-diag failed: {msg}")
     if verbose:
-        print(f"[run_self_diagnostic] prompt size: {len(prompt)} chars")
-        print(f"[run_self_diagnostic] model: {model}")
-        print(f"[run_self_diagnostic] querying DeepSeek (this may take "
-              "several minutes)...")
-    t0 = time.time()
-    try:
-        report = _post_deepseek(prompt, model)
-    except Exception as e:
-        if model == "deepseek-reasoner":
-            if verbose:
-                print(f"[run_self_diagnostic] reasoner failed ({e}); "
-                      "falling back to deepseek-chat")
-            report = _post_deepseek(prompt, "deepseek-chat")
-        else:
-            raise
-    elapsed = time.time() - t0
-    if verbose:
-        print(f"[run_self_diagnostic] done in {elapsed:.1f}s, "
-              f"report size: {len(report)} chars")
-
-    retry_used = False
-    if compliance_retry:
-        comp, n_with, n_total = _compliance_of(report)
-        if n_total > 0 and comp < min_compliance:
-            if verbose:
-                print(f"[run_self_diagnostic] line_compliance={comp:.0%} "
-                      f"(<{min_compliance:.0%}) — retrying once with "
-                      "corrective suffix")
-            retry_prompt = prompt + _COMPLIANCE_RETRY_SUFFIX.format(
-                prev=comp, n_with=n_with, n_total=n_total)
-            try:
-                retry = _post_deepseek(retry_prompt, model)
-                retry_comp = _compliance_of(retry)[0]
-                if retry_comp > comp:
-                    report = retry
-                    retry_used = True
-                    if verbose:
-                        print(f"[run_self_diagnostic] retry compliance="
-                              f"{retry_comp:.0%}; using retry")
-                elif verbose:
-                    print(f"[run_self_diagnostic] retry compliance="
-                          f"{retry_comp:.0%} did not improve; keeping "
-                          "first response")
-            except Exception as e:
-                if verbose:
-                    print(f"[run_self_diagnostic] retry failed: {e}; "
-                          "keeping first response")
-
-    if save:
-        out = _output_path()
-        out.write_text(report, encoding="utf-8")
-        try:
-            from AI.ai.diagnostic_ledger import record_from_report
-            record_from_report(report, model=model,
-                                retry_used=retry_used,
-                                report_path=str(out))
-        except Exception as e:
-            log.debug("ledger record skipped: %s", e)
-        try:
-            from AI.ai.prompt_versions import record_current
-            record_current()
-        except Exception as e:
-            log.debug("prompt_versions record skipped: %s", e)
-        if verbose:
-            print(f"[run_self_diagnostic] saved → {out}")
-            try:
-                from AI.ai.meta_evaluator import parse_report
-                parsed = parse_report(report)
-                comp_final = parsed.line_compliance
-                print(f"[run_self_diagnostic] grade={parsed.grade} "
-                      f"refs={len(parsed.findings)} "
-                      f"line_compliance={comp_final:.0%}")
-                if comp_final < 0.5 and parsed.findings:
-                    print("[run_self_diagnostic] ⚠ low line compliance — "
-                          "model ignored path:line rule; rerun recommended")
-            except Exception as e:
-                log.debug("compliance check skipped: %s", e)
-        return out
-    return Path("/dev/null")
+        # Mirror the binary's stderr to the parent for cron / interactive logs.
+        sys.stderr.write(proc.stderr)
+    if not save:
+        return Path("/dev/null")
+    return _output_path()
 
 
 def _main() -> int:

@@ -225,6 +225,23 @@ def process_one(file_path: Path, *, dry_run: bool = True) -> Action:
             f"{target.stem}-{dt.datetime.now():%Y%m%d-%H%M%S}{target.suffix}")
     shutil.move(str(file_path), str(target))
     _append_log(target_folder, file_path.name, target.name, cls)
+
+    # Fire HOOK_INTAKE_PDF (HW1, 2026-05-06) с stage="moved" — отдельный
+    # этап от "processed" (intake.process_file). Q9.A: переиспользуем
+    # константу с stage-полем вместо новой HOOK_PATIENT_FILE_MOVED.
+    try:
+        from agents.hooks import fire, HOOK_INTAKE_PDF
+        fire(HOOK_INTAKE_PDF, {
+            "stage": "moved",
+            "path": str(target),
+            "patient_dir": str(target_folder),
+            "patient_id": target_folder.name,
+            "ext": target.suffix.lower(),
+            "dob": cls.dob.isoformat() if cls.dob else None,
+        })
+    except Exception as e:
+        log.debug("HOOK_INTAKE_PDF (stage=moved) fire failed: %s", e)
+
     return Action(file=str(file_path), moved_to=str(target),
                   reason="moved", classification=cls)
 

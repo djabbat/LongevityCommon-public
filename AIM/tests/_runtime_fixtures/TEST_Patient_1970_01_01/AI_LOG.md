@@ -440,3 +440,29 @@
 **Override:** type=soft, reason=prefer data
 
 ---
+
+## 2026-05-06 21:46:13 — triage by test
+
+**Alternatives considered:** 2
+
+-    `empiric_abx` (treatment): U=0.613 (𝒞=0.00, Φ_Ze=0.94, Ethics=0.59) — Амоксициллин 500 мг × 3 дня
+- ⭐ `xray_cbc` (test): U=0.786 (𝒞=0.15, Φ_Ze=0.99, Ethics=0.89) — Рентген грудной клетки + CBC + CRP
+
+**Decision:** `xray_cbc` — Рентген грудной клетки + CBC + CRP
+- 𝓘: 0.26 → 0.16 (expected)
+
+---
+
+## 2026-05-06 21:47:47 — triage by test
+
+**Alternatives considered:** 2
+
+-    `dx_guess` (dx): U=0.731 (𝒞=0.02, Φ_Ze=1.00, Ethics=0.82) — Эмпирический dx
+- ⭐ `cbc` (test): U=0.776 (𝒞=0.10, Φ_Ze=0.99, Ethics=0.89) — CBC only
+
+**Decision:** `cbc` — CBC only
+- 𝓘: 0.36 → 0.16 (expected)
+
+**Override:** type=soft, reason=prefer data
+
+---

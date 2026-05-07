@@ -115,3 +115,43 @@ fn fxhash(s: &str) -> u64 {
     }
     h
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hash_embed_fixed_dimension() {
+        let v = hash_embed("hello world", 256);
+        assert_eq!(v.len(), 256);
+    }
+
+    #[test]
+    fn hash_embed_deterministic() {
+        let a = hash_embed("aim integrative", 128);
+        let b = hash_embed("aim integrative", 128);
+        assert_eq!(a, b);
+    }
+
+    #[test]
+    fn hash_embed_distinct_inputs_distinct_outputs() {
+        let a = hash_embed("alpha", 64);
+        let b = hash_embed("beta", 64);
+        assert_ne!(a, b);
+    }
+
+    #[test]
+    fn fxhash_stability() {
+        // Two calls — same hash.
+        assert_eq!(fxhash("AIM"), fxhash("AIM"));
+        assert_ne!(fxhash("AIM"), fxhash("aim"));
+    }
+
+    #[tokio::test]
+    async fn embed_one_via_hash_backend() {
+        std::env::set_var("AIM_EMBED_PROVIDER", "hash");
+        let e = Embedder::from_env();
+        let v = e.embed_one("hello").await.expect("must succeed");
+        assert!(!v.is_empty());
+    }
+}

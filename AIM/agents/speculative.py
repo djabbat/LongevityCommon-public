@@ -15,7 +15,9 @@ import logging
 import time
 from typing import Optional
 
-from llm import ask, ask_deep
+# Routing rule (MEMORY.md #1, REMINDER.md #6): all LLM calls go through
+# `llm.py`. ask_fast() = Groq tier (with DS-chat fallback if Groq down).
+from llm import ask, ask_deep, ask_fast
 from config import GROQ_API_KEY, DEEPSEEK_API_KEY, Models
 
 log = logging.getLogger("aim.speculative")
@@ -31,11 +33,16 @@ def speculative_generate(
     """Generate via draft → target verification.
 
     Strategy:
-      1. Draft a candidate answer with Groq (fast, ~1s).
+      1. Draft a candidate answer with Groq (fast, ~1s) — via `ask_fast()`.
       2. Ask DeepSeek-reasoner to validate/refine, with the draft in-prompt.
          The reasoner can accept (cheap, only reads), or rewrite.
 
     Returns the target's verdict (always DeepSeek-quality).
+
+    Note (2026-05-07): `draft_model` and `draft_tokens` parameters are
+    kept for backward-compat but ignored — `ask_fast()` selects the model
+    + caps tokens internally per `llm.py` policy. To override, set the
+    relevant env vars (`AIM_GROQ_FAST_MODEL`, `AIM_FAST_MAX_TOKENS`).
     """
     if not GROQ_API_KEY or not DEEPSEEK_API_KEY:
         # Single-model fallback
@@ -43,18 +50,9 @@ def speculative_generate(
 
     t0 = time.time()
     try:
-        from openai import OpenAI
-        from config import Endpoints, LLM_TIMEOUT
-        groq = OpenAI(base_url=Endpoints.GROQ, api_key=GROQ_API_KEY, timeout=LLM_TIMEOUT)
-        msgs = []
-        if system:
-            msgs.append({"role": "system", "content": system})
-        msgs.append({"role": "user", "content": prompt})
-        draft_resp = groq.chat.completions.create(
-            model=draft_model, messages=msgs,
-            temperature=0.3, max_tokens=draft_tokens,
-        )
-        draft = draft_resp.choices[0].message.content.strip()
+        # Draft via the centralised router. `ask_fast` already wires
+        # Groq → DS-chat → Ollama 3b fallback chain (see llm.py).
+        draft = ask_fast(prompt if not system else f"{system}\n\n{prompt}").strip()
         log.info(f"draft generated in {time.time()-t0:.1f}s ({len(draft)} chars)")
     except Exception as e:
         log.warning(f"draft failed ({e}); fallback to direct DeepSeek")

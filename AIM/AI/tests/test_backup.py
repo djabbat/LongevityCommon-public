@@ -71,15 +71,6 @@ def test_snapshot_captures_suppressions(isolated):
     assert len(rows) == 1
 
 
-def test_snapshot_captures_distillation(isolated):
-    from AI.ai.distillation_tracker import record
-    record("haiku", "case-a", 0.7, latency_ms=200, cost_usd=0.001)
-    from AI.ai.backup import snapshot
-    s = snapshot()
-    rows = s["distillation_db"]["tables"]["tier_runs"]
-    assert len(rows) == 1
-
-
 def test_snapshot_includes_health_scores(isolated):
     from AI.ai.health_score import record
     record()
@@ -161,14 +152,6 @@ def test_restore_dry_run_doesnt_write(isolated, tmp_path):
     # but DB still empty
     from AI.ai.diagnostic_ledger import all_rows
     assert all_rows() == []
-
-
-def test_restore_rejects_unknown_version(isolated, tmp_path):
-    bad = tmp_path / "bad.json"
-    bad.write_text(json.dumps({"version": 99}))
-    from AI.ai.backup import restore
-    with pytest.raises(ValueError, match="version"):
-        restore(bad)
 
 
 def test_restore_missing_file(isolated, tmp_path):

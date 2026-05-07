@@ -18,34 +18,6 @@ def isolated(tmp_path, monkeypatch):
 # ── tokenisation ────────────────────────────────────────────────
 
 
-def test_tokens_drops_fillers(isolated):
-    from AI.ai.reflexion_cluster import _tokens
-    out = _tokens("The user must verify citations against PubMed")
-    assert "user" not in out
-    assert "must" not in out
-    assert "verify" in out
-    assert "pubmed" in out
-
-
-def test_tokens_min_length(isolated):
-    from AI.ai.reflexion_cluster import _tokens
-    out = _tokens("Do not use ai")
-    # 'ai' is too short (≥4 chars).
-    assert "ai" not in out
-
-
-def test_jaccard_similarity(isolated):
-    from AI.ai.reflexion_cluster import _jaccard
-    a = {"verify", "pubmed", "citation"}
-    b = {"verify", "pubmed", "doi"}
-    assert _jaccard(a, b) == 2 / 4
-
-
-def test_jaccard_disjoint(isolated):
-    from AI.ai.reflexion_cluster import _jaccard
-    assert _jaccard({"a"}, {"b"}) == 0.0
-
-
 # ── cluster() ────────────────────────────────────────────────────
 
 

@@ -1,28 +1,25 @@
-"""AI/ai/self_modify.py — S6 (2026-05-04, framework only).
+"""AI/ai/self_modify.py — thin Python shim over the
+`aim-ai-self-modify` Rust binary (Phase 9 Tier 2 #3, 2026-05-07).
 
-S6 closes the loop: AIM modifies its own `agents/` code based on
-diagnostic findings + eval gate.
+Code self-modification framework (S6). Gate closed by default.
+All gate logic + proposal building in Rust crate
+`rust-core/crates/aim-ai-self-modify`.
 
-This module is intentionally **scaffolded but disabled** until at
-least 4 weeks of accumulated baselines exist (see roadmap rule). The
-framework is here so the loop can flip on the moment the baseline
-threshold is reached, with all safety mechanisms already tested.
-
-Direction rule: S6 LIVES in AI/ but ITS WRITE TARGET is `agents/` —
-worktree isolation makes that one-way. We never short-circuit and
-mutate the live tree.
-
-Public API:
+Public API (preserved):
+    Verdict / Proposal / ApplyResult dataclasses
     can_self_modify() -> Verdict
-    propose(finding) -> Proposal
+    propose(finding_ref) -> Proposal
     apply(proposal, *, dry_run=True) -> ApplyResult
+    summary() -> str
+
+Env: AI_DIAGNOSTIC_DB.
 """
 from __future__ import annotations
 
 import dataclasses
-import datetime as dt
+import json
 import logging
-import os
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -39,10 +36,10 @@ class Verdict:
 
 @dataclasses.dataclass
 class Proposal:
-    finding_ref: str        # `agents/x.py:42`
+    finding_ref: str
     target_path: Path
-    summary: str            # short rationale
-    patch_unified: str      # unified diff or empty
+    summary: str
+    patch_unified: str
     eval_case_id: Optional[str] = None
 
 
@@ -56,105 +53,84 @@ class ApplyResult:
     notes: list[str]
 
 
-# ── safety prerequisites ────────────────────────────────────────
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-self-modify"
+    )
 
 
-_MIN_BASELINE_RUNS = 28        # ~4 wks daily
-_MIN_BASELINE_AGE_DAYS = 28
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-self-modify binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-self-modify {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
+
+
+def _verdict_from_json(j: dict) -> Verdict:
+    return Verdict(
+        allowed=bool(j["allowed"]),
+        reasons=list(j.get("reasons") or []),
+        n_baseline_runs=int(j["n_baseline_runs"]),
+        baseline_age_days=float(j["baseline_age_days"]),
+    )
+
+
+def _proposal_from_json(j: dict) -> Proposal:
+    return Proposal(
+        finding_ref=str(j["finding_ref"]),
+        target_path=Path(j["target_path"]),
+        summary=str(j["summary"]),
+        patch_unified=str(j.get("patch_unified", "")),
+        eval_case_id=j.get("eval_case_id"),
+    )
 
 
 def can_self_modify() -> Verdict:
-    """S6 only fires once baseline is mature. We require BOTH a long
-    enough wall-clock window AND enough sampled runs — neither alone
-    is sufficient (one cron firing all month with no real responses
-    must NOT unlock the gate)."""
-    reasons: list[str] = []
-    n_runs = 0
-    age_days = 0.0
-    try:
-        from AI.ai.diagnostic_ledger import all_rows
-        rows = all_rows()
-        n_runs = len(rows)
-        if rows:
-            try:
-                first = dt.datetime.fromisoformat(rows[0].ts)
-                age_days = (dt.datetime.now() - first).total_seconds() / 86400.0
-            except (ValueError, TypeError):
-                age_days = 0.0
-    except Exception as e:
-        reasons.append(f"ledger unavailable: {e}")
-
-    if n_runs < _MIN_BASELINE_RUNS:
-        reasons.append(
-            f"baseline runs {n_runs} < {_MIN_BASELINE_RUNS} required"
-        )
-    if age_days < _MIN_BASELINE_AGE_DAYS:
-        reasons.append(
-            f"baseline age {age_days:.1f}d < {_MIN_BASELINE_AGE_DAYS}d required"
-        )
-
-    # Hard kill-switch via env so an emergency stop is one command:
-    #   export AI_SELF_MODIFY_DISABLED=1
-    if os.environ.get("AI_SELF_MODIFY_DISABLED"):
-        reasons.append("AI_SELF_MODIFY_DISABLED env set")
-
-    return Verdict(
-        allowed=not reasons,
-        reasons=reasons,
-        n_baseline_runs=n_runs,
-        baseline_age_days=age_days,
-    )
-
-
-# ── propose ─────────────────────────────────────────────────────
+    out = _run(["can-self-modify"]).strip()
+    return _verdict_from_json(json.loads(out))
 
 
 def propose(finding_ref: str) -> Proposal:
-    """Build a Proposal struct for `finding_ref`. Currently only
-    populates metadata — patch generation lands when can_self_modify()
-    returns allowed."""
-    parts = finding_ref.split(":")
-    path = parts[0]
-    return Proposal(
-        finding_ref=finding_ref,
-        target_path=Path(path),
-        summary=f"(stub) framework proposal for {finding_ref}",
-        patch_unified="",
-    )
-
-
-# ── apply ───────────────────────────────────────────────────────
+    """Build a Proposal struct for `finding_ref`."""
+    out = _run(["propose", finding_ref]).strip()
+    return _proposal_from_json(json.loads(out))
 
 
 def apply(proposal: Proposal, *, dry_run: bool = True) -> ApplyResult:
-    """Apply a Proposal in an isolated worktree, then run S1 evals
-    pre/post and decide whether to merge.
-
-    For now: refuses unless can_self_modify() allows AND dry_run.
-    Real mutation lands when baseline is mature."""
-    notes: list[str] = []
-    v = can_self_modify()
-    if not v.allowed:
-        notes.append("can_self_modify denied: " + "; ".join(v.reasons))
-        return ApplyResult(
-            proposal=proposal, applied=False, worktree_path=None,
-            pre_eval_score=None, post_eval_score=None, notes=notes,
-        )
-
-    # Even when verdict passes, never mutate without explicit consent.
-    # This branch is reached only after L_CONSENT integration in a
-    # later wave — for now we force dry_run.
+    """Apply a Proposal in an isolated worktree. Currently always dry_run
+    until baseline matures."""
+    args = ["apply", proposal.finding_ref]
     if not dry_run:
-        notes.append("forced to dry_run — live mutation not yet enabled")
-    notes.append("(framework: would isolate worktree, apply patch, "
-                  "run S1 evals pre/post, merge if Δscore >= 0.05 & p ≤ 0.05)")
+        args.append("--no-dry-run")
+    out = _run(args).strip()
+    j = json.loads(out)
+    p_json = j["proposal"]
     return ApplyResult(
-        proposal=proposal, applied=False, worktree_path=None,
-        pre_eval_score=None, post_eval_score=None, notes=notes,
+        proposal=_proposal_from_json(p_json),
+        applied=bool(j["applied"]),
+        worktree_path=Path(j["worktree_path"]) if j.get("worktree_path") else None,
+        pre_eval_score=(
+            float(j["pre_eval_score"]) if j.get("pre_eval_score") is not None else None
+        ),
+        post_eval_score=(
+            float(j["post_eval_score"]) if j.get("post_eval_score") is not None else None
+        ),
+        notes=list(j.get("notes") or []),
     )
 
 
 def summary() -> str:
+    """Original Python format preserved."""
     v = can_self_modify()
     if v.allowed:
         return ("🟢 self-modify gate OPEN — baseline mature.\n"

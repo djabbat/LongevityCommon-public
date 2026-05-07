@@ -1,31 +1,24 @@
-"""agents/smart_routing.py — smarter than llm._route(): picks the cheapest
-adequate model based on prompt complexity + estimated cost.
+"""agents/smart_routing.py — thin Python shim over the
+`aim-smart-routing` Rust binary (Phase 8 Week 1, 2026-05-07).
 
-Routing tiers:
-    fast       — Groq llama-3.1-8b-instant (cheapest, ≤200 chars or <50 toks)
-    standard   — DeepSeek chat (default)
-    reasoning  — DeepSeek-reasoner (only when reasoning markers detected
-                 OR caller explicitly forces it)
+All classification, pricing, routing, and SQLite persistence live in
+Rust (`rust-core/crates/aim-smart-routing`). This module exists only to
+give Python callers (llm.py, cost_monitor.py) a Pythonic API and to
+preserve the public surface (`classify`, `route`, `estimate_cost`,
+`stats`) so existing imports keep working.
 
-Backwards-compatible: existing llm._route() keeps working. To opt in:
-    AIM_SMART_ROUTING=1
-
-CLI:
-    aim-route classify "проанализируй данные..."     # show route+cost estimate
-    aim-route stats                                   # routing stats
+If you find yourself adding pricing tables or regex tuning here — STOP
+and put it in the Rust crate, then expose a new subcommand. See
+`PHASE_8_ROADMAP.md` for the migration pattern.
 """
-
 from __future__ import annotations
 
 import argparse
 import json
 import logging
 import os
-import re
-import sqlite3
-import threading
-from collections import Counter
-from datetime import datetime
+import subprocess
+import sys
 from pathlib import Path
 
 log = logging.getLogger("aim.smart_routing")
@@ -34,146 +27,95 @@ ENABLED = os.getenv("AIM_SMART_ROUTING", "").lower() in ("1", "true", "yes")
 DB_PATH = Path("~/.claude/smart_routing.db").expanduser()
 
 
-# Pricing — keep in sync with cost_monitor.PRICES (DeepSeek V4 series, 2026-04)
-_PRICES = {
-    "deepseek-v4-flash":          {"input": 0.14,  "output": 0.28},
-    "deepseek-v4-pro":            {"input": 0.435, "output": 0.87},   # 75% off until 2026-05-31
-    # legacy aliases (billed identically per DeepSeek docs)
-    "deepseek-chat":              {"input": 0.14,  "output": 0.28},
-    "deepseek-reasoner":          {"input": 0.435, "output": 0.87},
-    "llama-3.1-8b-instant":       {"input": 0.05,  "output": 0.08},
-    "llama-3.3-70b-versatile":    {"input": 0.59,  "output": 0.79},
-}
-
-# heuristic — Russian + English reasoning markers
-_REASONING_RE = re.compile(
-    r"\b(?:почему|объясни|обоснуй|проанализируй|сравни|оцени|"
-    r"why|explain|analy[sz]e|compare|reason|prove|justify|"
-    r"докажи|выведи|разложи|обсуди)\b",
-    re.IGNORECASE,
-)
-# triage queries — almost always one-line answers, route to fast model
-_FAST_RE = re.compile(
-    r"^(?:что|кто|когда|где|сколько|when|who|where|how many|what is|какой|какая|какое)\s",
-    re.IGNORECASE,
-)
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent
+        / "rust-core" / "target" / "release" / "aim-smart-routing"
+    )
 
 
-# ── DB for route stats ─────────────────────────────────────────────────────
-
-
-_LOCK = threading.Lock()
-
-
-def _db():
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(DB_PATH), check_same_thread=False, isolation_level=None)
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS routes (
-            ts TEXT, model TEXT, tier TEXT,
-            prompt_chars INTEGER, est_in_tokens INTEGER,
-            est_cost REAL
+def _run(args: list[str], pass_env_routing: bool = True) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-smart-routing binary not built at {bin_path}; "
+            "run `cargo build -p aim-smart-routing --release` in rust-core/"
         )
-    """)
-    conn.execute("CREATE INDEX IF NOT EXISTS idx_routes_ts ON routes(ts)")
-    return conn
-
-
-# ── classification ─────────────────────────────────────────────────────────
+    env = dict(os.environ)
+    if pass_env_routing and ENABLED:
+        env["AIM_SMART_ROUTING"] = "1"
+    proc = subprocess.run(
+        [str(bin_path), *args],
+        capture_output=True, text=True, check=False, env=env,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"aim-smart-routing {args[0]} failed: {proc.stderr.strip()}")
+    return proc.stdout
 
 
 def classify(prompt: str, force_model: str | None = None) -> dict:
+    """Pure classifier — no DB write. Returns
+    {model, tier, reason, est_in_tokens, est_cost (always 0.0)}."""
+    args = ["classify"]
     if force_model:
-        return {"model": force_model, "tier": "forced",
-                "reason": "caller forced model",
-                "est_in_tokens": len(prompt) // 4}
-
-    n = len(prompt)
-    est_tokens = max(1, n // 4)
-
-    if _REASONING_RE.search(prompt):
-        return {"model": "deepseek-reasoner",     "tier": "reasoning",
-                "reason": "reasoning marker matched",
-                "est_in_tokens": est_tokens}
-
-    if n < 200 or _FAST_RE.match(prompt or ""):
-        return {"model": "llama-3.1-8b-instant",  "tier": "fast",
-                "reason": "short or simple-Q pattern",
-                "est_in_tokens": est_tokens}
-
-    return {"model": "deepseek-chat",             "tier": "standard",
-            "reason": "default",
-            "est_in_tokens": est_tokens}
+        args += ["--force-model", force_model]
+    args.append(prompt)
+    return json.loads(_run(args))
 
 
 def estimate_cost(model: str, in_tok: int, out_tok: int = 0) -> float:
-    p = _PRICES.get(model, {"input": 1.0, "output": 2.0})
-    return (in_tok * p["input"] + out_tok * p["output"]) / 1_000_000
+    """Cost in USD for the given token counts on the given model."""
+    out = _run(["estimate-cost", model, str(in_tok), str(out_tok)])
+    return float(json.loads(out)["cost_usd"])
 
 
 def route(prompt: str, force_model: str | None = None,
           assume_output: int = 500) -> dict:
-    """Public API: returns {model, tier, est_cost_usd, ...}."""
-    info = classify(prompt, force_model)
-    info["est_cost"] = round(
-        estimate_cost(info["model"], info["est_in_tokens"], assume_output), 6)
-
-    if ENABLED:
-        try:
-            with _LOCK:
-                _db().execute(
-                    "INSERT INTO routes (ts, model, tier, prompt_chars, "
-                    "est_in_tokens, est_cost) VALUES (?,?,?,?,?,?)",
-                    (datetime.now().isoformat(timespec="seconds"),
-                     info["model"], info["tier"], len(prompt or ""),
-                     info["est_in_tokens"], info["est_cost"]),
-                )
-        except Exception as e:
-            log.debug(f"route log failed: {e}")
-    return info
-
-
-# ── stats ──────────────────────────────────────────────────────────────────
+    """Public API: returns {model, tier, est_cost, ...}. Logs to the
+    Rust-side SQLite ledger iff AIM_SMART_ROUTING=1."""
+    args = ["route", "--db", str(DB_PATH), "--assume-output", str(assume_output)]
+    if force_model:
+        args += ["--force-model", force_model]
+    args.append(prompt)
+    return json.loads(_run(args))
 
 
 def stats() -> dict:
-    if not DB_PATH.exists():
-        return {"enabled": ENABLED, "rows": 0}
-    with _LOCK:
-        c = _db()
-        n   = c.execute("SELECT COUNT(*) FROM routes").fetchone()[0]
-        cost = c.execute("SELECT COALESCE(SUM(est_cost),0) FROM routes").fetchone()[0]
-        by_tier = {r[0]: r[1] for r in c.execute(
-            "SELECT tier, COUNT(*) FROM routes GROUP BY tier").fetchall()}
-        by_model = {r[0]: r[1] for r in c.execute(
-            "SELECT model, COUNT(*) FROM routes GROUP BY model").fetchall()}
-    # also compute "savings" — cost if everything routed to deepseek-chat
-    chat_avg_in = _PRICES["deepseek-chat"]["input"] / 1_000_000
-    return {
-        "enabled":         ENABLED,
-        "rows":            n,
-        "estimated_cost":  round(cost, 4),
-        "by_tier":         by_tier,
-        "by_model":        by_model,
-    }
+    """Lifetime routing stats from the SQLite ledger."""
+    return json.loads(_run(["stats", "--db", str(DB_PATH)]))
 
 
-# ── CLI ────────────────────────────────────────────────────────────────────
+# ── CLI parity (preserved for any caller that did
+#                `python -m agents.smart_routing classify ...`) ────────────
 
 
 def _main() -> int:
-    p = argparse.ArgumentParser(prog="aim-route")
+    p = argparse.ArgumentParser(description="Smart LLM routing (shim → Rust)")
     sub = p.add_subparsers(dest="cmd", required=True)
-    cl = sub.add_parser("classify"); cl.add_argument("prompt")
+    cl = sub.add_parser("classify")
+    cl.add_argument("prompt")
+    cl.add_argument("--force-model")
+    rt = sub.add_parser("route")
+    rt.add_argument("prompt")
+    rt.add_argument("--force-model")
+    rt.add_argument("--assume-output", type=int, default=500)
     sub.add_parser("stats")
-    args = p.parse_args()
-    logging.basicConfig(level=logging.INFO, format="[%(name)s] %(message)s")
-    if args.cmd == "classify":
-        print(json.dumps(route(args.prompt), ensure_ascii=False, indent=2))
-    elif args.cmd == "stats":
+    ec = sub.add_parser("estimate-cost")
+    ec.add_argument("model")
+    ec.add_argument("in_tokens", type=int)
+    ec.add_argument("out_tokens", type=int, nargs="?", default=0)
+    a = p.parse_args()
+    if a.cmd == "classify":
+        print(json.dumps(classify(a.prompt, a.force_model), ensure_ascii=False))
+    elif a.cmd == "route":
+        print(json.dumps(route(a.prompt, a.force_model, a.assume_output),
+                         ensure_ascii=False))
+    elif a.cmd == "stats":
         print(json.dumps(stats(), ensure_ascii=False, indent=2))
+    elif a.cmd == "estimate-cost":
+        print(estimate_cost(a.model, a.in_tokens, a.out_tokens))
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main())
+    sys.exit(_main())

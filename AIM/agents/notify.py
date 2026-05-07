@@ -56,7 +56,7 @@ class NotifyResult:
 def _send_telegram(text: str, subject: Optional[str]) -> bool:
     body = f"{subject}\n\n{text}" if subject else text
     try:
-        from scripts.daily_brief import send_telegram
+        from agents.telegram_sender import send_telegram
     except Exception as e:
         log.debug("telegram channel unavailable: %s", e)
         return False

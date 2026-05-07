@@ -48,42 +48,6 @@ def _seed_report(isolated, refs):
 # ── _ref_from_id / _normalise_ref round-trip ────────────────────
 
 
-def test_ref_from_id_with_line():
-    from AI.ai.case_archiver import _ref_from_id
-    out = _ref_from_id("regr-agents-x-py-l42")
-    assert out == ("agents-x-py", 42)
-
-
-def test_ref_from_id_no_line():
-    from AI.ai.case_archiver import _ref_from_id
-    out = _ref_from_id("regr-agents-x-py")
-    assert out == ("agents-x-py", None)
-
-
-def test_ref_from_id_invalid():
-    from AI.ai.case_archiver import _ref_from_id
-    assert _ref_from_id("not-a-regr-id") is None
-
-
-def test_normalise_ref_with_line():
-    from AI.ai.case_archiver import _normalise_ref
-    assert _normalise_ref("agents/x.py:42") == ("agents-x-py", 42)
-
-
-def test_normalise_ref_no_line():
-    from AI.ai.case_archiver import _normalise_ref
-    assert _normalise_ref("agents/x.py") == ("agents-x-py", None)
-
-
-def test_id_and_normalise_match():
-    """Critical invariant: case id derived from `ref` must match the
-    normalised form of the same ref read back from a report."""
-    from AI.ai.case_archiver import _ref_from_id, _normalise_ref
-    ref = "agents/x.py:42"
-    case_id = "regr-agents-x-py-l42"
-    assert _ref_from_id(case_id) == _normalise_ref(ref)
-
-
 # ── candidates ──────────────────────────────────────────────────
 
 

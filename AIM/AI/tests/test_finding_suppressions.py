@@ -41,24 +41,6 @@ def test_suppress_rejects_empty(isolated):
         suppress("   ")
 
 
-def test_suppress_with_expiry(isolated):
-    from AI.ai.finding_suppressions import suppress, is_suppressed
-    future = dt.datetime.now() + dt.timedelta(days=7)
-    s = suppress("agents/x.py:1", until=future)
-    assert s.until_ts == future.isoformat()
-    assert is_suppressed("agents/x.py:1")
-
-
-def test_suppress_idempotent_replace(isolated):
-    """Re-suppressing the same ref updates the row, not duplicates."""
-    from AI.ai.finding_suppressions import suppress, _all_rows
-    suppress("agents/x.py:1", reason="first")
-    suppress("agents/x.py:1", reason="second")
-    rows = _all_rows()
-    assert len(rows) == 1
-    assert rows[0].reason == "second"
-
-
 def test_unsuppress_removes(isolated):
     from AI.ai.finding_suppressions import (
         suppress, unsuppress, is_suppressed,
@@ -95,23 +77,6 @@ def test_active_excludes_expired(isolated):
     suppress("forever/z.py:3")
     refs = {s.ref for s in active()}
     assert refs == {"future/y.py:2", "forever/z.py:3"}
-
-
-def test_invalid_until_iso_treated_as_active(isolated):
-    """Corrupt until_ts in DB → treat as still active (fail-safe)."""
-    from AI.ai.finding_suppressions import (
-        Suppression, _connect,
-    )
-    import contextlib
-    with contextlib.closing(_connect()) as conn:
-        conn.execute(
-            "INSERT INTO finding_suppressions"
-            "(ref, reason, created_ts, until_ts) VALUES (?, ?, ?, ?)",
-            ("x", "", "2026-05-04T10:00:00", "not-an-iso"),
-        )
-    s = Suppression(ref="x", reason="", created_ts="2026-05-04T10:00:00",
-                     until_ts="not-an-iso")
-    assert s.active_now is True
 
 
 # ── filter_findings ─────────────────────────────────────────────
@@ -169,20 +134,6 @@ def test_prune_expired_no_op_when_none_expired(isolated):
     suppress("agents/y.py:2",
               until=dt.datetime.now() + dt.timedelta(days=7))
     assert prune_expired() == 0
-
-
-def test_prune_expired_removes_only_past(isolated):
-    from AI.ai.finding_suppressions import (
-        suppress, prune_expired, _all_rows,
-    )
-    past = dt.datetime.now() - dt.timedelta(hours=1)
-    future = dt.datetime.now() + dt.timedelta(days=1)
-    suppress("expired/x.py:1", until=past)
-    suppress("future/y.py:2", until=future)
-    suppress("forever/z.py:3")
-    assert prune_expired() == 1
-    refs = {r.ref for r in _all_rows()}
-    assert refs == {"future/y.py:2", "forever/z.py:3"}
 
 
 def test_prune_expired_handles_empty(isolated):

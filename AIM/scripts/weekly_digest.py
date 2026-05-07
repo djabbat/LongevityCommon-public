@@ -176,9 +176,10 @@ def main() -> int:
     if os.environ.get("AIM_TG_DRYRUN") == "1":
         print(text)
         return 0
-    # Reuse the daily-brief sender for chunking + auth.
+    # Reuse the canonical Telegram sender (HW1, 2026-05-06: extracted
+    # from scripts/daily_brief.py to agents/telegram_sender.py).
     try:
-        from scripts.daily_brief import send_telegram
+        from agents.telegram_sender import send_telegram
     except Exception:
         print(text)
         return 0

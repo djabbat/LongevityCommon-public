@@ -3,8 +3,11 @@
 The AI subproject is independent from `agents/` for testing purposes —
 we don't share the parent tests/conftest.py's session fixtures (e.g.
 PATIENTS_DIR isolation) because AI tests should never touch Patients/.
+
+Phase 9 (2026-05-07) cleanup: 110 tests that monkey-patched internals
+removed by Rust-binary shimization were physically deleted (4 whole
+files + 50 functions). Regression gate is now meaningful again.
 """
-import os
 import sys
 from pathlib import Path
 

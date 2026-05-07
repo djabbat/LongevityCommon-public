@@ -1,25 +1,14 @@
-"""AI/ai/reflexion_cluster.py — group failure themes (S10, 2026-05-03).
+"""AI/ai/reflexion_cluster.py — thin Python shim over the
+`aim-ai-reflexion` Rust binary (Phase 9 Tier 3 #21, 2026-05-07).
 
-Pulls accumulated reflexion notes from
-`agents.reflexion.recent_reflections` (or feedback memory directly)
-and clusters them by topic so we can produce ONE targeted prompt
-patch per cluster instead of dozens of one-off corrections.
+Group failure-theme reflexion notes by Jaccard token overlap. The
+Rust crate owns tokeniser + filler list + clustering + theme
+selection; Python keeps the same Cluster public API and the
+memory-source loaders (feedback_*.md + reflexion buckets) — both are
+Python-side conventions.
 
-Strategy (deterministic, no LLM needed for clustering):
-  1. Tokenise each note (≥4 chars, no fillers).
-  2. Compute Jaccard similarity between notes.
-  3. Greedy single-link clustering: notes with similarity ≥ threshold
-     join the same cluster.
-  4. Each cluster gets a "theme" — top-K most-shared key terms.
-  5. (optional) Suggest a prompt-patch hint built from those terms.
-
-Output:
-  * `Cluster.notes`     — list of note texts
-  * `Cluster.theme`     — sorted top key terms
-  * `Cluster.suggestion` — short string the user can paste into a
-                          prompt as a "remember:" hint
-
-Public API:
+Public API (preserved):
+    Cluster dataclass (with .n / .suggestion properties)
     cluster(notes, *, threshold=0.25) -> list[Cluster]
     clusters_from_memory(window_days=180, threshold=0.25) -> list[Cluster]
     summary(threshold=0.25) -> str
@@ -28,50 +17,21 @@ from __future__ import annotations
 
 import dataclasses
 import datetime as dt
+import json
 import logging
-import re
+import subprocess
 from pathlib import Path
 from typing import Iterable, Optional
 
 log = logging.getLogger("ai.reflexion_cluster")
 
 
-# ── tokenisation ────────────────────────────────────────────────
-
-
-_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЁё][\w-]{3,}")
-_FILLERS = {
-    # English
-    "the", "and", "for", "with", "that", "this", "from", "they", "their",
-    "your", "user", "model", "agent", "must", "should", "after", "into",
-    "have", "been", "would", "could", "make", "make", "more", "very",
-    "when", "what", "which", "where", "while", "doesn", "don", "didn",
-    # Russian
-    "когда", "если", "чтобы", "также", "может", "нужно", "очень",
-    "будут", "будет", "пока", "потом", "только", "ровно", "будем",
-    "уже", "его", "ему", "она", "нам", "наш", "наша", "наше",
-}
-
-
-def _tokens(s: str) -> set[str]:
-    return {w.lower() for w in _TOKEN_RE.findall(s)
-            if w.lower() not in _FILLERS}
-
-
-def _jaccard(a: set[str], b: set[str]) -> float:
-    if not a or not b:
-        return 0.0
-    return len(a & b) / max(1, len(a | b))
-
-
-# ── data ─────────────────────────────────────────────────────────
-
-
 @dataclasses.dataclass
 class Cluster:
     notes: list[str]
-    theme: list[str]            # top key terms
-    representative: str         # the longest note in the cluster
+    theme: list[str]
+    representative: str
+    _suggestion: Optional[str] = None
 
     @property
     def n(self) -> int:
@@ -79,6 +39,8 @@ class Cluster:
 
     @property
     def suggestion(self) -> str:
+        if self._suggestion is not None:
+            return self._suggestion
         if not self.theme:
             return self.representative[:200]
         terms = ", ".join(self.theme[:5])
@@ -86,59 +48,53 @@ class Cluster:
                 f"{self.representative.strip()[:200]}")
 
 
-# ── cluster ──────────────────────────────────────────────────────
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-reflexion"
+    )
+
+
+def _run(args: list[str], *, stdin: str) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-reflexion binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args],
+        input=stdin, capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-reflexion {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
 def cluster(notes: Iterable[str], *,
             threshold: float = 0.25) -> list[Cluster]:
-    """Greedy single-link clustering by Jaccard token overlap."""
-    items: list[tuple[str, set[str]]] = []
-    for n in notes:
-        if not isinstance(n, str):
+    safe_notes = [n for n in notes if isinstance(n, str)]
+    if not safe_notes:
+        return []
+    payload = "\n".join(json.dumps(n) for n in safe_notes)
+    out = _run(["cluster", "--threshold", str(threshold)], stdin=payload)
+    res: list[Cluster] = []
+    for line in out.splitlines():
+        line = line.strip()
+        if not line:
             continue
-        n = n.strip()
-        if len(n) < 20:
-            continue
-        toks = _tokens(n)
-        if not toks:
-            continue
-        items.append((n, toks))
-
-    clusters: list[list[tuple[str, set[str]]]] = []
-    for note, toks in items:
-        attached = False
-        for cl in clusters:
-            for _, ct in cl:
-                if _jaccard(toks, ct) >= threshold:
-                    cl.append((note, toks))
-                    attached = True
-                    break
-            if attached:
-                break
-        if not attached:
-            clusters.append([(note, toks)])
-
-    out: list[Cluster] = []
-    for cl in clusters:
-        # Theme: tokens shared by ≥half the notes in the cluster.
-        from collections import Counter
-        ctr: Counter = Counter()
-        for _, ts in cl:
-            ctr.update(ts)
-        threshold_count = max(1, len(cl) // 2)
-        theme = [t for t, c in ctr.most_common(20)
-                 if c >= threshold_count]
-        rep = max((n for n, _ in cl), key=len)
-        out.append(Cluster(
-            notes=[n for n, _ in cl],
-            theme=theme[:6],
-            representative=rep,
+        j = json.loads(line)
+        res.append(Cluster(
+            notes=list(j.get("notes", [])),
+            theme=list(j.get("theme", [])),
+            representative=str(j.get("representative", "")),
+            _suggestion=j.get("suggestion"),
         ))
-    out.sort(key=lambda c: -c.n)
-    return out
+    return res
 
 
-# ── pull reflexions from memory ─────────────────────────────────
+# ── pull reflexions from memory (Python-only) ──────────────────
 
 
 def _from_feedback_memory(window_days: int = 180) -> list[str]:
@@ -184,7 +140,6 @@ def _from_reflexion_buckets(n_per_bucket: int = 8) -> list[str]:
     if not d.exists():
         return []
     out: list[str] = []
-    import json as _json
     for p in d.glob("*.jsonl"):
         try:
             lines = p.read_text(encoding="utf-8").splitlines()[-n_per_bucket:]
@@ -192,7 +147,7 @@ def _from_reflexion_buckets(n_per_bucket: int = 8) -> list[str]:
             continue
         for line in lines:
             try:
-                rec = _json.loads(line)
+                rec = json.loads(line)
             except Exception:
                 continue
             s = rec.get("summary") or ""

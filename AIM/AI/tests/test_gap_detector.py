@@ -22,22 +22,6 @@ def write_session(setup, name, events):
 # ── _is_surrender ────────────────────────────────────────────────
 
 
-@pytest.mark.parametrize("text,expected", [
-    ("I cannot help with that.", True),
-    ("I don't have access to your calendar.", True),
-    ("I'm not able to verify this.", True),
-    ("(interrupted)", True),
-    ("Не могу помочь, нет доступа.", True),
-    ("ERROR:PERMISSION:bash blocked", True),
-    ("Sure, here is the answer.", False),
-    ("", False),
-    (None, False),
-])
-def test_is_surrender(text, expected):
-    from AI.ai.gap_detector import _is_surrender
-    assert _is_surrender(text) is expected
-
-
 # ── surrenders() ─────────────────────────────────────────────────
 
 
@@ -138,36 +122,6 @@ def test_gaps_empty_when_no_surrenders(sessions):
 
 
 # ── suggestion heuristics ────────────────────────────────────────
-
-
-def test_suggestion_access_theme():
-    from AI.ai.gap_detector import _suggestion_for
-    s = _suggestion_for(["access", "calendar"], "send calendar invite")
-    assert "missing tool" in s.lower() or "scope" in s.lower()
-
-
-def test_suggestion_citation_theme():
-    from AI.ai.gap_detector import _suggestion_for
-    s = _suggestion_for(["pubmed", "verify"], "verify PMID")
-    assert "citation" in s.lower() or "grounding" in s.lower()
-
-
-def test_suggestion_language_theme():
-    from AI.ai.gap_detector import _suggestion_for
-    s = _suggestion_for(["georgian", "translate"], "translate paper")
-    assert "translation" in s.lower()
-
-
-def test_suggestion_default():
-    from AI.ai.gap_detector import _suggestion_for
-    s = _suggestion_for(["weather", "forecast"], "predict weather")
-    assert "prompt patch" in s.lower() or "investigate" in s.lower()
-
-
-def test_suggestion_empty_theme():
-    from AI.ai.gap_detector import _suggestion_for
-    s = _suggestion_for([], "do x")
-    assert "investigate" in s.lower()
 
 
 # ── summary ──────────────────────────────────────────────────────

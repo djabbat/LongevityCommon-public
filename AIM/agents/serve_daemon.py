@@ -319,3 +319,31 @@ def run_forever(jobs: Optional[list[Job]] = None,
 
 def run_once() -> list[str]:
     return tick(default_jobs())
+
+
+# ── CLI entrypoint (for `python -m agents.serve_daemon`) ───────────
+
+
+def _main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="AIM long-running orchestrator")
+    ap.add_argument("--once", action="store_true",
+                    help="run one tick and exit (for tests)")
+    ap.add_argument("--tick", type=int, default=30,
+                    help="tick interval in seconds (default 30)")
+    args = ap.parse_args()
+
+    logging.basicConfig(
+        level=os.environ.get("AIM_LOG_LEVEL", "INFO"),
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    )
+    if args.once:
+        fired = run_once()
+        print(json.dumps({"fired": fired}))
+        return 0
+    run_forever(tick_seconds=args.tick)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(_main())

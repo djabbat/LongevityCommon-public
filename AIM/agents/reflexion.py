@@ -1,95 +1,69 @@
-"""agents/reflexion.py — verbal-reflection memory for the generalist.
+"""agents/reflexion.py — thin Python shim over the `aim-reflexion`
+Rust binary (Phase 8 Week 2, 2026-05-07).
 
 Reflexion (Shinn et al., 2023; refined 2025) — when a run fails or the
 self-critique finds material flaws, generate a brief verbal reflection
-("what went wrong, what to try differently") and persist it. On the NEXT
-run with a similar task class, retrieve recent reflections and inject
-them as a hint.
+("what went wrong, what to try differently") and persist it. On the
+NEXT run with a similar task class, retrieve recent reflections and
+inject them as a hint.
 
-This is cheap (no fine-tuning) and one of the highest-ROI
-non-RLHF techniques for tool-using agents (+10-15% on ReAct tasks).
+Storage logic (classify, save_reflection, recent_reflections,
+store_dir resolution) lives in `rust-core/crates/aim-reflexion`. This
+module remains in Python only because `on_failure` calls the Python
+LLM router (`llm.ask_fast`) — until `llm.py` itself is Rust (Phase 5
+of MIGRATION_RUST_PHOENIX), the LLM-using flow stays here.
 
-Public API:
-    classify(task)                     → str    (task class key)
+Public API (preserved):
+    classify(task)                     → str
     save_reflection(task, summary)
     recent_reflections(task, n=3)      → list[str]
-    on_failure(task, error_excerpt)    → None   (auto-summary via LLM)
+    on_failure(task, error_excerpt)    → None
 """
 from __future__ import annotations
 
-import json
 import logging
-import os
-import platform
-import re
-import time
+import subprocess
 from pathlib import Path
-from typing import Iterable
 
 log = logging.getLogger("aim.reflexion")
 
-_LOCK_FILE = ".aim_reflexion.lock"
+
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent
+        / "rust-core" / "target" / "release" / "aim-reflexion"
+    )
 
 
-def _store_dir() -> Path:
-    sysname = platform.system()
-    if sysname == "Windows":
-        base = Path(os.environ.get("LOCALAPPDATA",
-                                   Path.home() / "AppData" / "Local"))
-        d = base / "aim" / "reflexion"
-    elif sysname == "Darwin":
-        d = Path.home() / "Library" / "Application Support" / "aim" / "reflexion"
-    else:
-        d = Path(os.environ.get("XDG_DATA_HOME",
-                                str(Path.home() / ".local/share"))) / "aim" / "reflexion"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
-
-
-# ── Task classification — coarse keyword bucket ───────────────────────────
-
-
-_BUCKETS = {
-    "code_edit":   ("edit", "refactor", "fix", "patch", "bug", "пофикси", "исправь", "рефактор"),
-    "research":    ("research", "find papers", "literature", "PubMed", "PMID", "DOI",
-                     "literature review", "обзор", "литератур"),
-    "writing":     ("write", "draft", "peer review", "manuscript", "article",
-                     "редакт", "напиши", "статья", "рецензир"),
-    "diagnosis":   ("diagnose", "diagnos", "treatment", "symptoms", "patient",
-                     "диагноз", "лечен", "пациент", "симптом"),
-    "ops":         ("deploy", "build", "push", "commit", "git", "test"),
-    "email":       ("email", "send", "draft email", "напиши письмо"),
-    "general":     (),
-}
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-reflexion binary not built at {bin_path}; "
+            "run `cargo build -p aim-reflexion --release` in rust-core/"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args],
+        capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"aim-reflexion {args[0]} failed: {proc.stderr.strip()}")
+    return proc.stdout
 
 
 def classify(task: str) -> str:
-    t = task.lower()
-    for bucket, kws in _BUCKETS.items():
-        if any(k in t for k in kws):
-            return bucket
-    return "general"
+    """Return one of: code_edit / research / writing / diagnosis / ops /
+    email / general."""
+    return _run(["classify", task]).strip() or "general"
 
 
-# ── Persistence (JSONL per bucket) ─────────────────────────────────────────
-
-
-def _bucket_path(bucket: str) -> Path:
-    safe = re.sub(r"[^a-z0-9_]", "_", bucket.lower())[:40]
-    return _store_dir() / f"{safe}.jsonl"
-
-
-def save_reflection(task: str, summary: str, *,
-                    bucket: str | None = None) -> None:
-    bucket = bucket or classify(task)
-    rec = {
-        "ts": int(time.time()),
-        "task_excerpt": task[:200],
-        "summary": summary[:1000],
-    }
+def save_reflection(task: str, summary: str, *, bucket: str | None = None) -> None:
+    args = ["save"]
+    if bucket:
+        args += ["--bucket", bucket]
+    args += [task, summary]
     try:
-        with _bucket_path(bucket).open("a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        _run(args)
     except Exception as e:
         log.warning(f"reflexion save failed: {e}")
 
@@ -97,27 +71,23 @@ def save_reflection(task: str, summary: str, *,
 def recent_reflections(task: str, n: int = 3, *,
                        bucket: str | None = None,
                        max_age_days: int = 60) -> list[str]:
-    bucket = bucket or classify(task)
-    p = _bucket_path(bucket)
-    if not p.exists():
-        return []
-    cutoff = time.time() - max_age_days * 86400
-    out: list[dict] = []
+    args = ["recent", "--n", str(n), "--max-age-days", str(max_age_days)]
+    if bucket:
+        args += ["--bucket", bucket]
+    args.append(task)
     try:
-        for line in p.read_text(encoding="utf-8").splitlines():
-            try:
-                rec = json.loads(line)
-                if rec.get("ts", 0) >= cutoff:
-                    out.append(rec)
-            except Exception:
-                continue
+        out = _run(args)
     except Exception:
         return []
-    return [r["summary"] for r in out[-n:]]
+    return [line for line in out.splitlines() if line.strip()]
 
 
 def on_failure(task: str, error_excerpt: str) -> None:
-    """Generate a brief Reflexion summary via cheap LLM and persist it."""
+    """Generate a brief Reflexion summary via cheap LLM and persist it.
+
+    Stays in Python (calls `llm.ask_fast`). Will become a shim once
+    Phase 5 ports `llm.py` → `aim-llm`.
+    """
     try:
         from llm import ask_fast
         prompt = (

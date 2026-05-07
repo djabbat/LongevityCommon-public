@@ -11,7 +11,10 @@ use std::collections::{BTreeMap, BTreeSet};
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 
-pub const DISCLAIMER: &str = "This is decision support only; clinician judgment required.";
+pub const DISCLAIMER: &str =
+    "AIM drug-interaction database is a curated stub (~30 high-impact \
+pairs). NOT a replacement for RxNav / DrugBank / FDA DailyMed. \
+Always cross-check before prescribing. AIM v0.1, 2026-04-21.";
 
 // ── severity ────────────────────────────────────────────────────────────────
 
@@ -423,6 +426,22 @@ pub fn known_drugs() -> Vec<String> {
     s.into_iter().collect()
 }
 
+/// Dump every entry in the static table for diagnostic / parity testing.
+/// Each tuple is `(drug_a, drug_b, severity, mechanism, recommendation, source)`.
+pub fn dump_table() -> Vec<Interaction> {
+    TABLE
+        .iter()
+        .map(|((a, b), e)| Interaction {
+            drug_a: a.clone(),
+            drug_b: b.clone(),
+            severity: e.severity,
+            mechanism: e.mechanism.into(),
+            recommendation: e.recommendation.into(),
+            source: e.source.into(),
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -559,7 +578,8 @@ mod tests {
         assert!(r.contains("Drug-interaction screen"));
         assert!(r.contains("[MAJOR]"));
         assert!(r.contains("warfarin"));
-        assert!(r.contains("decision support only"));
+        // DISCLAIMER updated 2026-05-07 to match Python parity wording.
+        assert!(r.contains("AIM drug-interaction database"));
     }
 
     #[test]

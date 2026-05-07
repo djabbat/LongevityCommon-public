@@ -1,27 +1,58 @@
-"""AI/ai/morning_brief.py — MB1 (2026-05-04).
+"""AI/ai/morning_brief.py — thin Python shim over the
+`aim-ai-brief` Rust binary (Phase 9 Tier 3 #14, 2026-05-07).
 
-A single-shot wake-up briefing for AIM/AI subproject state. Like
-`aim brief` but specifically for AI/ — what happened overnight, what
-needs attention.
+Single-shot wake-up briefing for AIM/AI subproject state. The Rust
+crate `aim-ai-morning-brief` owns regression / ledger / archive /
+deadlines sections; Python only overlays the wiring probe section
+(still Python, since `AI/ai/doctor.py` calls `agents/*` modules).
 
-Pulls from doctor (wiring), regression_detector (any bugs?), ledger
-(trend), case_archiver (anything to retire?), and surfaces *only*
-the lines worth reading first thing in the morning.
-
-Public API:
+Public API (preserved):
     render() -> str
 """
 from __future__ import annotations
 
+import json
 import logging
+import subprocess
+from pathlib import Path
 from typing import Optional
 
 log = logging.getLogger("ai.morning_brief")
 
 
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-brief"
+    )
+
+
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-brief binary not built at {bin_path}"
+        )
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-brief failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
+
+
 def _section_doctor() -> tuple[str, bool]:
-    from AI.ai.doctor import diagnose, has_critical_failure
-    probes = diagnose()
+    """Wiring probe — still in Python until `agents/doctor.py` is ported."""
+    try:
+        from AI.ai.doctor import diagnose
+    except Exception as e:
+        return (f"(wiring probe unavailable: {e})", False)
+    try:
+        probes = diagnose()
+    except Exception as e:
+        return (f"(wiring probe failed: {e})", False)
     crit = [p for p in probes if not p.ok and p.severity == "crit"]
     warn = [p for p in probes if not p.ok and p.severity == "warn"]
     if not crit and not warn:
@@ -38,119 +69,39 @@ def _section_doctor() -> tuple[str, bool]:
     return ("\n".join(parts), bool(crit))
 
 
-def _section_regression() -> tuple[str, bool]:
-    from AI.ai.regression_detector import detect
-    try:
-        r = detect()
-    except Exception as e:
-        return (f"⚠ regression check unavailable: {e}", False)
-    if not r.have_baseline:
-        return ("(no baseline yet — first 2 diagnostic runs needed)", False)
-    if r.regressed:
-        new_list = ", ".join(sorted(r.new_findings)[:3])
-        more = (f" +{len(r.new_findings) - 3} more"
-                if len(r.new_findings) > 3 else "")
-        return (
-            f"❌ REGRESSED — {len(r.new_findings)} new finding(s): "
-            f"{new_list}{more}",
-            True,
-        )
-    if r.improved:
-        return (f"✅ IMPROVED — {len(r.fixed_findings)} finding(s) fixed",
-                False)
-    return ("= stable since last run", False)
-
-
-def _section_ledger() -> str:
-    from AI.ai.diagnostic_ledger import trend
-    t = trend()
-    if t["n_runs"] == 0:
-        return "(no diagnostic runs in ledger)"
-    parts = [
-        f"{t['n_runs']} runs · "
-        f"avg compliance {t['avg_compliance']:.0%} · "
-        f"avg crit {t['avg_crit']:.1f}"
-    ]
-    if t["retry_share"] > 0:
-        parts.append(f"  retry fired in {t['retry_share']:.0%} of runs")
-    return "\n".join(parts)
-
-
-def _section_archive() -> str:
-    try:
-        from AI.ai.case_archiver import candidates
-        cands = candidates()
-    except Exception as e:
-        return f"(archive scan failed: {e})"
-    if not cands:
-        return "(no resolved cases to archive)"
-    return (f"{len(cands)} regression case(s) ready to archive — "
-            "run `aim diag --archive-cases` to retire")
-
-
-def _section_deadlines() -> str:
-    """High-crit pending deadlines (from agents/deadline_scanner)."""
-    try:
-        import datetime as dt
-        from agents.deadline_scanner import scan_memory
-    except Exception as e:
-        return f"(deadline scanner unavailable: {e})"
-    today = dt.date.today()
-    try:
-        rows = scan_memory(today=today)
-    except Exception as e:
-        return f"(deadline scan failed: {e})"
-    high_pending = [r for r in rows
-                     if r.criticality == "high" and r.when >= today]
-    if not high_pending:
-        return "(no high-criticality pending deadlines)"
-    high_pending.sort(key=lambda r: r.when)
-    parts = [f"{len(high_pending)} high-criticality pending:"]
-    for r in high_pending[:5]:
-        days = (r.when - today).days
-        when = "TODAY" if days == 0 else f"+{days}d"
-        # trim label to first 80 chars, single-line
-        label = r.label.replace("\n", " ")[:80]
-        parts.append(f"  • {when:>5}  {r.when}  {label}")
-    if len(high_pending) > 5:
-        parts.append(f"  (+{len(high_pending) - 5} more)")
-    return "\n".join(parts)
-
-
 def render() -> str:
     """Render the morning brief.
 
-    Format: header line ("good morning" status) + sections. The header
-    summarises whether anything actually needs attention; sections give
-    detail.
+    Strategy: ask the Rust binary for the structured Brief, then
+    overlay the wiring section using the Python doctor probe (which
+    still depends on `agents/*` modules), recompute the headline, and
+    serialise the same Markdown layout.
     """
-    doctor_text, doctor_crit = _section_doctor()
-    regr_text, regr_bad = _section_regression()
-    ledger_text = _section_ledger()
-    archive_text = _section_archive()
+    raw = _run(["--json"])
+    b = json.loads(raw)
 
-    overall_bad = doctor_crit or regr_bad
+    wiring_text, doctor_crit = _section_doctor()
+    overall_bad = bool(b.get("overall_bad")) or doctor_crit
     headline = ("⚠ AIM/AI needs attention this morning"
                 if overall_bad
                 else "🟢 AIM/AI is healthy this morning")
 
-    deadlines_text = _section_deadlines()
     parts = [
         f"# {headline}",
         "",
         "## High-criticality deadlines",
-        deadlines_text,
+        b.get("deadlines", "(unavailable)"),
         "",
         "## Wiring",
-        doctor_text,
+        wiring_text,
         "",
         "## Regression check",
-        regr_text,
+        b.get("regression", "(unavailable)"),
         "",
         "## Diagnostic trend",
-        ledger_text,
+        b.get("ledger", "(unavailable)"),
         "",
         "## Case archive",
-        archive_text,
+        b.get("archive", "(unavailable)"),
     ]
     return "\n".join(parts)

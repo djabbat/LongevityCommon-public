@@ -174,3 +174,14 @@
 - 𝓘: 0.28 → 0.20 (expected)
 
 ---
+
+## 2026-05-06 21:45:04 — lab_interpretation by lab_agent
+
+**Alternatives considered:** 1
+
+- ⭐ `urgent_ref` (referral): U=0.735 (𝒞=0.01, Φ_Ze=0.90, Ethics=0.93) — Срочное направление (ER/stationary). Red flags: Gluc > 15 mmol/L — suspect DKA/H
+
+**Decision:** `urgent_ref` — Срочное направление (ER/stationary). Red flags: Gluc > 15 mmol/L — suspect DKA/HHS
+- 𝓘: 0.23 → 0.16 (expected)
+
+---

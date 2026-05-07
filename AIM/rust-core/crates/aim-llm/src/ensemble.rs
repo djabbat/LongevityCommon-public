@@ -245,3 +245,131 @@ fn _force_use_json() { let _ = json!({}); }
 
 // Re-export for test suite (public so integration tests can hit it).
 pub fn jaccard_for_test(a: &str, b: &str, k: usize) -> f32 { jaccard_kshingle(a, b, k) }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── shingles ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn shingles_empty_input() {
+        let s = shingles("", 3);
+        assert!(s.is_empty());
+    }
+
+    #[test]
+    fn shingles_too_short() {
+        // "hello world" is 2 tokens; k=3 → no shingles.
+        let s = shingles("hello world", 3);
+        assert!(s.is_empty());
+    }
+
+    #[test]
+    fn shingles_lowercases_and_strips_punct() {
+        let s = shingles("Hello, World! How are you?", 2);
+        // 5 tokens (hello world how are you) → 4 bigrams
+        assert_eq!(s.len(), 4);
+        assert!(s.contains(&vec!["hello".into(), "world".into()]));
+    }
+
+    // ── jaccard_kshingle ──────────────────────────────────────────────────
+
+    #[test]
+    fn jaccard_identical_strings() {
+        let j = jaccard_kshingle("the quick brown fox", "the quick brown fox", 2);
+        assert!((j - 1.0).abs() < 1e-6);
+    }
+
+    #[test]
+    fn jaccard_disjoint_strings() {
+        let j = jaccard_kshingle("alpha beta gamma", "delta epsilon zeta", 2);
+        assert_eq!(j, 0.0);
+    }
+
+    #[test]
+    fn jaccard_partial_overlap() {
+        // "the quick brown fox" vs "the brown fox jumps" — share bigram (brown,fox)
+        let j = jaccard_kshingle("the quick brown fox", "the brown fox jumps", 2);
+        assert!(j > 0.0 && j < 1.0, "expected partial overlap, got {j}");
+    }
+
+    #[test]
+    fn jaccard_both_empty_returns_one() {
+        // edge case: both empty → similarity defined as 1 (per impl)
+        assert_eq!(jaccard_kshingle("", "", 2), 1.0);
+    }
+
+    #[test]
+    fn jaccard_one_empty_returns_zero() {
+        assert_eq!(jaccard_kshingle("", "the quick brown fox jumps", 2), 0.0);
+    }
+
+    #[test]
+    fn jaccard_for_test_alias_works() {
+        let j = jaccard_for_test("a b c d", "a b c d", 2);
+        assert!((j - 1.0).abs() < 1e-6);
+    }
+
+    // ── default_members ───────────────────────────────────────────────────
+
+    #[test]
+    fn default_members_has_three_diverse_providers() {
+        let m = default_members();
+        assert_eq!(m.len(), 3);
+        let pids: Vec<_> = m.iter().map(|x| x.provider).collect();
+        assert!(pids.contains(&ProviderId::Anthropic));
+        assert!(pids.contains(&ProviderId::DeepSeek));
+        assert!(pids.contains(&ProviderId::Gemini));
+    }
+
+    #[test]
+    fn default_members_all_have_model_strings() {
+        for m in default_members() {
+            assert!(!m.model.is_empty(), "{:?} member missing model", m.provider);
+        }
+    }
+
+    // ── parse_critique ────────────────────────────────────────────────────
+
+    #[test]
+    fn parse_critique_extracts_critique_and_revised() {
+        let raw = "CRITIQUE: factual error in para 2\nREVISED: corrected version follows\n";
+        let (c, r) = parse_critique(raw, "fallback");
+        assert_eq!(c, "factual error in para 2");
+        assert_eq!(r, "corrected version follows");
+    }
+
+    #[test]
+    fn parse_critique_falls_back_to_original_when_no_revised() {
+        let raw = "CRITIQUE: minor nit, otherwise ok";
+        let (c, r) = parse_critique(raw, "the original answer");
+        assert_eq!(c, "minor nit, otherwise ok");
+        assert_eq!(r, "the original answer");
+    }
+
+    #[test]
+    fn parse_critique_handles_multiline_blocks() {
+        let raw = "CRITIQUE: line1\nline2 of critique\nREVISED: rev line1\nrev line2";
+        let (c, r) = parse_critique(raw, "fb");
+        assert!(c.contains("line1"));
+        assert!(c.contains("line2 of critique"));
+        assert!(r.contains("rev line1"));
+        assert!(r.contains("rev line2"));
+    }
+
+    #[test]
+    fn parse_critique_empty_raw_returns_fallback() {
+        let (c, r) = parse_critique("", "fb-answer");
+        assert_eq!(c, "");
+        assert_eq!(r, "fb-answer");
+    }
+
+    #[test]
+    fn parse_critique_unrecognised_format_returns_fallback() {
+        let raw = "this is just some text without our markers";
+        let (c, r) = parse_critique(raw, "fb-answer");
+        assert_eq!(c, "");
+        assert_eq!(r, "fb-answer");
+    }
+}

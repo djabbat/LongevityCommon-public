@@ -9,9 +9,14 @@ description = "AIM AI — finding suppressions (FS1). SQLite-backed mute list fo
 aim-ai-ledger = { path = "../aim-ai-ledger" }
 
 serde = { workspace = true }
+serde_json = { workspace = true }
 thiserror = { workspace = true }
 chrono = { workspace = true }
 rusqlite = { version = "0.31", features = ["bundled"] }
+
+[[bin]]
+name = "aim-ai-suppressions"
+path = "src/main.rs"
 
 [dev-dependencies]
 tempfile = "3"

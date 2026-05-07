@@ -29,3 +29,38 @@ pub fn rank_label(r: u8) -> &'static str {
         _ => "no_known",
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn severity_rank_orders_correctly() {
+        assert!(severity_rank("contraindicated") < severity_rank("major"));
+        assert!(severity_rank("major") < severity_rank("moderate"));
+        assert!(severity_rank("moderate") < severity_rank("minor"));
+        assert!(severity_rank("unknown_label") >= 4);
+    }
+
+    #[test]
+    fn rank_label_round_trips() {
+        for s in ["contraindicated", "major", "moderate", "minor"] {
+            let r = severity_rank(s);
+            assert_eq!(rank_label(r), s);
+        }
+    }
+
+    #[test]
+    fn canonicalise_uses_synonym_table() {
+        // canonicalise lowercases + trims input before lookup, so synonym
+        // keys must be stored in canonical (lowercase) form.
+        let mut syns = HashMap::new();
+        syns.insert("paracetamol".into(), "acetaminophen".into());
+        syns.insert("asa".into(), "aspirin".into());
+        assert_eq!(canonicalise("Paracetamol", &syns), "acetaminophen");
+        assert_eq!(canonicalise("ASA", &syns), "aspirin");
+        // Unknown drugs round-trip with lowercase + spaces→underscores.
+        assert_eq!(canonicalise("Ibuprofen", &syns), "ibuprofen");
+        assert_eq!(canonicalise("Vitamin D3", &syns), "vitamin_d3");
+    }
+}

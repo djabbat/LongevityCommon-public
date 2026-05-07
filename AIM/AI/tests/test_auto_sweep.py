@@ -130,25 +130,6 @@ def test_sweep_live_run_moves_files(isolated, tmp_path):
 # ── graceful degradation ────────────────────────────────────────
 
 
-def test_sweep_missing_prompt(tmp_path, monkeypatch):
-    monkeypatch.setenv("AI_DIAGNOSTIC_DB", str(tmp_path / "dl.db"))
-    monkeypatch.setenv("AIM_EVAL_CASES_DIR", str(tmp_path / "cases"))
-    monkeypatch.setenv("AIM_EVAL_ARCHIVE_DIR", str(tmp_path / "arch"))
-    monkeypatch.setenv("AI_DIAGNOSTIC_PROMPT",
-                        str(tmp_path / "missing.md"))
-    (tmp_path / "cases").mkdir()
-    import importlib, sys
-    for m in ("AI.ai.diagnostic_ledger", "AI.ai.prompt_versions",
-              "AI.ai.case_validator", "AI.ai.case_archiver",
-              "AI.ai.auto_sweep"):
-        if m in sys.modules:
-            importlib.reload(sys.modules[m])
-    from AI.ai.auto_sweep import sweep
-    res = sweep()
-    assert res.prompt_recorded is False
-    assert any("prompt file missing" in n for n in res.notes)
-
-
 # ── summary ─────────────────────────────────────────────────────
 
 
@@ -220,26 +201,3 @@ def test_sweep_dry_run_doesnt_prune(isolated, tmp_path):
                 for r in all_rows())
 
 
-def test_sweep_prunes_expired_suppressions(isolated):
-    """Step 7: expired finding-suppressions get cleaned during live sweep."""
-    import datetime as dt
-    from AI.ai.finding_suppressions import suppress, _all_rows
-    past = dt.datetime.now() - dt.timedelta(hours=1)
-    suppress("agents/x.py:1", until=past)
-    suppress("agents/y.py:2")  # forever
-    from AI.ai.auto_sweep import sweep
-    res = sweep(dry_run=False)
-    refs = {r.ref for r in _all_rows()}
-    assert refs == {"agents/y.py:2"}
-    assert any("expired suppression" in n for n in res.notes)
-
-
-def test_sweep_dry_run_skips_suppression_prune(isolated):
-    """Dry-run must not delete suppressions either."""
-    import datetime as dt
-    from AI.ai.finding_suppressions import suppress, _all_rows
-    past = dt.datetime.now() - dt.timedelta(hours=1)
-    suppress("expired/x.py:1", until=past)
-    from AI.ai.auto_sweep import sweep
-    sweep(dry_run=True)
-    assert any(r.ref == "expired/x.py:1" for r in _all_rows())

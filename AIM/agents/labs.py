@@ -304,6 +304,20 @@ class LabAgent:
         red_flags = detect_red_flags(results)
         patterns = detect_patterns(results)
 
+        # 2.5. Fire HOOK_LAB_CRITICAL on any red flag (HW1, 2026-05-06).
+        # Handler in agents/hook_handlers.py routes to Telegram + log via
+        # notify multiplexer with 4h dedup. Payload = Q4.B compact.
+        if red_flags:
+            try:
+                from agents.hooks import fire, HOOK_LAB_CRITICAL
+                fire(HOOK_LAB_CRITICAL, {
+                    "patient_id": patient.get("id", "?"),
+                    "red_flags": red_flags,
+                    "lang": lang,
+                })
+            except Exception as e:
+                log.debug("HOOK_LAB_CRITICAL fire failed: %s", e)
+
         # 3. Inject red flags into patient for kernel L1
         p = dict(patient)
         p["red_flags"] = p.get("red_flags", []) + red_flags
@@ -313,6 +327,17 @@ class LabAgent:
             if r.get("status") in ("low", "high", "critical_low", "critical_high")
         )
         p["unexplained_symptoms_count"] = p.get("unexplained_symptoms_count", 0) + abnormal_count
+        # Patient activation level (PAM-13) — feeds L_AGENCY law in the
+        # kernel. Auto-populate from the live tracker if the caller
+        # didn't pre-fill it.
+        if "activation_level" not in p:
+            try:
+                from agents import pam_tracker
+                p["activation_level"] = pam_tracker.current_activation_level(
+                    p.get("id", "")
+                )
+            except Exception:
+                p["activation_level"] = 0
 
         # 4. Generate alternatives
         alts = generate_alternatives(results, red_flags, patterns, p)

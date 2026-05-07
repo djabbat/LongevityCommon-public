@@ -363,6 +363,17 @@ class ChatAgent:
         p.setdefault("missing_labs_count", 0)
         p.setdefault("history_contradictions", 0)
         p.setdefault("unexplained_symptoms_count", 0)
+        # Patient activation level (PAM-13) — feeds L_AGENCY law in the
+        # kernel. Default to live tracker if patient has a stable id;
+        # 0 if anonymous (treats as "disengaged" → law passes with flag).
+        if "activation_level" not in p:
+            try:
+                from agents import pam_tracker
+                p["activation_level"] = pam_tracker.current_activation_level(
+                    p.get("id", "")
+                )
+            except Exception:
+                p["activation_level"] = 0
 
         # 4. Generate alternatives
         alts = generate_alternatives(message, intent, p)

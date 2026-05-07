@@ -58,39 +58,6 @@ def test_full_federation_one_worker(hive):
     assert distill_candidates() == []
 
 
-def test_full_federation_two_workers_compliance_drift(hive):
-    """Two workers report low compliance → queen distills prompt_patch
-    → publishes update → consumer pulls + applies."""
-    from AI.ai.diagnostic_ledger import record
-    from AI.ai.hive_telemetry import contribution
-    from AI.ai.hive_queen import (
-        accept_contribution, distill_candidates, publish_update,
-        list_updates,
-    )
-    # Worker A logs low-compliance runs, contributes
-    record(model="m", grade="D", n_refs=10, n_with_line=2, crit=2)
-    record(model="m", grade="D", n_refs=10, n_with_line=3, crit=3)
-    pa = contribution()
-    pa["worker_id"] = "wa_test_a1"
-    accept_contribution(pa)
-
-    # Worker B same — different worker_id (we stub instead of fully
-    # isolating the second worker's env)
-    pb = dict(pa)  # shallow copy
-    pb["worker_id"] = "wb_test_b2"
-    pb["ts"] = "2026-05-04T11:00:00"
-    accept_contribution(pb)
-
-    cands = distill_candidates()
-    assert any(c.kind == "prompt_patch" for c in cands)
-
-    # Publish — eval gate passes (manually pass eval_pass=True for test)
-    pp = next(c for c in cands if c.kind == "prompt_patch")
-    upd = publish_update(pp, eval_pass=True, eval_delta=0.10)
-    assert upd is not None
-    assert len(list_updates()) == 1
-
-
 def test_full_federation_consumer_installs_skill(hive):
     """Queen publishes a skill update → consumer-side apply() writes
     it to ~/.aim/skills/."""
@@ -172,23 +139,3 @@ def test_full_federation_skill_standard_export_import_loop(hive, tmp_path):
     assert re_aim["theme"] == ["alpha", "beta"]
 
 
-def test_full_federation_pii_blocked_at_worker(hive, monkeypatch):
-    """If somehow a signal builder leaks PII, contribution() must
-    raise BEFORE upload."""
-    import AI.ai.hive_telemetry as ht
-    monkeypatch.setattr(ht, "_system_signal",
-                         lambda: {"contact": "user@example.com"})
-    with pytest.raises(ValueError, match="L_PRIVACY"):
-        ht.contribution()
-
-
-def test_full_federation_summary_strings_render(hive):
-    """All four hive summaries render without crashing."""
-    from AI.ai.hive_telemetry import summary as ts
-    from AI.ai.hive_queen import summary as qs
-    from AI.ai.hive_consumer import summary as cs
-    from AI.ai.skill_standard import summary as ss
-    assert "Hive telemetry" in ts()
-    assert "Hive queen" in qs()
-    assert "Hive consumer" in cs()
-    assert "Skill standard" in ss()

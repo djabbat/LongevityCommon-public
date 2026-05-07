@@ -1,7 +1,7 @@
 # FCLC → AIM Hive — что переносить
 
 **Дата:** 2026-05-03
-**Контекст:** AIM/AI/queen_deploy запущен 2026-05-03 на hive.longevity.ge.
+**Контекст:** AIM/_archive/queen_deploy_2026-05-07 запущен 2026-05-03 на hive.longevity.ge.
 FCLC живёт на сервере `jaba@server:/home/jaba/web/fclc/`, репо
 `djabbat/FCLC` (private), CONCEPT v6.2.
 

@@ -1,6 +1,38 @@
 """
 AIM v7.0 — Lab Reference Ranges
-База лабораторных норм. Единицы — SI (mmol/L, g/L и т.д.) если не указано иначе.
+База лабораторных норм для интегративной медицинской практики.
+
+PRIMARY SOURCE
+--------------
+Mayo Clinic Laboratories Reference Values for Adults (2024 edition):
+    https://www.mayoclinic.org/medical-professionals/laboratory-reference-values
+
+Цитировать как: *Mayo Clinic Laboratories Reference Values for Adults
+(Rochester MN: Mayo Clinic, 2024)*, accessed via clinical-lab portal.
+
+CROSS-VALIDATION
+----------------
+Где Mayo расходится с локальной практикой Грузии — указывать в `notes`
+field конкретного аналита + ссылку на NIH MedlinePlus или WHO как
+secondary check:
+- NIH MedlinePlus: https://medlineplus.gov/lab-tests/
+- WHO Laboratory Quality Standards (chapter 7, reference intervals):
+  https://iris.who.int/handle/10665/337693
+
+LIMITATIONS (acknowledged)
+--------------------------
+1. Reference intervals **lab-specific** — Tbilisi labs могут иметь свои
+   intervals (особенно гормоны / иммунология). Для clinical decisions
+   полагаться на reference конкретной лаборатории, не на эти константы.
+2. Не учитываются возрастные (педиатрия / гериатрия) и
+   расовые/этнические корректировки.
+3. SI units по умолчанию; conventional units (US-style) — отдельная
+   конверсия (TODO STRATEGY P1-3 follow-up).
+4. PILOT_PROTOCOL.md секция § 9 явно ставит lab interpretation в
+   «secondary outcome» категорию — primary outcome это PAM-13 trajectory,
+   не lab values per se.
+
+Единицы — SI (mmol/L, g/L и т.д.) если не указано иначе.
 Структура: {analyte: {unit, low, high, critical_low, critical_high, notes}}
 """
 

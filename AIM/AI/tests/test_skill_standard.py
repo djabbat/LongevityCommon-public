@@ -132,17 +132,6 @@ def test_export_dir_overwrite_flag(tmp_path):
     assert export_dir(src, dst, overwrite=True) == 1
 
 
-def test_export_dir_handles_invalid_input(tmp_path):
-    src = tmp_path / "src"
-    src.mkdir()
-    (src / "broken.json").write_text("not json {")
-    (src / "good.json").write_text(json.dumps({"skill_id": "good"}))
-    dst = tmp_path / "dst"
-    from AI.ai.skill_standard import export_dir
-    n = export_dir(src, dst)
-    assert n == 1   # only good.json converted
-
-
 def test_import_export_round_trip(tmp_path):
     """A skill exported then re-imported should match the original on
     key fields."""

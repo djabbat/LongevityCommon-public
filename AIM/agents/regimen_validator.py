@@ -1,33 +1,33 @@
-"""agents/regimen_validator.py — strict regimen validator (D1, 2026-05-03).
+"""agents/regimen_validator.py — strict regimen validator (D1, 2026-05-03;
+Phase 8 hybrid 2026-05-07).
 
-Wraps `agents.interactions.check_regimen` with a hard-refusal layer:
-when the regimen contains a contraindicated pair OR a major interaction
-without explicit override, `validate(...)` raises `RegimenError`.
-
-Why this matters: the existing `check_interaction` / `check_regimen`
-functions just *report*. The doctor agent's loop is then free to ignore
-them in its synthesis. D1 enforces:
+Wraps `agents.interactions.check_regimen` (now a Rust-backed shim) with
+a hard-refusal layer:
 
   1. Contraindicated pair → ALWAYS refuse, no override.
-  2. Major pair → refuse unless `physician_override=True`.
-  3. Moderate pair → warn (returned in the validation result), do not refuse.
+  2. Major pair → refuse unless ``physician_override=True``.
+  3. Moderate pair → warn (returned), do not refuse.
   4. Minor / no_known → silent.
 
-The `Validation` dataclass also exposes:
-  * `safe_drugs`           — drugs that have no entanglement at all
-  * `must_drop`            — drugs that participated in any refusal
-  * `monitoring_required`  — drugs implicated in moderate interactions
+The drug-pair table + canonicalization live entirely in Rust
+(`rust-core/crates/aim-interactions`). The bucketing / refusal
+classification (this file) stays in Python because it's small (~50
+LoC), unit-tested via `tests/test_regimen_validator.py` with
+`monkeypatch.setattr(rv, "check_regimen", ...)`, and is mirrored in the
+Rust crate `aim-regimen-validator` for contexts where Python is not
+available (e.g., Phoenix LiveView calling the binary directly).
 
 Public API:
     validate(drugs, *, physician_override=False) -> Validation
-    RegimenError              # raised on hard refusal
-    annotate(report_text, drugs)  # post-process a doctor draft, redact unsafe
+    validate_or_raise(...)                                  → raises RegimenError
+    annotate(report_text, drugs, ...)                       → str
+    RegimenError
 """
 from __future__ import annotations
 
 import dataclasses
 import logging
-from typing import Iterable, Optional
+from typing import Iterable
 
 log = logging.getLogger("aim.regimen")
 
@@ -173,7 +173,8 @@ def annotate(draft_text: str, drugs: list[str], *,
             bits.append(f"   • {ix.drug_a} + {ix.drug_b} — "
                         f"{getattr(ix, 'recommendation', '')}")
     if v.major:
-        marker = "⚠️ MAJOR (override active)" if physician_override else "⛔ MAJOR — refused without physician_override"
+        marker = ("⚠️ MAJOR (override active)" if physician_override
+                  else "⛔ MAJOR — refused without physician_override")
         bits.append(f"{marker}:")
         for ix in v.major:
             bits.append(f"   • {ix.drug_a} + {ix.drug_b} — "

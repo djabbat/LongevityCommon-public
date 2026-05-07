@@ -1,24 +1,30 @@
-"""AI/ai/doctor.py — DR2 (2026-05-04).
+"""AI/ai/doctor.py — hybrid Rust+Python shim (Phase 9 Tier 3 #11, 2026-05-07).
 
-Smoke-test every AI/ai/* module + verify the wiring assumptions a
-fresh checkout depends on. Runs in O(seconds), no network, no model
-calls — pure local introspection.
+Smoke-test every AI/ai/* module + verify the wiring assumptions a fresh
+checkout depends on. Runs in O(seconds), no network, no model calls —
+pure local introspection.
 
-Returns a list of Probe results so callers (CLI, CI, dashboard) can
-decide what to do.
+Architecture:
+- Rust binary `aim-ai-doctor` owns: db_writable, workspace, artifacts_dir,
+  direction_rule, latest_report (structural / fs probes).
+- Python keeps: modules (every `AI/ai/*.py` must import — no Rust
+  equivalent) and api_key (DEEPSEEK_API_KEY presence).
 
-Public API:
+Public API (preserved):
+    Probe dataclass
     diagnose() -> list[Probe]
+    has_critical_failure(probes=None) -> bool
     summary() -> str
 """
 from __future__ import annotations
 
 import dataclasses
 import importlib
+import json
 import logging
-import os
+import subprocess
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Optional
 
 log = logging.getLogger("ai.doctor")
 
@@ -35,7 +41,46 @@ def _project_root() -> Path:
     return Path(__file__).resolve().parent.parent.parent
 
 
-# ── individual probes ───────────────────────────────────────────
+def _binary_path() -> Path:
+    return _project_root() / "rust-core" / "target" / "release" / "aim-ai-doctor"
+
+
+def _rust_probes() -> list[Probe]:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        return [Probe(
+            name="rust_doctor", ok=False, severity="warn",
+            detail=f"aim-ai-doctor binary not built at {bin_path}",
+        )]
+    repo_root = _project_root().parent  # Rust expects parent-of-AIM
+    proc = subprocess.run(
+        [str(bin_path), "diagnose", "--repo-root", str(repo_root)],
+        capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        return [Probe(
+            name="rust_doctor", ok=False, severity="warn",
+            detail=f"aim-ai-doctor diagnose failed: {proc.stderr.strip()}",
+        )]
+    out: list[Probe] = []
+    for line in proc.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            j = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        out.append(Probe(
+            name=j.get("name", "?"),
+            ok=bool(j.get("ok")),
+            detail=str(j.get("detail", "")),
+            severity=str(j.get("severity", "info")),
+        ))
+    return out
+
+
+# ── Python-only probes ──────────────────────────────────────────
 
 
 def _probe_modules() -> Probe:
@@ -60,75 +105,13 @@ def _probe_modules() -> Probe:
                  detail=f"{n} AI/ai modules import cleanly")
 
 
-def _probe_direction_rule() -> Probe:
-    """`agents/` must not import from AI/ — fundamental contract."""
-    from AI.ai.self_diagnostic import _direction_rule_status
-    out = _direction_rule_status()
-    if out["clean"]:
-        return Probe(name="direction_rule", ok=True,
-                     detail="agents/ → AI/ imports: 0 (clean)")
-    return Probe(name="direction_rule", ok=False, severity="crit",
-                 detail="agents/ imports AI/ — direction rule violated:\n  "
-                         + "\n  ".join(out["violations"][:5]))
-
-
-def _probe_db_writable() -> Probe:
-    """Diagnostic ledger DB path must be writable."""
-    from AI.ai.diagnostic_ledger import db_path
-    p = db_path()
-    try:
-        p.parent.mkdir(parents=True, exist_ok=True)
-        marker = p.parent / ".doctor_probe"
-        marker.write_text("ok", encoding="utf-8")
-        marker.unlink()
-    except OSError as e:
-        return Probe(name="db_writable", ok=False, severity="crit",
-                     detail=f"{p} — {e}")
-    return Probe(name="db_writable", ok=True,
-                 detail=f"{p.parent} is writable")
-
-
-def _probe_artifacts_dir() -> Probe:
-    """AI/artifacts/ must exist or be creatable."""
-    p = _project_root() / "AI" / "artifacts"
-    try:
-        p.mkdir(parents=True, exist_ok=True)
-    except OSError as e:
-        return Probe(name="artifacts_dir", ok=False, severity="warn",
-                     detail=f"{p} — {e}")
-    n = sum(1 for _ in p.glob("self_diag_*.md")
-             if "_request_" not in _.name)
-    return Probe(name="artifacts_dir", ok=True,
-                 detail=f"{p} ({n} reports)")
-
-
-def _probe_latest_report_parseable() -> Probe:
-    """If a self_diag_*.md exists, it must parse without crashing."""
-    p = _project_root() / "AI" / "artifacts"
-    cands = sorted(c for c in p.glob("self_diag_*.md")
-                    if "_request_" not in c.name)
-    if not cands:
-        return Probe(name="latest_report", ok=True,
-                     severity="info",
-                     detail="(no reports yet — first run pending)")
-    latest = cands[-1]
-    try:
-        from AI.ai.meta_evaluator import parse_report
-        parsed = parse_report(latest.read_text(encoding="utf-8",
-                                                  errors="replace"))
-    except Exception as e:
-        return Probe(name="latest_report", ok=False, severity="warn",
-                     detail=f"parse failed: {type(e).__name__}: {e}")
-    return Probe(name="latest_report", ok=True,
-                 detail=f"{latest.name} → grade={parsed.grade} "
-                         f"refs={len(parsed.findings)} "
-                         f"compliance={parsed.line_compliance:.0%}")
-
-
 def _probe_api_key() -> Probe:
-    """DEEPSEEK_API_KEY presence (warn, not crit — diagnostic still
-    parseable / fix_planner usable without it)."""
-    from AI.ai.run_self_diagnostic import _api_key
+    """DEEPSEEK_API_KEY presence (warn, not crit)."""
+    try:
+        from AI.ai.run_self_diagnostic import _api_key
+    except Exception as e:
+        return Probe(name="api_key", ok=False, severity="warn",
+                     detail=f"run_self_diagnostic unimportable: {e}")
     if _api_key():
         return Probe(name="api_key", ok=True,
                      detail="DEEPSEEK_API_KEY resolved")
@@ -137,22 +120,13 @@ def _probe_api_key() -> Probe:
                          "run_self_diagnostic.run() will fail")
 
 
-_PROBES: list[Callable[[], Probe]] = [
-    _probe_modules,
-    _probe_direction_rule,
-    _probe_db_writable,
-    _probe_artifacts_dir,
-    _probe_latest_report_parseable,
-    _probe_api_key,
-]
-
-
 # ── orchestrate ─────────────────────────────────────────────────
 
 
 def diagnose() -> list[Probe]:
     out: list[Probe] = []
-    for fn in _PROBES:
+    # Python-only first (fastest, structural).
+    for fn in (_probe_modules, _probe_api_key):
         try:
             out.append(fn())
         except Exception as e:
@@ -160,6 +134,8 @@ def diagnose() -> list[Probe]:
                               ok=False, severity="crit",
                               detail=f"probe crashed: "
                                       f"{type(e).__name__}: {e}"))
+    # Then Rust binary's structural probes.
+    out.extend(_rust_probes())
     return out
 
 

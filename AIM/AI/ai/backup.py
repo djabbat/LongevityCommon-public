@@ -1,82 +1,59 @@
-"""AI/ai/backup.py — BK1 (2026-05-04).
+"""AI/ai/backup.py — thin Python shim over the
+`aim-ai-backup` Rust binary (Phase 9 Tier 4 #26, 2026-05-07).
 
-JSON snapshot of every persistent DB AIM/AI uses, for backup / migration
-/ debugging. Safe to run any time — read-only, no writes back.
+JSON snapshot / restore of every persistent DB AIM/AI uses. The Rust
+crate owns SQLite I/O and JSON encoding; Python keeps the same public
+dict-shaped API plus the legacy default-output-path heuristic
+(`AI/artifacts/backup_*.json`).
 
-Public API:
+Public API (preserved):
     snapshot() -> dict
-    write_snapshot(path) -> Path
+    write_snapshot(path=None) -> Path
     restore(path, *, dry_run=False) -> dict
+    summary() -> str
+
+Env: AI_DIAGNOSTIC_DB.
 """
 from __future__ import annotations
 
-import contextlib
 import datetime as dt
 import json
 import logging
-import sqlite3
+import subprocess
 from pathlib import Path
 from typing import Optional
 
 log = logging.getLogger("ai.backup")
 
 
-_TABLES = (
-    "runs",
-    "tier_runs",
-    "prompt_versions",
-    "health_scores",
-    "finding_suppressions",
-)
+def _binary_path() -> Path:
+    return (
+        Path(__file__).resolve().parent.parent.parent
+        / "rust-core" / "target" / "release" / "aim-ai-backup"
+    )
 
 
-def _diag_db_path() -> Path:
-    from AI.ai.diagnostic_ledger import db_path
-    return db_path()
-
-
-def _distill_db_path() -> Path:
-    from AI.ai.distillation_tracker import db_path
-    return db_path()
-
-
-def _dump_db(p: Path) -> dict:
-    """Read every known table from the DB. Missing tables → []."""
-    out: dict[str, list[dict]] = {}
-    if not p.exists():
-        return out
-    with contextlib.closing(sqlite3.connect(p)) as conn:
-        conn.row_factory = sqlite3.Row
-        cur = conn.execute(
-            "SELECT name FROM sqlite_master "
-            "WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+def _run(args: list[str]) -> str:
+    bin_path = _binary_path()
+    if not bin_path.exists():
+        raise FileNotFoundError(
+            f"aim-ai-backup binary not built at {bin_path}"
         )
-        names = [r[0] for r in cur.fetchall()]
-        for name in names:
-            if name not in _TABLES:
-                continue
-            rows = conn.execute(f"SELECT * FROM {name}").fetchall()
-            out[name] = [dict(r) for r in rows]
-    return out
+    proc = subprocess.run(
+        [str(bin_path), *args], capture_output=True, text=True, check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"aim-ai-backup {args[0]} failed: {proc.stderr.strip()}"
+        )
+    return proc.stdout
 
 
 def snapshot() -> dict:
-    return {
-        "version": 1,
-        "created_at": dt.datetime.now().isoformat(timespec="seconds"),
-        "diagnostic_db": {
-            "path": str(_diag_db_path()),
-            "tables": _dump_db(_diag_db_path()),
-        },
-        "distillation_db": {
-            "path": str(_distill_db_path()),
-            "tables": _dump_db(_distill_db_path()),
-        },
-    }
+    return json.loads(_run(["snapshot"]).strip())
 
 
 def write_snapshot(path: Optional[Path] = None) -> Path:
-    s = snapshot()
     if path is None:
         try:
             from AI.ai.run_self_diagnostic import ai_root
@@ -88,82 +65,27 @@ def write_snapshot(path: Optional[Path] = None) -> Path:
         path = base / f"backup_{ts}.json"
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(s, ensure_ascii=False, indent=2),
-                     encoding="utf-8")
-    return path
-
-
-def _restore_db(p: Path, table_data: dict[str, list[dict]],
-                  *, dry_run: bool) -> dict:
-    """Re-insert rows from a snapshot back into a DB. UNIQUE indexes
-    must already match — we use INSERT OR IGNORE so duplicates are
-    silently skipped."""
-    counts: dict[str, int] = {}
-    if dry_run:
-        return {name: len(rows) for name, rows in table_data.items()}
-    p.parent.mkdir(parents=True, exist_ok=True)
-    with contextlib.closing(sqlite3.connect(p)) as conn:
-        for name, rows in table_data.items():
-            if not rows:
-                counts[name] = 0
-                continue
-            # Make sure the table exists by re-touching the source module.
-            if name == "runs":
-                from AI.ai.diagnostic_ledger import _connect as c
-                c().close()
-            elif name == "tier_runs":
-                from AI.ai.distillation_tracker import _connect as c
-                c().close()
-            elif name == "prompt_versions":
-                from AI.ai.prompt_versions import _connect as c
-                c().close()
-            elif name == "health_scores":
-                from AI.ai.health_score import _connect as c
-                c().close()
-            elif name == "finding_suppressions":
-                from AI.ai.finding_suppressions import _connect as c
-                c().close()
-            cols = list(rows[0].keys())
-            placeholders = ",".join("?" * len(cols))
-            stmt = (f"INSERT OR IGNORE INTO {name} "
-                     f"({','.join(cols)}) VALUES ({placeholders})")
-            inserted = 0
-            for r in rows:
-                conn.execute(stmt, [r[c] for c in cols])
-                inserted += 1
-            conn.commit()
-            counts[name] = inserted
-    return counts
+    j = json.loads(_run(["write", "--out", str(path)]).strip())
+    return Path(j.get("path", path))
 
 
 def restore(path: Path, *, dry_run: bool = False) -> dict:
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(p)
-    payload = json.loads(p.read_text(encoding="utf-8"))
-    if payload.get("version") != 1:
-        raise ValueError(f"unsupported snapshot version: "
-                          f"{payload.get('version')!r}")
-    diag_counts = _restore_db(
-        _diag_db_path(),
-        payload.get("diagnostic_db", {}).get("tables", {}),
-        dry_run=dry_run,
-    )
-    distill_counts = _restore_db(
-        _distill_db_path(),
-        payload.get("distillation_db", {}).get("tables", {}),
-        dry_run=dry_run,
-    )
-    return {"diagnostic_db": diag_counts,
-             "distillation_db": distill_counts,
-             "dry_run": dry_run}
+    args = ["restore", "--in", str(p)]
+    if not dry_run:
+        args.append("--apply")
+    try:
+        out = _run(args).strip()
+    except RuntimeError as e:
+        if "unsupported snapshot version" in str(e).lower():
+            raise ValueError(str(e))
+        raise
+    if not out:
+        return {"diagnostic_db": {}, "distillation_db": {}, "dry_run": dry_run}
+    return json.loads(out)
 
 
 def summary() -> str:
-    s = snapshot()
-    parts = ["📦 Backup snapshot inventory"]
-    for db_key in ("diagnostic_db", "distillation_db"):
-        parts.append(f"  {db_key}: {s[db_key]['path']}")
-        for tname, rows in sorted(s[db_key]["tables"].items()):
-            parts.append(f"    • {tname:24s} {len(rows):>5d} rows")
-    return "\n".join(parts)
+    return _run(["summary"]).rstrip("\n")
