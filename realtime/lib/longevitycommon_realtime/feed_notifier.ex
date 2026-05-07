@@ -42,11 +42,13 @@ defmodule LongevityCommonRealtime.FeedNotifier do
 
   @impl true
   def handle_info({:notification, _pid, _ref, @channel, payload}, state) do
+    Logger.info("FeedNotifier: notify received (#{byte_size(payload)} bytes)")
     case Jason.decode(payload) do
       {:ok, %{"kind" => kind} = msg} when kind in ["new_post", "post_updated", "post_deleted"] ->
+        Logger.info("FeedNotifier: broadcast #{kind} to #{@phoenix_topic}")
         LongevityCommonRealtimeWeb.Endpoint.broadcast(@phoenix_topic, kind, msg)
       {:ok, %{"kind" => other}} ->
-        Logger.debug("FeedNotifier: unknown kind=#{other}, ignoring")
+        Logger.warning("FeedNotifier: unknown kind=#{other}, ignoring")
       {:error, e} ->
         Logger.warning("FeedNotifier: invalid JSON payload: #{inspect(e)}; raw=#{payload}")
     end
