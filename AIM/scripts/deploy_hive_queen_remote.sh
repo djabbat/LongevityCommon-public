@@ -45,6 +45,11 @@ PORT=8090
 HOST=0.0.0.0
 RUST_LOG=info
 
+# sqlite DB lives in $XDG_CACHE_HOME/aim/hive_queen.db.
+# Service user `aim` has home=/opt/aim-hive-queen which is read-only under
+# ProtectSystem=strict — point XDG_CACHE_HOME at the unit's ReadWritePaths.
+XDG_CACHE_HOME=/var/lib/aim-hive-queen
+
 # Admin operations (POST /v1/hive/distill, GET /v1/hive/status) require this:
 AIM_HIVE_ADMIN_TOKEN=CHANGE_ME_$(/usr/bin/openssl rand -hex 16)
 
@@ -65,9 +70,9 @@ if ! /usr/bin/id aim &>/dev/null; then
     sudo /usr/sbin/useradd -r -s /usr/sbin/nologin -d /opt/aim-hive-queen aim
 fi
 
-# 2. dirs
-sudo /usr/bin/mkdir -p /opt/aim-hive-queen /var/lib/aim-hive-queen /etc/aim
-sudo /usr/bin/chown aim:aim /opt/aim-hive-queen /var/lib/aim-hive-queen
+# 2. dirs (include /var/lib/aim-hive-queen/aim so $XDG_CACHE_HOME/aim is writable)
+sudo /usr/bin/mkdir -p /opt/aim-hive-queen /var/lib/aim-hive-queen/aim /etc/aim
+sudo /usr/bin/chown -R aim:aim /opt/aim-hive-queen /var/lib/aim-hive-queen
 sudo /usr/bin/chown root:aim /etc/aim
 sudo /usr/bin/chmod 750 /etc/aim
 

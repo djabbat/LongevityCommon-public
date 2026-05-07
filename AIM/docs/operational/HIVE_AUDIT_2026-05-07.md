@@ -204,23 +204,30 @@ Steps detailed в `docs/operational/HIVE_QUEEN_DEPLOY.md`. Summary:
 3. **Configure local worker**: `echo 'AIM_HIVE_QUEEN_URL=https://hive.longevity.ge' >> ~/.aim_env && bash scripts/deploy_aim_hive_worker.sh --user`
 4. **Verify cycle**: see queen DB created + contribution accepted.
 
-### Code-level (next session, autonomous-able)
+### Code-level (closed 2026-05-07, autonomous code session)
 
-5. P0.3 — write `aim-hive-consumer/src/bin/consumer.rs` (long-poll updates).
-6. P1.1 — bump `MIN_WORKERS_FOR_PATTERN`, make configurable.
-7. P1.2 — `name_pair` redact instead of reject.
-8. P1.3 — extend PII patterns (IPv4/dates/IDs).
-9. P1.4 — `accept_contribution` payload size cap.
-10. P1.5 — backup cron documented + sample crontab.
-11. P1.6 — unify error response format.
-12. P1.7 — env-configured worker token list (no external backend).
+5. ✅ P0.3 — `aim-hive-consumer/src/bin/consumer.rs` (190 LoC, 5 subcommands).
+6. ✅ P1.1 — `MIN_WORKERS_FOR_PATTERN` 2 → 5, env override `AIM_HIVE_MIN_WORKERS_FOR_PATTERN`.
+7. ✅ P1.2 — `name_pair` switched to redact (`[redacted]` placeholder).
+8. ✅ P1.3 — `ipv4` (Reject), `iso_date` (Redact), `long_id` 9-12 digits (Reject).
+9. ✅ P1.4 — 1 MiB cap (env `AIM_HIVE_MAX_PAYLOAD_BYTES`); HTTP 413 + canonical body.
+10. ✅ P1.5 — `HIVE_QUEEN_DEPLOY.md` § 5 — `sqlite3 .backup` cron + 14-day retention + restore.
+11. ✅ P1.6 — Rust `JsonRejection` mapped + fallback 404; Python `RequestValidationError` + Exception handlers.
+12. ✅ P1.7 — `AIM_HIVE_WORKER_TOKENS` SHA-256 hex allowlist; `require_worker_bearer` / `require_admin_bearer` helpers.
+
+**Tests added:** 71 hive crate tests (was 0 binary, +everything).
+**Regression:** ALL 3 BLOCKS PASS (Python 167 + 34 subtests · Rust 216 across 11 crates · Phoenix 23).
 
 ### Strategic (future)
 
-13. Plan Python → Rust queen migration (HIVE_QUEEN_DEPLOY.md Option B).
+13. P0.4 — Python → Rust queen migration (Option B). Requires 1-week
+    focused session: side-by-side parity validation on alt port,
+    nginx upstream cutover, decommission Python queen.
 14. Evaluate если Hive subsystem worth keeping at all (3 дня live, 0
     contributions; if никто никогда не contribute → закрыть как vapor по
-    аналогии с aim-media v7.2).
+    аналогии с aim-media v7.2). Decision deferred until ≥1 real worker
+    completes a full cycle (contribute → queen distill ≥5 workers →
+    consumer pull → install).
 
 ---
 

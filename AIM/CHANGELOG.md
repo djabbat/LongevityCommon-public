@@ -8,6 +8,42 @@ SemVer-compatible.
 
 ## [Unreleased]
 
+### Hive deep-audit closure (2026-05-07, code-level P0+P1)
+
+Continuation of overnight Hive audit. Closes 7 of the 8 audit items
+(P0.4 Python→Rust queen migration deferred to focused 1-week session).
+
+| Item | Artefact |
+|---|---|
+| **P0.3** consumer binary | `rust-core/crates/aim-hive-consumer/src/bin/consumer.rs` (~190 LoC). Subcommands: `pull` / `loop` / `status` / `opt-out` / `opt-in`. Long-poll mode honours `AIM_HIVE_POLL_INTERVAL_S`. **Closes the cycle:** workers contribute → queen distills → consumers apply. |
+| **P1.1** distill threshold | `aim-hive-queen::distill::MIN_WORKERS_FOR_PATTERN` 2 → **5** (collusion-attack mitigation). Env override `AIM_HIVE_MIN_WORKERS_FOR_PATTERN`. |
+| **P1.2** name_pair scrubber | `aim-hive-worker::scrub` — Title-Case bigram switched from hard-reject to **redact** with `[redacted]` placeholder. Preserves contributions on benign collisions ("Linux Kernel", "User Activity"). |
+| **P1.3** PII patterns extended | `aim-hive-worker::scrub` adds **ipv4** (Reject), **iso_date** (Redact), **long_id** 9-12 digits (Reject). |
+| **P1.4** payload size cap | `aim-hive-queen::accept_contribution` rejects > **1 MiB** (env `AIM_HIVE_MAX_PAYLOAD_BYTES`). HTTP layer enforces same via `DefaultBodyLimit`. New error `HiveQueenError::PayloadTooLarge`; mapped to **413** with canonical body. |
+| **P1.5** backup cron | `docs/operational/HIVE_QUEEN_DEPLOY.md` § 5 — `sqlite3 .backup` nightly cron sample + 14-day retention + restore procedure. |
+| **P1.6** error format unified | Rust queen: `JsonRejection` mapped to canonical `{"error","status"}`; **fallback 404 handler** for unknown routes. Python `queen_app.py` adds **`RequestValidationError`** + catch-all `Exception` handlers to canonical shape. |
+| **P1.7** worker token allowlist | Rust queen: replaces external auth backend (was returning 503 → 0 contributions ever) with **`AIM_HIVE_WORKER_TOKENS`** env list of SHA-256 hex hashes. New `require_worker_bearer` + `require_admin_bearer` helpers. Empty allowlist + `REQUIRE_AUTH=1` → legacy bootstrap (any non-empty bearer, logged at startup). |
+
+**Tests added:** +13 aim-hive-consumer · +9 distill · +9 scrub (P1.2/P1.3) · +3 lib (P1.4) · +12 server (P1.7).
+**Hive crate regression:** 71/71 pass (consumer 13 · queen-lib 21 · queen-bin 12 · worker 25).
+**Full regression `--quick`:** ALL 3 BLOCKS PASS (Python 167 + 34 subtests · Rust 216 across 11 cornerstone+infra crates · Phoenix 23).
+
+**Open / deferred:**
+- **P0.4** Python → Rust queen migration (Option B in HIVE_QUEEN_DEPLOY.md) — **parity validation done 2026-05-07** (`docs/operational/HIVE_PARITY_2026-05-07.md`); cutover decision is the user's.
+- **Manual (sudo on hive.longevity.ge):**
+  1. `sudo systemctl restart aim-hive-queen` — activates patched Python handlers (structured `queen_summary`, `RequestValidationError`, generic `Exception` → canonical body).
+  2. Decide cutover to Rust queen (one-command swap of `ExecStart`).
+  3. Populate `AIM_HIVE_WORKER_TOKENS` once N>1 real worker hosts come online.
+
+### Server-side artifacts (deployed 2026-05-07 20:09 +04)
+
+- `/home/jaba/hive_queen_src/queen_app.py` — patched (structured summary + canonical error handlers); awaiting `systemctl restart`.
+- `/home/jaba/web/aim/AIM/rust-core/target/release/aim-hive-queen` — rebuilt aarch64 release, includes P1.4/P1.6/P1.7.
+- `/home/jaba/web/aim/AIM/rust-core/target/release/aim-hive-consumer` — new binary, P0.3.
+- `/home/jaba/hive_queen_rust_parity/` — Rust queen running on `:8091`, separate DB, isolated tokens; for parity verification only.
+
+**Hive parity verdict (full report in `docs/operational/HIVE_PARITY_2026-05-07.md`):** post-restart Python and Rust queens agree on all endpoints; pre-restart drift is all in Python error paths the patch addresses.
+
 ### Added
 - Файлы ядра проекта восстановлены до полного 11-канона: `THEORY.md` (immutable
   formal spec PAM-13 + L_AGENCY), `STRATEGY.md` (6-месячный focus), `REMINDER.md`

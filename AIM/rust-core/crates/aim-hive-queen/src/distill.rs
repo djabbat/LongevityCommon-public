@@ -13,10 +13,25 @@ use std::collections::{BTreeMap, BTreeSet};
 use crate::{Candidate, Contribution};
 
 /// Minimum distinct workers showing the same pattern before it becomes
-/// a candidate.
-pub const MIN_WORKERS_FOR_PATTERN: usize = 2;
+/// a candidate. Hardened from 2 → 5 in 2026-05-07 audit (collusion attack
+/// vector — 2 fake workers could push a `prompt_patch`). Override at
+/// runtime via `AIM_HIVE_MIN_WORKERS_FOR_PATTERN`.
+pub const MIN_WORKERS_FOR_PATTERN: usize = 5;
+
+/// Effective threshold for the current process: env override
+/// `AIM_HIVE_MIN_WORKERS_FOR_PATTERN` (saturating at 1) or the
+/// compile-time default. Reads env on every call — cheap; intentionally
+/// uncached so a hot reload of `.env` takes effect after queen restart.
+pub fn min_workers_for_pattern() -> usize {
+    std::env::var("AIM_HIVE_MIN_WORKERS_FOR_PATTERN")
+        .ok()
+        .and_then(|s| s.parse::<usize>().ok())
+        .map(|n| n.max(1))
+        .unwrap_or(MIN_WORKERS_FOR_PATTERN)
+}
 
 pub fn distill(contribs: &[Contribution]) -> Vec<Candidate> {
+    let min_workers = min_workers_for_pattern();
     let mut out: Vec<Candidate> = Vec::new();
 
     // 1. Compliance drift detection.
@@ -35,7 +50,7 @@ pub fn distill(contribs: &[Contribution]) -> Vec<Candidate> {
             by_worker.insert(c.worker_id.clone(), avg);
         }
     }
-    if by_worker.len() >= MIN_WORKERS_FOR_PATTERN {
+    if by_worker.len() >= min_workers {
         let avg: f64 = by_worker.values().sum::<f64>() / by_worker.len() as f64;
         if avg < 0.5 {
             let workers: BTreeSet<String> = by_worker.keys().cloned().collect();
@@ -89,7 +104,7 @@ pub fn distill(contribs: &[Contribution]) -> Vec<Candidate> {
         }
     }
     for (theme, ws) in theme_workers {
-        if ws.len() >= MIN_WORKERS_FOR_PATTERN {
+        if ws.len() >= min_workers {
             use sha2::Digest;
             let key = theme.join(" ");
             let mut h = sha2::Sha256::new();
@@ -139,65 +154,102 @@ mod tests {
         assert!(distill(&cs).is_empty());
     }
 
+    fn drift(worker: &str, avg: f64) -> Contribution {
+        contrib(
+            worker,
+            serde_json::json!({"ledger":{"n_runs":5,"avg_compliance":avg}}),
+        )
+    }
+    fn theme(worker: &str, theme: &[&str]) -> Contribution {
+        contrib(
+            worker,
+            serde_json::json!({"reflexion":{"clusters":[{"theme": theme,"n":1}]}}),
+        )
+    }
+
     #[test]
-    fn compliance_drift_detected_two_workers_low() {
+    fn compliance_drift_detected_at_default_threshold() {
+        // Default threshold = 5 workers (2026-05-07 hardening).
         let cs = vec![
-            contrib(
-                "w1",
-                serde_json::json!({"ledger":{"n_runs":5,"avg_compliance":0.3}}),
-            ),
-            contrib(
-                "w2",
-                serde_json::json!({"ledger":{"n_runs":5,"avg_compliance":0.4}}),
-            ),
+            drift("w1", 0.3),
+            drift("w2", 0.4),
+            drift("w3", 0.35),
+            drift("w4", 0.45),
+            drift("w5", 0.4),
         ];
         let out = distill(&cs);
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].kind, "prompt_patch");
-        assert_eq!(out[0].source_n(), 2);
+        assert_eq!(out[0].source_n(), 5);
+    }
+
+    #[test]
+    fn compliance_drift_below_threshold_no_candidate() {
+        // 4 workers (< 5) → must NOT produce a candidate. Closes the
+        // 2026-05-07 collusion gap (was: 2 workers could push patch).
+        let cs = vec![
+            drift("w1", 0.3),
+            drift("w2", 0.3),
+            drift("w3", 0.3),
+            drift("w4", 0.3),
+        ];
+        assert!(distill(&cs).is_empty());
     }
 
     #[test]
     fn compliance_drift_not_detected_when_high() {
         let cs = vec![
-            contrib(
-                "w1",
-                serde_json::json!({"ledger":{"n_runs":5,"avg_compliance":0.7}}),
-            ),
-            contrib(
-                "w2",
-                serde_json::json!({"ledger":{"n_runs":5,"avg_compliance":0.8}}),
-            ),
+            drift("w1", 0.7),
+            drift("w2", 0.8),
+            drift("w3", 0.75),
+            drift("w4", 0.7),
+            drift("w5", 0.85),
         ];
         assert!(distill(&cs).is_empty());
     }
 
     #[test]
-    fn theme_convergence() {
+    fn theme_convergence_at_default_threshold() {
+        // 5 workers all see the same theme → candidate.
         let cs = vec![
-            contrib(
-                "w1",
-                serde_json::json!({"reflexion":{"clusters":[{"theme":["bug","retry"],"n":3}]}}),
-            ),
-            contrib(
-                "w2",
-                serde_json::json!({"reflexion":{"clusters":[{"theme":["retry","bug"],"n":2}]}}),
-            ),
+            theme("w1", &["bug", "retry"]),
+            theme("w2", &["retry", "bug"]),
+            theme("w3", &["bug", "retry"]),
+            theme("w4", &["retry", "bug"]),
+            theme("w5", &["bug", "retry"]),
         ];
         let out = distill(&cs);
-        // theme normalised to sorted ["bug","retry"], shared by both → 1 candidate
+        // theme normalised to sorted ["bug","retry"]; 5 ≥ default
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].kind, "skill");
-        assert_eq!(out[0].source_n(), 2);
+        assert_eq!(out[0].source_n(), 5);
         assert!(out[0].body["skill_id"].as_str().unwrap().starts_with("auto-"));
     }
 
     #[test]
-    fn theme_skipped_if_only_one_worker() {
-        let cs = vec![contrib(
-            "w1",
-            serde_json::json!({"reflexion":{"clusters":[{"theme":["a","b"],"n":1}]}}),
-        )];
+    fn theme_skipped_below_threshold() {
+        let cs = vec![
+            theme("w1", &["a", "b"]),
+            theme("w2", &["a", "b"]),
+            theme("w3", &["a", "b"]),
+            theme("w4", &["a", "b"]),
+        ];
         assert!(distill(&cs).is_empty());
+    }
+
+    #[test]
+    fn theme_skipped_if_only_one_worker() {
+        let cs = vec![theme("w1", &["a", "b"])];
+        assert!(distill(&cs).is_empty());
+    }
+
+    #[test]
+    fn min_workers_helper_returns_default_when_unset() {
+        // Sanity: helper returns the const default when env unset.
+        // We avoid mutating env in tests (parallel-unsafe); this only
+        // exercises the unset branch, which is the production case.
+        std::env::remove_var("AIM_HIVE_MIN_WORKERS_FOR_PATTERN");
+        assert_eq!(min_workers_for_pattern(), MIN_WORKERS_FOR_PATTERN);
+        assert_eq!(MIN_WORKERS_FOR_PATTERN, 5);
     }
 }

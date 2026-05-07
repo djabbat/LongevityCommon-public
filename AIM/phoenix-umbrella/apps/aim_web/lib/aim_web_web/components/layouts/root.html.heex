@@ -656,11 +656,34 @@
       }
     </style>
 
+    <script defer src="/assets/phoenix.min.js"></script>
+    <script defer src="/assets/phoenix_live_view.min.js"></script>
+    <script defer>
+      // Initialise LiveSocket once dependencies are loaded. The bundles are
+      // symlinked from deps/{phoenix,phoenix_live_view}/priv/static into
+      // apps/aim_web/priv/static/assets and exposed via Plug.Static.
+      window.addEventListener("DOMContentLoaded", function(){
+        if (!window.Phoenix || !window.LiveView) {
+          console.error("[aim] phoenix / phoenix_live_view bundles missing — chat & live updates disabled");
+          return;
+        }
+        var meta = document.querySelector("meta[name='csrf-token']");
+        var csrf = meta ? meta.getAttribute("content") : null;
+        var liveSocket = new window.LiveView.LiveSocket("/live", window.Phoenix.Socket, {
+          params: { _csrf_token: csrf }
+        });
+        liveSocket.connect();
+        window.liveSocket = liveSocket;
+      });
+    </script>
     <script src="https://longevity.ge/eco-inject.js?v=61" defer></script>
     <script>
-      // Read shared theme cookie (.longevity.ge), fall back to localStorage,
-      // and apply data-theme="dark" pre-paint to avoid FOUC. Sync theme-toggle button
-      // and persist to the same cookie so toggling on AIM affects ze/biosense/etc.
+      // Robust theme toggle that survives:
+      //   * LiveView morphdom replacing the eco-bar / button on every patch
+      //   * eco-inject.js loading before/after this script (or not at all)
+      //   * 127.0.0.1 dev (cookie with domain=.longevity.ge silently rejected)
+      // Strategy: event delegation on document + apply data-theme on every
+      // phx LV update + dual cookie write (host-only AND .longevity.ge).
       (function(){
         function getTheme(){
           var m = document.cookie.match(/(?:^|; )lc_theme=([^;]+)/);
@@ -669,33 +692,93 @@
         }
         function setTheme(v){
           var d = new Date(); d.setTime(d.getTime() + 365*24*60*60*1000);
-          document.cookie = "lc_theme=" + encodeURIComponent(v) + "; expires=" + d.toUTCString() +
-                            "; path=/; domain=.longevity.ge; SameSite=Lax";
+          var exp = d.toUTCString();
+          // Host-only cookie — works on 127.0.0.1, localhost, and any
+          // *.longevity.ge subdomain (browser stores it for the current host).
+          document.cookie = "lc_theme=" + encodeURIComponent(v) +
+                            "; expires=" + exp + "; path=/; SameSite=Lax";
+          // Cross-subdomain cookie — succeeds only when host matches
+          // .longevity.ge; silently dropped on 127.0.0.1, which is fine.
+          if (/\.longevity\.ge$/i.test(location.hostname)) {
+            document.cookie = "lc_theme=" + encodeURIComponent(v) +
+                              "; expires=" + exp +
+                              "; path=/; domain=.longevity.ge; SameSite=Lax";
+          }
           try { localStorage.setItem("theme", v); } catch(e){}
         }
-        var t = getTheme();
-        if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        function applyTheme(){
+          var t = getTheme();
+          if (t === "dark") document.documentElement.setAttribute("data-theme", "dark");
+          else document.documentElement.removeAttribute("data-theme");
+          syncAllIcons();
+        }
+        function syncAllIcons(){
+          var dark = document.documentElement.getAttribute("data-theme") === "dark";
+          var btns = document.querySelectorAll(".theme-toggle-i");
+          for (var i = 0; i < btns.length; i++) btns[i].textContent = dark ? "☀" : "☾";
+        }
+        // 1) Pre-paint apply (before first render to avoid FOUC).
+        applyTheme();
 
-        document.addEventListener("DOMContentLoaded", function(){
-          var btn = document.querySelector(".theme-toggle-i");
+        // 2) Event delegation — survives any DOM replacement (LV morphdom,
+        //    eco-inject.js rewrites, etc.). One handler for the lifetime of
+        //    the document.
+        document.addEventListener("click", function(e){
+          var btn = e.target && e.target.closest && e.target.closest(".theme-toggle-i");
           if (!btn) return;
-          function syncIcon(){
-            var dark = document.documentElement.getAttribute("data-theme") === "dark";
-            btn.textContent = dark ? "☀" : "☾";
+          e.preventDefault();
+          // Capture-phase + stopImmediatePropagation: eco-inject.js also
+          // attaches a click listener directly on the button (target phase)
+          // that toggles data-theme. Without stopping, both fire and the
+          // toggles cancel out — visible: nothing happens.
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+          var dark = document.documentElement.getAttribute("data-theme") === "dark";
+          if (dark) {
+            document.documentElement.removeAttribute("data-theme");
+            setTheme("light");
+          } else {
+            document.documentElement.setAttribute("data-theme", "dark");
+            setTheme("dark");
           }
-          syncIcon();
-          btn.addEventListener("click", function(){
-            var dark = document.documentElement.getAttribute("data-theme") === "dark";
-            if (dark) {
-              document.documentElement.removeAttribute("data-theme");
-              setTheme("light");
-            } else {
-              document.documentElement.setAttribute("data-theme", "dark");
-              setTheme("dark");
-            }
-            syncIcon();
-          });
-        });
+          syncAllIcons();
+        }, true);
+
+        // 3) Re-sync icon after any LiveView update / page-loading transition.
+        function reapply(){ syncAllIcons(); }
+        document.addEventListener("DOMContentLoaded", reapply);
+        window.addEventListener("phx:page-loading-stop", reapply);
+        window.addEventListener("phx:update", reapply);
+      })();
+
+      // ── ChatLive UX helpers ─────────────────────────────────────────────
+      // Enter sends, Shift+Enter inserts newline. Delegated so it survives
+      // LV morphdom replacing the textarea.
+      document.addEventListener("keydown", function(e){
+        if (e.key !== "Enter" || e.shiftKey || e.isComposing) return;
+        var t = e.target;
+        if (!t || t.tagName !== "TEXTAREA") return;
+        var form = t.form;
+        if (!form || !form.classList.contains("aim-chat-form")) return;
+        e.preventDefault();
+        if (typeof form.requestSubmit === "function") form.requestSubmit();
+        else form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+      }, true);
+
+      // Auto-scroll #aim-chat-log to bottom on any DOM mutation. One-shot
+      // observer attachment per element via __aim_obs flag.
+      (function(){
+        function bind(){
+          var el = document.getElementById("aim-chat-log");
+          if (!el || el.__aim_obs) return;
+          el.__aim_obs = true;
+          el.scrollTop = el.scrollHeight;
+          new MutationObserver(function(){ el.scrollTop = el.scrollHeight; })
+            .observe(el, { childList: true, subtree: true, characterData: true });
+        }
+        document.addEventListener("DOMContentLoaded", bind);
+        window.addEventListener("phx:page-loading-stop", bind);
+        window.addEventListener("phx:update", bind);
       })();
     </script>
   </head>

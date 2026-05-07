@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
-# scripts/desktop/aim_local_launch.sh
-# Launch LOCAL AIM Phoenix dev server (force local, no prod fallback).
+# scripts/desktop/aim_chat_launch.sh
+# Open AIM Chat as a standalone window (no browser tabs/toolbar).
 #
-# UX 2026-05-07:
-#   * No visible terminal. mix phx.server runs detached, log → /tmp/aim_local_phx.log
-#   * zenity --progress (pulsate) shows boot progress while we poll port :4000
-#   * On port-up: progress dialog closes, browser opens /admin
-#   * On boot failure: zenity --error with last 30 log lines
-#
-# Env quirks fixed (vs. previous version that left port refused):
-#   * config/runtime.exs reads AIM_WEB_PORT (not PORT) → we set both
-#   * runtime.exs sets `server: phx_server?` where phx_server? requires
-#     PHX_SERVER=true → without it, endpoint never binds
+# UX:
+#   * Reuses local Phoenix dev server (port :4000) — boots it via
+#     aim_local_launch helpers if not already up.
+#   * Shows zenity --progress (pulsate) during boot.
+#   * Opens http://127.0.0.1:4000/chat as a Chrome --app= window
+#     (PWA-style: just title bar + content, no URL bar / tabs).
+#   * Firefox fallback uses --new-window when Chrome unavailable.
 set -uo pipefail
 REPO_ROOT="/home/oem/Desktop/LongevityCommon/AIM"
 PHOENIX="$REPO_ROOT/phoenix-umbrella"
 PORT="${AIM_LOCAL_PORT:-4000}"
-LOCAL_URL="http://127.0.0.1:${PORT}/"
-ADMIN_URL="http://127.0.0.1:${PORT}/admin"
+CHAT_URL="http://127.0.0.1:${PORT}/chat"
 LOG="/tmp/aim_local_phx.log"
 PIDFILE="/tmp/aim_local_phx.pid"
 
@@ -35,13 +31,32 @@ show_error() {
     fi
 }
 
+open_chat_window() {
+    local url="$1"
+    local profile_dir="$HOME/.cache/aim-chat-chrome"
+    /usr/bin/mkdir -p "$profile_dir"
+    if command -v /usr/bin/google-chrome >/dev/null 2>&1; then
+        /usr/bin/google-chrome \
+            --app="$url" \
+            --user-data-dir="$profile_dir" \
+            --window-size=900,720 \
+            --no-first-run \
+            --no-default-browser-check \
+            >/dev/null 2>&1 &
+    elif command -v /usr/bin/firefox >/dev/null 2>&1; then
+        /usr/bin/firefox --new-window "$url" >/dev/null 2>&1 &
+    else
+        /usr/bin/xdg-open "$url" >/dev/null 2>&1 &
+    fi
+}
+
 # 1) Already running?
-if [ "$(reachable "$LOCAL_URL")" = "200" ]; then
-    /usr/bin/xdg-open "$ADMIN_URL" >/dev/null 2>&1 &
+if [ "$(reachable "http://127.0.0.1:${PORT}/")" = "200" ]; then
+    open_chat_window "$CHAT_URL"
     exit 0
 fi
 
-# 2) Stale PID file?
+# 2) Stale PID?
 if [ -f "$PIDFILE" ]; then
     OLDPID="$(cat "$PIDFILE" 2>/dev/null || true)"
     if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
@@ -52,7 +67,7 @@ if [ -f "$PIDFILE" ]; then
     rm -f "$PIDFILE"
 fi
 
-# 3) Boot phx.server detached, log to file.
+# 3) Boot phx.server detached.
 : > "$LOG"
 (
     cd "$PHOENIX" || exit 1
@@ -65,7 +80,7 @@ fi
 PHX_PID=$!
 echo "$PHX_PID" > "$PIDFILE"
 
-# 4) Pulsating progress dialog. Close on port-up or process-death.
+# 4) Progress dialog.
 (
     STAGE="Starting Erlang VM…"
     for i in $(/usr/bin/seq 1 240); do
@@ -77,10 +92,10 @@ echo "$PHX_PID" > "$PIDFILE"
             60) STAGE="Binding 127.0.0.1:${PORT}…" ;;
             120) STAGE="Still booting (cold compile, please wait)…" ;;
         esac
-        CODE="$(reachable "$LOCAL_URL")"
+        CODE="$(reachable "http://127.0.0.1:${PORT}/")"
         if [ "$CODE" = "200" ] || [ "$CODE" = "302" ] || [ "$CODE" = "301" ]; then
             echo "100"
-            echo "# Ready — opening browser"
+            echo "# Ready — opening chat window"
             /usr/bin/sleep 0.3
             exit 0
         fi
@@ -93,7 +108,7 @@ echo "$PHX_PID" > "$PIDFILE"
     echo "# Timeout: Phoenix did not bind port within 120s"
     exit 2
 ) | /usr/bin/zenity --progress \
-        --title="AIM — local Phoenix" \
+        --title="AIM Chat — starting" \
         --text="Starting Erlang VM…" \
         --pulsate \
         --auto-close \
@@ -101,12 +116,12 @@ echo "$PHX_PID" > "$PIDFILE"
         --no-cancel 2>/dev/null
 
 # 5) Outcome.
-if [ "$(reachable "$LOCAL_URL")" = "200" ]; then
-    /usr/bin/xdg-open "$ADMIN_URL" >/dev/null 2>&1 &
+if [ "$(reachable "http://127.0.0.1:${PORT}/")" = "200" ]; then
+    open_chat_window "$CHAT_URL"
     exit 0
 fi
 
-# Failure: kill phx, show last log lines.
+# Failure.
 if kill -0 "$PHX_PID" 2>/dev/null; then
     kill "$PHX_PID" 2>/dev/null
     sleep 1
@@ -116,5 +131,5 @@ rm -f "$PIDFILE"
 
 TAIL="$(/usr/bin/tail -n 30 "$LOG" 2>/dev/null | /usr/bin/sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')"
 [ -z "$TAIL" ] && TAIL="(empty log — mix produced no output)"
-show_error "AIM Local — Phoenix failed to start" "Port ${PORT} did not respond.\n\nLast 30 lines of ${LOG}:\n\n<tt>${TAIL}</tt>"
+show_error "AIM Chat — Phoenix failed to start" "Port ${PORT} did not respond.\n\nLast 30 lines of ${LOG}:\n\n<tt>${TAIL}</tt>"
 exit 1

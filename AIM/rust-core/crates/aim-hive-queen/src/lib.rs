@@ -19,12 +19,28 @@ use thiserror::Error;
 
 pub use store::{QueenStore, QueenError};
 
+/// Default upper bound for the serialized JSON payload accepted from
+/// a worker. Set in 2026-05-07 audit (DoS mitigation). Override via
+/// `AIM_HIVE_MAX_PAYLOAD_BYTES`.
+pub const MAX_PAYLOAD_BYTES_DEFAULT: usize = 1_048_576; // 1 MiB
+
+/// Effective payload-size cap for the current process.
+pub fn max_payload_bytes() -> usize {
+    std::env::var("AIM_HIVE_MAX_PAYLOAD_BYTES")
+        .ok()
+        .and_then(|s| s.parse::<usize>().ok())
+        .map(|n| n.max(1024)) // never less than 1 KiB
+        .unwrap_or(MAX_PAYLOAD_BYTES_DEFAULT)
+}
+
 #[derive(Debug, Error)]
 pub enum HiveQueenError {
     #[error("store: {0}")]
     Store(#[from] QueenError),
     #[error("rejected: {0}")]
     Rejected(String),
+    #[error("payload too large: {actual} > {limit} bytes")]
+    PayloadTooLarge { limit: usize, actual: usize },
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -86,6 +102,14 @@ pub fn accept_contribution(
     let id = uuid::Uuid::new_v4().to_string();
     let ts = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
     let blob = serde_json::to_string(&payload).expect("payload serialises");
+    let limit = max_payload_bytes();
+    if blob.len() > limit {
+        tracing::warn!(actual = blob.len(), limit, "rejected oversize payload");
+        return Err(HiveQueenError::PayloadTooLarge {
+            limit,
+            actual: blob.len(),
+        });
+    }
     store.insert_contribution(&id, &ts, &worker_id, &blob)?;
     Ok(Some(id))
 }
@@ -263,6 +287,46 @@ mod tests {
         let b = signature(&body);
         assert_eq!(a, b);
         assert_eq!(a.len(), 24);
+    }
+
+    #[test]
+    fn accept_rejects_oversized_payload() {
+        let (_d, s) = fresh_store();
+        // 2 MiB random-ish blob, well above the 1 MiB default.
+        let big = "x".repeat(2 * 1024 * 1024);
+        let p = serde_json::json!({
+            "v": 1,
+            "worker_id": "a".repeat(16),
+            "blob": big,
+        });
+        let r = accept_contribution(&s, p);
+        match r {
+            Err(HiveQueenError::PayloadTooLarge { limit, actual }) => {
+                assert_eq!(limit, MAX_PAYLOAD_BYTES_DEFAULT);
+                assert!(actual > limit);
+            }
+            other => panic!("expected PayloadTooLarge, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn accept_passes_payload_just_under_cap() {
+        let (_d, s) = fresh_store();
+        // 600 KiB — well under 1 MiB cap.
+        let p = serde_json::json!({
+            "v": 1,
+            "worker_id": "a".repeat(16),
+            "blob": "x".repeat(600 * 1024),
+        });
+        let r = accept_contribution(&s, p).unwrap();
+        assert!(r.is_some());
+    }
+
+    #[test]
+    fn max_payload_bytes_default_is_1mib() {
+        std::env::remove_var("AIM_HIVE_MAX_PAYLOAD_BYTES");
+        assert_eq!(max_payload_bytes(), MAX_PAYLOAD_BYTES_DEFAULT);
+        assert_eq!(MAX_PAYLOAD_BYTES_DEFAULT, 1_048_576);
     }
 
     #[test]

@@ -464,8 +464,8 @@ defmodule AimWeb.AboutLive do
           CI. A typical node install runs:
         </p>
         <pre><code>bash scripts/install_node.sh         # Linux/macOS — Ollama + venv + ~/.aim_env
-powershell scripts/install_node.ps1  # Windows
-</code></pre>
+    powershell scripts/install_node.ps1  # Windows
+    </code></pre>
         <p>
           Service supervisor units include <code>aim-llm.service</code>
           (HTTP LLM router on :8770),
