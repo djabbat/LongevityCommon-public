@@ -7,7 +7,7 @@
 
 **Создан:** 2026-05-07 — закрытие пробела ядра, выявленного DeepSeek-аудитом.
 **Источник:** Tkemaladze J. (2026) *Patient as a Project*, *Longevity
-Horizon* 2(4), [longevity.ge/longhoriz/article/view/177](https://longevity.ge/longhoriz/article/view/177);
+Horizon* 2(5), [DOI 10.65649/qqwva850](https://doi.org/10.65649/qqwva850);
 Hibbard JH et al. (2004, 2005) PAM-13 валидация; Insignia Health PAM-13
 официальный manual; Blumenthal-Lee 2024 4-zone HCI framework; Tao et al.
 (2026) *Nature Medicine* RCT n=2069.
@@ -165,8 +165,8 @@ gap, фиксируемый в `STRATEGY.md` P1.
 - Blumenthal D., Lee J. (2024) *Four-zone framework for human-AI clinical
   collaboration.* JAMA.
 - Tkemaladze J. (2026) *Patient as a Project: Three-level framework for
-  AI-assisted integrative medicine.* Longevity Horizon 2(4),
-  [DOI 10.65649/4cxxhe47](https://doi.org/10.65649/4cxxhe47).
+  AI-assisted integrative medicine.* Longevity Horizon 2(5),
+  [DOI 10.65649/qqwva850](https://doi.org/10.65649/qqwva850).
 
 ---
 

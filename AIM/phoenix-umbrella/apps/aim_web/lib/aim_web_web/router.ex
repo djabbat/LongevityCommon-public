@@ -35,6 +35,7 @@ defmodule AimWeb.Router do
     live "/settings", SettingsLive,  :index
     # Phase A/B (HW1, 2026-05-06):
     live "/patients",    PatientLive,    :index
+    live "/patients/:id", PatientWorkspaceLive, :show
     live "/experiments", ExperimentLive, :index
     # Patient as a Project cornerstone (Fix #3, 2026-05-07):
     live "/pam",                   PamLive,           :cohort

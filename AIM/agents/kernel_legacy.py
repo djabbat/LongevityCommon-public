@@ -327,8 +327,8 @@ def evaluate_l_verifiability(decision: Decision, patient: dict, context: dict) -
 
 # ─────────────────────────────────────────────────────────────────────────────
 # L_AGENCY (developmental agency)
-#   Cornerstone of "Patient as a Project" framework (Tkemaladze 2026,
-#   Longevity Horizon, longevity.ge/longhoriz/article/view/177).
+#   Cornerstone of "Patient as a Project" framework (Tkemaladze J. 2026,
+#   Longevity Horizon 2(5), DOI 10.65649/qqwva850).
 #   Codifies that an AI must not bypass patient agency
 #   on actions where the patient is the legitimate co-decider. Triggers
 #   on action_types in AGENCY_ACTIONS:

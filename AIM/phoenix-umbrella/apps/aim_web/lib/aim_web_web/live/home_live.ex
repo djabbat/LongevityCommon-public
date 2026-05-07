@@ -136,6 +136,11 @@ defmodule AimWeb.HomeLive do
       <p class="section-lead">
         Level-3 developmental engagement: PAM-13 trajectory, co-design log,
         4-zone disagreement classifier, motivational-interviewing coach.
+        <br/>
+        <small>
+          Per Tkemaladze J. (2026), <em>Longevity Horizon</em> 2(5),
+          DOI <a href="https://doi.org/10.65649/qqwva850">10.65649/qqwva850</a>.
+        </small>
       </p>
 
       <div class="grid">

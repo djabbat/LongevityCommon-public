@@ -8,6 +8,63 @@ SemVer-compatible.
 
 ## [Unreleased]
 
+### Patient-as-Project workspace + safety-checker (2026-05-08, overnight)
+
+Адресует requirements пользователя 2026-05-08 ("структура пациент-проект",
+"список пациентов с истории/назначения/совместимость", "интегрировано в UI
+локального AIM") + reviewer's Phase 0 safety lock-in (peer-review
+2026-05-07). 4 новых Rust crates + 1 Python shim + 1 Phoenix LiveView.
+
+| # | Artefact | LoC | Tests |
+|---|---|---|---|
+| 1 | `crates/aim-patient-workspace` | 408 lib + 121 main | 5 ✓ |
+| 2 | `crates/aim-compat` (drug-drug + age + allergy + pregnancy + renal/hepatic) | 488 lib + 95 main | 14 ✓ |
+| 3 | `crates/aim-lab-parser` (multi-language OCR → structured analytes) | 220 lib + 55 main | 7 ✓ |
+| 4 | `crates/aim-patient-events` (append-only JSONL timeline) | 354 lib + 215 main | 9 ✓ |
+| 5 | `tools/lab_evaluate.py` (thin shim to `lab_reference.py::evaluate`) | 95 | manual smoke |
+| 6 | `live/patient_workspace_live.ex` (`/patients/:id` LiveView) | 740 | 6 integration ✓ |
+
+**Patient-as-Project compliance:** Per `feedback_project_core` rule, each
+patient is now a project with a 12-file core (MEMORY/THEORY/CONCEPT/
+STRATEGY/PARAMETERS/TODO/CHANGELOG/KNOWLEDGE/MAP/REMINDER/NEEDTOWRITE +
+AI_LOG). `aim-patient-workspace::scan_core_files` reports presence per
+file; "Core files" tab in Phoenix shows status with create-on-demand path.
+
+**Compat checker scope (v0.1):** 98 patient-side rules total. 35 drug-drug
+pairs (existing `aim-interactions`) + 15 age (10 below-thresholds incl.
+ASA<16/Reye's, codeine<12 + 5 Beers Criteria ≥65) + 17 allergy (penicillin
+class + cephalosporin cross-react + sulfa + NSAID class + statin class) +
+17 pregnancy (FDA Cat X + ACE/ARB/statin/NSAID 3rd-trimester) + 8 renal
+(CKD 3+) + 6 hepatic. **Phase 2 expansion to 200+ drug-drug pairs deferred
+to focused pharmacology curation session** — cannot safely run in overnight
+without verified PMIDs (per `feedback_deepseek_no_citations`).
+
+**End-to-end smoke verified:**
+- `/patients/Beridze_Keti_2026_03_12` renders Demographics/Allergies/Meds
+  (13)/Conditions (3)/Project core/PAM-13/Lab files + Timeline 1-event/Labs
+  parsed (RBC HGB HCT MCV MCH MCHC RDW WBC PLT NEUT LYMPH MONO EOS BASO ESR
+  from Georgian OCR via aim-lab-parser).
+- Treatment modal: typing `amoxicillin` against patient with penicillin
+  allergy → Contraindicated conflict surfaced; typing `paracetamol` → "no
+  conflicts found".
+- Timeline tab: append `add` events (manual / agent / pam / doctor / codesign
+  / kernel sources); JSONL persistence verified on real patient.
+
+**Stack rule compliance:** Pure Rust (4 crates) + Phoenix LiveView, no
+Docker. The single Python shim (`tools/lab_evaluate.py`) reuses existing
+`lab_reference.py` (Frozen Python legacy per `STACK.md`); future Phase 9
+port will replace it with `aim-lab-reference` Rust crate.
+
+**Known limitation surfaced:** Lab unit reconciliation is NOT automatic.
+If OCR-reported unit (e.g. "g/dL") differs from `LAB_RANGES` reference
+unit ("g/L"), the status flag may misfire. Phoenix Labs tab shows both
+units side-by-side + warning paragraph instructing physician verification.
+Fix is unit-conversion table; deferred (out of overnight scope).
+
+**Routes added:**
+- `GET /patients/:id` → PatientWorkspaceLive (Overview/Timeline/Labs/
+  Medications/Core files/PAM-13 tabs)
+
 ### Hive deep-audit closure (2026-05-07, code-level P0+P1)
 
 Continuation of overnight Hive audit. Closes 7 of the 8 audit items

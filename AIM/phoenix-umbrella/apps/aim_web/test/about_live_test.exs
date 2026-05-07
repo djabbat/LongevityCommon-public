@@ -30,11 +30,15 @@ defmodule AimWeb.AboutLiveTest do
     assert html =~ "14. License and contact"
   end
 
-  test "/about cites Tkemaladze 2026 in Longevity Horizon (not Nat Med)", %{conn: conn} do
+  test "/about cites Tkemaladze 2026 in Longevity Horizon 2(5) with finalized DOI", %{conn: conn} do
     {:ok, _view, html} = live(conn, "/about")
     assert html =~ "Longevity Horizon"
-    assert html =~ "longhoriz/article/view/177"
+    # Finalized 2026-05-08: DOI 10.65649/qqwva850, issue 2(5).
+    assert html =~ "10.65649/qqwva850"
+    assert html =~ "2(5)"
     refute html =~ ~r/Tkemaladze.*?(?:Nat Med|Nature Medicine)\s+target/i
+    # Old placeholder must be gone.
+    refute html =~ "longhoriz/article/view/177"
   end
 
   test "/about cites Tao et al. correctly (Nat Med 2026)", %{conn: conn} do

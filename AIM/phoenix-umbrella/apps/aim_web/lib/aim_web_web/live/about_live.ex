@@ -67,8 +67,8 @@ defmodule AimWeb.AboutLive do
           AIM is built around a three-level framework, derived from
           Tao et al. (Nat Med 2026, n = 2069 RCT) and the manuscript
           "Patient as a Project" (Tkemaladze 2026,
-          <em>Longevity Horizon</em>,
-          <a href="https://longevity.ge/longhoriz/article/view/177">longevity.ge/longhoriz/article/view/177</a>):
+          <em>Longevity Horizon</em> 2(5), DOI
+          <a href="https://doi.org/10.65649/qqwva850">10.65649/qqwva850</a>):
         </p>
         <table class="about-table">
           <thead>
@@ -534,8 +534,8 @@ defmodule AimWeb.AboutLive do
           <li>
             Tkemaladze J. (2026) — "Patient as a Project: A
             Theoretical and Empirical Framework",
-            <em>Longevity Horizon</em>, article 177:
-            <a href="https://longevity.ge/longhoriz/article/view/177">longevity.ge/longhoriz/article/view/177</a>.
+            <em>Longevity Horizon</em> 2(5), DOI
+            <a href="https://doi.org/10.65649/qqwva850">10.65649/qqwva850</a>.
           </li>
         </ul>
       </section>

@@ -708,6 +708,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-compat"
+version = "0.1.0"
+dependencies = [
+ "aim-interactions",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "aim-complexity"
 version = "0.1.0"
 dependencies = [
@@ -1412,6 +1422,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-lab-parser"
+version = "0.1.0"
+dependencies = [
+ "regex",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "aim-lab-reference"
 version = "0.1.0"
 dependencies = [
@@ -1831,6 +1850,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "aim-patient-events"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "aim-patient-inbox-watcher"
 version = "0.1.0"
 dependencies = [
@@ -1883,6 +1913,19 @@ dependencies = [
  "tempfile",
  "thiserror 2.0.18",
  "tracing",
+]
+
+[[package]]
+name = "aim-patient-workspace"
+version = "0.1.0"
+dependencies = [
+ "aim-patient-memory",
+ "aim-patient-owner",
+ "chrono",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
