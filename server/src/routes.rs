@@ -1,5 +1,6 @@
 use axum::{
     middleware,
+    response::Json as JsonResp,
     routing::{delete, get, patch, post},
     Router,
 };
@@ -12,6 +13,27 @@ use crate::{
     },
     AppState,
 };
+
+/// Liveness probe. Mounted at both `/health` (legacy) and `/api/health`
+/// (so nginx can probe through the standard /api/ prefix).
+async fn health() -> JsonResp<serde_json::Value> {
+    JsonResp(serde_json::json!({
+        "status": "ok",
+        "service": "longevitycommon-server",
+        "ts": chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+    }))
+}
+
+/// Build/version metadata for ops visibility. Returns CARGO_PKG_VERSION
+/// and the git short-SHA injected at build time via env (or "dev" if
+/// not provided).
+async fn version() -> JsonResp<serde_json::Value> {
+    JsonResp(serde_json::json!({
+        "version": env!("CARGO_PKG_VERSION"),
+        "git_sha": option_env!("GIT_SHA").unwrap_or("dev"),
+        "build_ts": option_env!("BUILD_TS").unwrap_or("unknown"),
+    }))
+}
 
 pub fn all_routes(state: AppState) -> Router {
     Router::new()
@@ -31,7 +53,9 @@ fn public_routes() -> Router<AppState> {
         .route("/api/studies/:id", get(studies::get_study))
         .route("/api/biosense/compute", post(biosense::compute_chi_ze))
         .route("/api/disclosures/v5_changes", get(disclosures::get_v5_changes))
-        .route("/health", get(|| async { "ok" }))
+        .route("/health", get(health))
+        .route("/api/health", get(health))
+        .route("/api/version", get(version))
         .route_layer(middleware::from_fn_with_state(
             rate_limit::api_limiter(),
             rate_limit_fn,
